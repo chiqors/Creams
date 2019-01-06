@@ -6,6 +6,7 @@
 package id.uniondev.creams.view;
 
 import java.awt.Color;
+import javax.swing.JFrame;
 
 /**
  *
@@ -16,8 +17,19 @@ public class HalamanUtamaView extends javax.swing.JFrame {
     /**
      * Creates new form NewJFrame_1
      */
-    public HalamanUtamaView() {
+    public HalamanUtamaView(String us) {
         initComponents();
+        String userName = us;
+        
+        lblWelcome.setText("Welcome Admin "+userName);
+        
+        setExtendedState(JFrame.MAXIMIZED_HORIZ);
+        setVisible(true);
+        setResizable(false);
+    }
+
+    private HalamanUtamaView() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**
@@ -33,7 +45,7 @@ public class HalamanUtamaView extends javax.swing.JFrame {
         jRadioButtonMenuItem1 = new javax.swing.JRadioButtonMenuItem();
         backGround = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        jLabel9 = new javax.swing.JLabel();
+        lblWelcome = new javax.swing.JLabel();
         panelView = new javax.swing.JPanel();
         panelHomeView = new javax.swing.JPanel();
         jButton15 = new javax.swing.JButton();
@@ -123,9 +135,9 @@ public class HalamanUtamaView extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(40, 53, 148));
 
-        jLabel9.setFont(new java.awt.Font("Lucida Sans Typewriter", 1, 18)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setText("WELCOME ADMIN");
+        lblWelcome.setFont(new java.awt.Font("Lucida Sans Typewriter", 1, 18)); // NOI18N
+        lblWelcome.setForeground(new java.awt.Color(255, 255, 255));
+        lblWelcome.setText("WELCOME ADMIN");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -133,14 +145,14 @@ public class HalamanUtamaView extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(29, 29, 29)
-                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(558, Short.MAX_VALUE))
+                .addComponent(lblWelcome, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(370, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(22, 22, 22)
-                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblWelcome, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(38, Short.MAX_VALUE))
         );
 
@@ -751,6 +763,7 @@ public class HalamanUtamaView extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(240, 240, 240));
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/assets/icons8_Content_15px.png"))); // NOI18N
         jLabel2.setText("KARTU");
 
         javax.swing.GroupLayout panelKartuLayout = new javax.swing.GroupLayout(panelKartu);
@@ -941,6 +954,7 @@ public class HalamanUtamaView extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/assets/icons8_Home_15px_2.png"))); // NOI18N
         jLabel1.setText("HOME");
 
         javax.swing.GroupLayout panelHomeLayout = new javax.swing.GroupLayout(panelHome);
@@ -987,6 +1001,7 @@ public class HalamanUtamaView extends javax.swing.JFrame {
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(240, 240, 240));
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/assets/icons8_Landlord_15px.png"))); // NOI18N
         jLabel10.setText("ABOUT");
 
         javax.swing.GroupLayout panelAboutLayout = new javax.swing.GroupLayout(panelAbout);
@@ -1033,6 +1048,7 @@ public class HalamanUtamaView extends javax.swing.JFrame {
 
         jLabel15.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
         jLabel15.setForeground(new java.awt.Color(240, 240, 240));
+        jLabel15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/assets/icons8_Import_15px.png"))); // NOI18N
         jLabel15.setText("LOG OUT");
 
         javax.swing.GroupLayout panelLogOutLayout = new javax.swing.GroupLayout(panelLogOut);
@@ -1423,7 +1439,6 @@ public class HalamanUtamaView extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem1;
     private javax.swing.JScrollBar jScrollBar1;
@@ -1443,6 +1458,7 @@ public class HalamanUtamaView extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
+    private javax.swing.JLabel lblWelcome;
     private javax.swing.JPanel panelAbout;
     private javax.swing.JPanel panelHome;
     private javax.swing.JPanel panelHomeView;
