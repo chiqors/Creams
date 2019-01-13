@@ -15,8 +15,7 @@ public class Creams {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        LogIn login = new LogIn();
-        login.setVisible(true);
+      
     }
     
 }
