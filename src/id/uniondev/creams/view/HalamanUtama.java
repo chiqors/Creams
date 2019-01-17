@@ -21,7 +21,7 @@ public class HalamanUtama extends javax.swing.JFrame {
         initComponents();
         String userName = us;
         
-        lblWelcome.setText("Selamat Datang "+userName);
+        lblWelcome.setText("Welcome Admin "+userName);
         
         setExtendedState(JFrame.MAXIMIZED_HORIZ);
         setVisible(true);
@@ -205,7 +205,7 @@ public class HalamanUtama extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(40, 53, 148));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        lblWelcome.setFont(new java.awt.Font("Lucida Sans Typewriter", 1, 18)); // NOI18N
+        lblWelcome.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lblWelcome.setForeground(new java.awt.Color(255, 255, 255));
         lblWelcome.setText("WELCOME ADMIN");
         jPanel2.add(lblWelcome, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, 640, 30));
@@ -219,11 +219,11 @@ public class HalamanUtama extends javax.swing.JFrame {
 
         jButton15.setText("SAVE");
 
-        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(240, 240, 240));
         jLabel8.setText("PULSA");
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(240, 240, 240));
         jLabel6.setText("Masukan Nomor : ");
 
@@ -233,13 +233,13 @@ public class HalamanUtama extends javax.swing.JFrame {
             }
         });
 
-        jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel12.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabel12.setForeground(new java.awt.Color(240, 240, 240));
         jLabel12.setText("Provider :");
 
         cmbBoxProvider.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-PROVIDER-", "AXIS", "INDOSAT", "SMARTFREN", "TELKOMSEL", "TRI", "XL" }));
 
-        jLabel18.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel18.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabel18.setForeground(new java.awt.Color(240, 240, 240));
         jLabel18.setText("Besar Pulsa :");
 
@@ -274,7 +274,7 @@ public class HalamanUtama extends javax.swing.JFrame {
         panelHomeViewLayout.setVerticalGroup(
             panelHomeViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelHomeViewLayout.createSequentialGroup()
-                .addContainerGap(137, Short.MAX_VALUE)
+                .addContainerGap(141, Short.MAX_VALUE)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1387,7 +1387,7 @@ public class HalamanUtama extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Dialog", 1, 10)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(240, 240, 240));
         jLabel2.setText("KARTU");
 
@@ -1433,7 +1433,7 @@ public class HalamanUtama extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Dialog", 1, 10)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(240, 240, 240));
         jLabel3.setText("PLN / PDAM");
 
@@ -1479,7 +1479,7 @@ public class HalamanUtama extends javax.swing.JFrame {
             }
         });
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Dialog", 1, 10)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(240, 240, 240));
         jLabel4.setText("PULSA");
 
@@ -1525,7 +1525,7 @@ public class HalamanUtama extends javax.swing.JFrame {
             }
         });
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Dialog", 1, 10)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(240, 240, 240));
         jLabel5.setText("PENDAPATAN");
 
@@ -1554,8 +1554,8 @@ public class HalamanUtama extends javax.swing.JFrame {
 
         jLabel7.setFont(new java.awt.Font("OCR A Extended", 1, 18)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setText("CREAMS");
-        sidePane.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 60, -1, 40));
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/assets/CREAMS (3) update.png"))); // NOI18N
+        sidePane.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 0, -1, 140));
 
         panelHome.setBackground(new java.awt.Color(92, 0, 122));
         panelHome.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -1577,7 +1577,7 @@ public class HalamanUtama extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Dialog", 1, 10)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("HOME");
 
@@ -1623,7 +1623,7 @@ public class HalamanUtama extends javax.swing.JFrame {
             }
         });
 
-        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        jLabel10.setFont(new java.awt.Font("Dialog", 1, 10)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(240, 240, 240));
         jLabel10.setText("ABOUT");
 
@@ -1669,7 +1669,7 @@ public class HalamanUtama extends javax.swing.JFrame {
             }
         });
 
-        jLabel15.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        jLabel15.setFont(new java.awt.Font("Dialog", 1, 10)); // NOI18N
         jLabel15.setForeground(new java.awt.Color(240, 240, 240));
         jLabel15.setText("LOG OUT");
 
@@ -1704,8 +1704,8 @@ public class HalamanUtama extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(backGround, javax.swing.GroupLayout.PREFERRED_SIZE, 873, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 1, Short.MAX_VALUE))
+                .addComponent(backGround, javax.swing.GroupLayout.PREFERRED_SIZE, 991, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
