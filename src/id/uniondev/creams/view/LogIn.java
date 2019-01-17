@@ -158,8 +158,12 @@ public class LogIn extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMasukMousePressed
 
     private void btnMasukMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMasukMouseClicked
-        HalamanUtama view = new HalamanUtama();
-        view.setVisible(true);
+        String userName;
+        
+        userName = txtUsername.getText().toString();
+        
+        HalamanUtama halaman = new HalamanUtama(userName);
+        halaman.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnMasukMouseClicked
 

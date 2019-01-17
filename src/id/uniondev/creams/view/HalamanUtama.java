@@ -6,6 +6,7 @@
 package id.uniondev.creams.view;
 
 import java.awt.Color;
+import javax.swing.JFrame;
 
 /**
  *
@@ -16,8 +17,19 @@ public class HalamanUtama extends javax.swing.JFrame {
     /**
      * Creates new form NewJFrame_1
      */
-    public HalamanUtama() {
+    public HalamanUtama(String us) {
         initComponents();
+        String userName = us;
+        
+        lblWelcome.setText("Selamat Datang "+userName);
+        
+        setExtendedState(JFrame.MAXIMIZED_HORIZ);
+        setVisible(true);
+        setResizable(false);
+    }
+
+    private HalamanUtama() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**
@@ -33,7 +45,7 @@ public class HalamanUtama extends javax.swing.JFrame {
         jRadioButtonMenuItem1 = new javax.swing.JRadioButtonMenuItem();
         backGround = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        jLabel9 = new javax.swing.JLabel();
+        lblWelcome = new javax.swing.JLabel();
         panelView = new javax.swing.JPanel();
         panelHomeView = new javax.swing.JPanel();
         jButton15 = new javax.swing.JButton();
@@ -191,27 +203,12 @@ public class HalamanUtama extends javax.swing.JFrame {
         backGround.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel2.setBackground(new java.awt.Color(40, 53, 148));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel9.setFont(new java.awt.Font("Lucida Sans Typewriter", 1, 18)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setText("WELCOME ADMIN");
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(29, 29, 29)
-                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(558, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(38, Short.MAX_VALUE))
-        );
+        lblWelcome.setFont(new java.awt.Font("Lucida Sans Typewriter", 1, 18)); // NOI18N
+        lblWelcome.setForeground(new java.awt.Color(255, 255, 255));
+        lblWelcome.setText("WELCOME ADMIN");
+        jPanel2.add(lblWelcome, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, 640, 30));
 
         backGround.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 30, 770, 90));
 
@@ -1706,7 +1703,9 @@ public class HalamanUtama extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(backGround, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(backGround, javax.swing.GroupLayout.PREFERRED_SIZE, 873, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 1, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2106,7 +2105,6 @@ public class HalamanUtama extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem1;
     private javax.swing.JScrollBar jScrollBar1;
@@ -2154,6 +2152,7 @@ public class HalamanUtama extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField8;
     private javax.swing.JTextField jTextField9;
+    private javax.swing.JLabel lblWelcome;
     private javax.swing.JPanel panelAbout;
     private javax.swing.JPanel panelHome;
     private javax.swing.JPanel panelHomeView;
