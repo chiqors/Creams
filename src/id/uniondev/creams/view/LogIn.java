@@ -207,7 +207,7 @@ public class LogIn extends javax.swing.JFrame {
     }//GEN-LAST:event_txtPasswordActionPerformed
 
     private void jPanel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MouseClicked
-        FrameUtama view = new FrameUtama();
+        HalamanUtama view = new HalamanUtama();
         view.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jPanel3MouseClicked
