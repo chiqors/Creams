@@ -89,14 +89,23 @@ public class LogIn extends javax.swing.JFrame {
         jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 340, -1, -1));
         jPanel2.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 390, 300, 10));
 
-        btnMasuk.setBackground(new java.awt.Color(0, 0, 0));
+        btnMasuk.setBackground(new java.awt.Color(92, 0, 122));
         btnMasuk.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 240, 240)));
         btnMasuk.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnMasukMouseClicked(evt);
             }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnMasukMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnMasukMouseExited(evt);
+            }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 btnMasukMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                btnMasukMouseReleased(evt);
             }
         });
 
@@ -154,7 +163,7 @@ public class LogIn extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnMasukMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMasukMousePressed
-        btnMasuk.setBackground(new Color(92,0,122));
+        btnMasuk.setBackground(new Color(153,0,153));
     }//GEN-LAST:event_btnMasukMousePressed
 
     private void btnMasukMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMasukMouseClicked
@@ -170,6 +179,21 @@ public class LogIn extends javax.swing.JFrame {
     private void chkLihatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkLihatActionPerformed
 
     }//GEN-LAST:event_chkLihatActionPerformed
+
+    private void btnMasukMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMasukMouseEntered
+        // TODO add your handling code here:
+        btnMasuk.setBackground(new Color(142,36,171));
+    }//GEN-LAST:event_btnMasukMouseEntered
+
+    private void btnMasukMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMasukMouseExited
+        // TODO add your handling code here:
+        btnMasuk.setBackground(new Color(92,0,122));
+    }//GEN-LAST:event_btnMasukMouseExited
+
+    private void btnMasukMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMasukMouseReleased
+        // TODO add your handling code here:
+        btnMasuk.setBackground(new Color(142,36,171));
+    }//GEN-LAST:event_btnMasukMouseReleased
 
     /**
      * @param args the command line arguments
