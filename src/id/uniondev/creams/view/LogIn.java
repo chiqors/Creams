@@ -60,7 +60,13 @@ public class LogIn extends javax.swing.JFrame {
         txtUsername.setBackground(new java.awt.Color(92, 0, 122));
         txtUsername.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
         txtUsername.setForeground(new java.awt.Color(255, 255, 255));
+        txtUsername.setText("Enter Your Name");
         txtUsername.setBorder(null);
+        txtUsername.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtUsernameMouseClicked(evt);
+            }
+        });
         jPanel2.add(txtUsername, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 290, 300, 30));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -194,6 +200,11 @@ public class LogIn extends javax.swing.JFrame {
         // TODO add your handling code here:
         btnMasuk.setBackground(new Color(142,36,171));
     }//GEN-LAST:event_btnMasukMouseReleased
+
+    private void txtUsernameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtUsernameMouseClicked
+        // TODO add your handling code here:
+        txtUsername.setText("");
+    }//GEN-LAST:event_txtUsernameMouseClicked
 
     /**
      * @param args the command line arguments

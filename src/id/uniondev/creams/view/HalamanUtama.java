@@ -7,6 +7,7 @@ package id.uniondev.creams.view;
 
 import java.awt.Color;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -1876,9 +1877,14 @@ public class HalamanUtama extends javax.swing.JFrame {
     }//GEN-LAST:event_panelAboutMouseReleased
 
     private void panelLogOutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelLogOutMouseClicked
-        LogIn about = new LogIn();
-        about.setVisible(true);
-        this.setVisible(false);
+        int dialoBtn = JOptionPane.YES_NO_OPTION;
+        int dialogResult = JOptionPane.showConfirmDialog(this, "Apakah anda yakin"
+                , "PERINGATAN", dialoBtn);
+        if (dialogResult==0) {
+            System.exit(0);
+        }else{
+            
+        }
     }//GEN-LAST:event_panelLogOutMouseClicked
 
     private void panelLogOutMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelLogOutMouseEntered
