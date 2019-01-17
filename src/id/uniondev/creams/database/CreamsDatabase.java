@@ -7,8 +7,8 @@ package id.uniondev.creams.database;
 
 /**
  *
- * @author Aditya Nur Iskandar
+ * @author Oktavian Triwinata P
  */
-public class Creams {
+public class CreamsDatabase {
     
 }
