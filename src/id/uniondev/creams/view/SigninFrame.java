@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Geo Syah
+ * @author Aditya Nur Iskandar
  */
 public class SigninFrame extends javax.swing.JFrame {
 
@@ -22,6 +22,8 @@ public class SigninFrame extends javax.swing.JFrame {
      */
     public SigninFrame() {
         initComponents();
+        
+        
     }
 
     /**
@@ -33,151 +35,165 @@ public class SigninFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel5 = new javax.swing.JLabel();
-        txtUsername = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
+        sidepanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        lblUsername = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        lblPassword = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
         chkLihat = new javax.swing.JCheckBox();
-        jLabel3 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        lblSignIn = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
-        btnMasuk = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
-        jSeparator3 = new javax.swing.JSeparator();
+        txtUsername = new javax.swing.JTextField();
         txtPassword = new javax.swing.JPasswordField();
+        jSeparator5 = new javax.swing.JSeparator();
+        lblUsername1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("LogIn");
-        setResizable(false);
 
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        sidepanel.setBackground(new java.awt.Color(92, 0, 122));
+        sidepanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel2.setBackground(new java.awt.Color(92, 0, 122));
-        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(240, 240, 240));
+        jLabel1.setText("Login to access");
+        sidepanel.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 140, 180, -1));
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(240, 240, 240));
-        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/assets/CREAMS (3) update.png"))); // NOI18N
-        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 30, -1, -1));
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("Welcome to our application!");
+        sidepanel.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 170, -1, -1));
 
-        txtUsername.setBackground(new java.awt.Color(92, 0, 122));
-        txtUsername.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        txtUsername.setForeground(new java.awt.Color(255, 255, 255));
-        txtUsername.setText("Enter Your Name");
-        txtUsername.setBorder(null);
-        txtUsername.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                txtUsernameMouseClicked(evt);
-            }
-        });
-        jPanel2.add(txtUsername, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 290, 300, 30));
+        lblUsername.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblUsername.setForeground(new java.awt.Color(240, 240, 240));
+        lblUsername.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/assets/creams_logo.png"))); // NOI18N
+        sidepanel.add(lblUsername, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 0, -1, -1));
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(240, 240, 240));
-        jLabel2.setText("USERNAME : ");
-        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 270, -1, 20));
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/assets/icons8_Landlord_15px.png"))); // NOI18N
+        jLabel5.setText("s");
+        sidepanel.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 210, 15, -1));
 
-        jLabel1.setFont(new java.awt.Font("Century Gothic", 1, 24)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("LOG IN");
-        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 190, -1, -1));
+        lblPassword.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblPassword.setForeground(new java.awt.Color(240, 240, 240));
+        lblPassword.setText("PASSWORD : ");
+        sidepanel.add(lblPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 280, -1, -1));
+
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/assets/icons8_Landlord_15px.png"))); // NOI18N
+        jLabel6.setText("s");
+        sidepanel.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 280, 15, -1));
 
         chkLihat.setBackground(new java.awt.Color(92, 0, 122));
         chkLihat.setForeground(new java.awt.Color(240, 240, 240));
-        chkLihat.setText("Ingat Saya");
+        chkLihat.setText("Remember Me?");
+        chkLihat.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         chkLihat.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 chkLihatActionPerformed(evt);
             }
         });
-        jPanel2.add(chkLihat, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 400, -1, -1));
+        sidepanel.add(chkLihat, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 380, -1, -1));
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(240, 240, 240));
-        jLabel3.setText("PASSWORD : ");
-        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 340, -1, -1));
-        jPanel2.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 390, 300, 10));
-
-        btnMasuk.setBackground(new java.awt.Color(92, 0, 122));
-        btnMasuk.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 240, 240)));
-        btnMasuk.addMouseListener(new java.awt.event.MouseAdapter() {
+        jPanel3.setBackground(new java.awt.Color(92, 0, 122));
+        jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 240, 240)));
+        jPanel3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel3.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnMasukMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnMasukMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnMasukMouseExited(evt);
+                jPanel3MouseClicked(evt);
             }
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                btnMasukMousePressed(evt);
-            }
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                btnMasukMouseReleased(evt);
+                jPanel3MousePressed(evt);
             }
         });
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(240, 240, 240));
-        jLabel4.setText("MASUK");
+        lblSignIn.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        lblSignIn.setForeground(new java.awt.Color(240, 240, 240));
+        lblSignIn.setText("Sign In");
 
-        javax.swing.GroupLayout btnMasukLayout = new javax.swing.GroupLayout(btnMasuk);
-        btnMasuk.setLayout(btnMasukLayout);
-        btnMasukLayout.setHorizontalGroup(
-            btnMasukLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 298, Short.MAX_VALUE)
-            .addGroup(btnMasukLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(btnMasukLayout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(jLabel4)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/assets/icons8_Landlord_15px.png"))); // NOI18N
+        jLabel7.setText("s");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(112, 112, 112)
+                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblSignIn)
+                .addContainerGap(123, Short.MAX_VALUE))
         );
-        btnMasukLayout.setVerticalGroup(
-            btnMasukLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 31, Short.MAX_VALUE)
-            .addGroup(btnMasukLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(btnMasukLayout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(jLabel4)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblSignIn)
+                    .addComponent(jLabel7))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel2.add(btnMasuk, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 430, 300, -1));
-        jPanel2.add(jSeparator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 320, 300, 10));
+        sidepanel.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 410, -1, -1));
+        sidepanel.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 340, 290, 10));
+
+        txtUsername.setBackground(new java.awt.Color(92, 0, 122));
+        txtUsername.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        txtUsername.setForeground(new java.awt.Color(240, 240, 240));
+        txtUsername.setBorder(null);
+        txtUsername.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtUsernameActionPerformed(evt);
+            }
+        });
+        sidepanel.add(txtUsername, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 230, 290, 40));
 
         txtPassword.setBackground(new java.awt.Color(92, 0, 122));
         txtPassword.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
         txtPassword.setForeground(new java.awt.Color(255, 255, 255));
         txtPassword.setBorder(null);
-        jPanel2.add(txtPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 360, 300, 30));
+        sidepanel.add(txtPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 300, 290, 40));
+        sidepanel.add(jSeparator5, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 270, 290, 10));
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 710, 580));
+        lblUsername1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblUsername1.setForeground(new java.awt.Color(240, 240, 240));
+        lblUsername1.setText("USERNAME : ");
+        sidepanel.add(lblUsername1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 210, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(sidepanel, javax.swing.GroupLayout.PREFERRED_SIZE, 677, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(sidepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 503, Short.MAX_VALUE)
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnMasukMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMasukMousePressed
-        btnMasuk.setBackground(new Color(153,0,153));
-    }//GEN-LAST:event_btnMasukMousePressed
+    private void jPanel3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MousePressed
+        jPanel3.setBackground(new Color(92,0,122));
+    }//GEN-LAST:event_jPanel3MousePressed
 
-    private void btnMasukMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMasukMouseClicked
-       MainFrame main = new MainFrame();
+    private void jPanel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MouseClicked
+        String userName;
+        
+        userName = txtUsername.getText().toString();
+        MainFrame main = new MainFrame(userName);
         try {
             main.loadDatabase();
             main.setVisible(true);
@@ -186,37 +202,21 @@ public class SigninFrame extends javax.swing.JFrame {
         } catch (EmployeeException ex) {
             Logger.getLogger(SigninFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_btnMasukMouseClicked
+    }//GEN-LAST:event_jPanel3MouseClicked
 
     private void chkLihatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkLihatActionPerformed
 
     }//GEN-LAST:event_chkLihatActionPerformed
 
-    private void btnMasukMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMasukMouseEntered
-        // TODO add your handling code here:
-        btnMasuk.setBackground(new Color(142,36,171));
-    }//GEN-LAST:event_btnMasukMouseEntered
+    private void txtUsernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsernameActionPerformed
 
-    private void btnMasukMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMasukMouseExited
-        // TODO add your handling code here:
-        btnMasuk.setBackground(new Color(92,0,122));
-    }//GEN-LAST:event_btnMasukMouseExited
-
-    private void btnMasukMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMasukMouseReleased
-        // TODO add your handling code here:
-        btnMasuk.setBackground(new Color(142,36,171));
-    }//GEN-LAST:event_btnMasukMouseReleased
-
-    private void txtUsernameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtUsernameMouseClicked
-        // TODO add your handling code here:
-        txtUsername.setText("");
-    }//GEN-LAST:event_txtUsernameMouseClicked
+    }//GEN-LAST:event_txtUsernameActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-         /* Set the Nimbus look and feel */
+        /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
@@ -239,12 +239,6 @@ public class SigninFrame extends javax.swing.JFrame {
         }
         //</editor-fold>
         //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -255,17 +249,20 @@ public class SigninFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel btnMasuk;
     private javax.swing.JCheckBox chkLihat;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JSeparator jSeparator5;
+    private javax.swing.JLabel lblPassword;
+    private javax.swing.JLabel lblSignIn;
+    private javax.swing.JLabel lblUsername;
+    private javax.swing.JLabel lblUsername1;
+    private javax.swing.JPanel sidepanel;
     private javax.swing.JPasswordField txtPassword;
     private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables

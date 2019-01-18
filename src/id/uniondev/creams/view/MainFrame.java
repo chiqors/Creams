@@ -14,7 +14,10 @@ import id.uniondev.creams.model.EmployeeModel;
 import id.uniondev.creams.model.EmployeeTableModel;
 import id.uniondev.creams.service.EmployeeDao;
 import java.awt.Color;
+import java.awt.Frame;
 import java.sql.SQLException;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
@@ -37,7 +40,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
     private EmployeeModel employeeModel;
     private EmployeeController employeeController;
     
-    public MainFrame() {
+    public MainFrame(String us) {
         employeeTableModel = new EmployeeTableModel();
         employeeModel = new EmployeeModel();
         employeeModel.setListener(this);
@@ -46,6 +49,18 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
         initComponents();
         tblEmployee.getSelectionModel().addListSelectionListener(this);
         tblEmployee.setModel(employeeTableModel);
+        
+        String userName = us;
+        
+        lblWelcome.setText("Welcome Admin "+userName);
+        
+        setExtendedState(JFrame.MAXIMIZED_HORIZ);
+        setVisible(true);
+        setResizable(false);
+    }
+
+    private MainFrame() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     /**
@@ -61,7 +76,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
         jRadioButtonMenuItem1 = new javax.swing.JRadioButtonMenuItem();
         backGround = new javax.swing.JPanel();
         headView = new javax.swing.JPanel();
-        jLabel9 = new javax.swing.JLabel();
+        lblWelcome = new javax.swing.JLabel();
         panelView = new javax.swing.JPanel();
         panelHomeView = new javax.swing.JPanel();
         jButton15 = new javax.swing.JButton();
@@ -259,9 +274,9 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
 
         headView.setBackground(new java.awt.Color(40, 53, 148));
 
-        jLabel9.setFont(new java.awt.Font("Lucida Sans Typewriter", 1, 18)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setText("WELCOME ADMIN");
+        lblWelcome.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lblWelcome.setForeground(new java.awt.Color(255, 255, 255));
+        lblWelcome.setText("WELCOME ADMIN");
 
         javax.swing.GroupLayout headViewLayout = new javax.swing.GroupLayout(headView);
         headView.setLayout(headViewLayout);
@@ -269,14 +284,14 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
             headViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(headViewLayout.createSequentialGroup()
                 .addGap(34, 34, 34)
-                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(553, Short.MAX_VALUE))
+                .addComponent(lblWelcome, javax.swing.GroupLayout.PREFERRED_SIZE, 623, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(113, Short.MAX_VALUE))
         );
         headViewLayout.setVerticalGroup(
             headViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(headViewLayout.createSequentialGroup()
                 .addGap(23, 23, 23)
-                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblWelcome, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(37, Short.MAX_VALUE))
         );
 
@@ -598,14 +613,15 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
                     .addComponent(jScrollBar4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelTagihanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton14)
-                    .addComponent(jButton13)
-                    .addComponent(jButton12)
+                .addGroup(panelTagihanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelTagihanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButton17)
                         .addComponent(jLabel51)
-                        .addComponent(jTextField21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jTextField21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelTagihanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton14)
+                        .addComponent(jButton13)
+                        .addComponent(jButton12)))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
 
@@ -946,9 +962,9 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
                     .addComponent(jScrollBar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 335, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addGroup(panelReStockKuotaViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton4)
-                    .addComponent(jButton3))
+                .addGroup(panelReStockKuotaViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton3)
+                    .addComponent(jButton4))
                 .addGap(14, 14, 14)
                 .addComponent(jButton8)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -2105,7 +2121,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
                 .addContainerGap())
         );
 
-        sidePane.add(btnAboutMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 460, 200, -1));
+        sidePane.add(btnAboutMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 490, 200, -1));
 
         btnManageMenu.setBackground(new java.awt.Color(92, 0, 122));
         btnManageMenu.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -2203,10 +2219,10 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
                 .addContainerGap(13, Short.MAX_VALUE))
         );
 
-        sidePane.add(btnLogoutMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 510, -1, -1));
+        sidePane.add(btnLogoutMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 540, -1, -1));
         sidePane.add(seperatorMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, 180, 10));
 
-        backGround.add(sidePane, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 200, 580));
+        backGround.add(sidePane, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 200, 590));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -2216,7 +2232,9 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(backGround, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(backGround, javax.swing.GroupLayout.PREFERRED_SIZE, 592, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -2383,9 +2401,17 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
     }//GEN-LAST:event_btnAboutMenuMouseReleased
 
     private void btnLogoutMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLogoutMenuMouseClicked
+        int dialogBtn = JOptionPane.YES_NO_OPTION;
+        int dialogResult = JOptionPane.showConfirmDialog(this,"Apakah anda yakin akan keluar ?"
+                , "PERINGATAN",dialogBtn);
+        if (dialogResult==0) {
         SigninFrame about = new SigninFrame();
         about.setVisible(true);
         this.setVisible(false);
+        }else{
+            
+        }
+        
     }//GEN-LAST:event_btnLogoutMenuMouseClicked
 
     private void btnLogoutMenuMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLogoutMenuMouseEntered
@@ -2824,7 +2850,6 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem1;
     private javax.swing.JScrollBar jScrollBar1;
     private javax.swing.JScrollBar jScrollBar2;
@@ -2879,6 +2904,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
     private javax.swing.JLabel lblHeaderEmployee;
     private javax.swing.JLabel lblHeaderFormEmployee;
     private javax.swing.JLabel lblRole;
+    private javax.swing.JLabel lblWelcome;
     private javax.swing.JPanel panelFormEmployee;
     private javax.swing.JPanel panelHomeView;
     private javax.swing.JPanel panelKartuView;
