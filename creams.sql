@@ -2,10 +2,10 @@
 -- version 4.8.3
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Waktu pembuatan: 06 Jan 2019 pada 17.22
--- Versi server: 10.1.37-MariaDB
--- Versi PHP: 7.2.12
+-- Host: localhost:3306
+-- Generation Time: Jan 17, 2019 at 04:29 PM
+-- Server version: 10.3.10-MariaDB-log
+-- PHP Version: 7.2.11
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -25,7 +25,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `balance`
+-- Table structure for table `balance`
 --
 
 CREATE TABLE `balance` (
@@ -37,7 +37,7 @@ CREATE TABLE `balance` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `customer`
+-- Table structure for table `customer`
 --
 
 CREATE TABLE `customer` (
@@ -52,7 +52,7 @@ CREATE TABLE `customer` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `employee`
+-- Table structure for table `employee`
 --
 
 CREATE TABLE `employee` (
@@ -63,29 +63,23 @@ CREATE TABLE `employee` (
   `role` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
 --
--- Struktur dari tabel `orderitem`
+-- Dumping data for table `employee`
 --
 
-CREATE TABLE `orderitem` (
-  `id_orderitem` int(11) NOT NULL,
-  `id_order` int(11) NOT NULL,
-  `id_product` int(11) NOT NULL,
-  `balance_order` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+INSERT INTO `employee` (`id_employee`, `username`, `password`, `employee_name`, `role`) VALUES
+(1, 'admin', 'admin', 'admin', 'Admin');
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `orderr`
+-- Table structure for table `order`
 --
 
-CREATE TABLE `orderr` (
+CREATE TABLE `order` (
   `id_order` int(11) NOT NULL,
-  `id_customer` int(11) NOT NULL,
-  `id_employee` int(11) NOT NULL,
+  `customer_id` int(11) NOT NULL,
+  `employee_id` int(11) NOT NULL,
   `order_date` date NOT NULL,
   `order_expire` date NOT NULL,
   `status_order` varchar(20) NOT NULL,
@@ -96,13 +90,26 @@ CREATE TABLE `orderr` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `product`
+-- Table structure for table `orderitem`
+--
+
+CREATE TABLE `orderitem` (
+  `id_orderitem` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `balance_order` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product`
 --
 
 CREATE TABLE `product` (
   `id_product` int(11) NOT NULL,
-  `id_provider` varchar(10) NOT NULL,
-  `id_balance` int(11) NOT NULL,
+  `provider_id` varchar(10) NOT NULL,
+  `balance_id` int(11) NOT NULL,
   `product_name` varchar(20) NOT NULL,
   `price` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -110,12 +117,12 @@ CREATE TABLE `product` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `progressreport`
+-- Table structure for table `progressreport`
 --
 
 CREATE TABLE `progressreport` (
-  `id_progress` int(11) NOT NULL,
-  `id_order` int(11) NOT NULL,
+  `id_progressreport` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
   `sent_data` text NOT NULL,
   `received_data` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -123,11 +130,11 @@ CREATE TABLE `progressreport` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `provider`
+-- Table structure for table `provider`
 --
 
 CREATE TABLE `provider` (
-  `id_provider` varchar(10) NOT NULL,
+  `id_provider` int(11) NOT NULL,
   `provider_name` int(11) NOT NULL,
   `status` varchar(10) NOT NULL,
   `balance` int(11) NOT NULL
@@ -138,90 +145,108 @@ CREATE TABLE `provider` (
 --
 
 --
--- Indeks untuk tabel `balance`
+-- Indexes for table `balance`
 --
 ALTER TABLE `balance`
   ADD PRIMARY KEY (`id_balance`);
 
 --
--- Indeks untuk tabel `customer`
+-- Indexes for table `customer`
 --
 ALTER TABLE `customer`
   ADD PRIMARY KEY (`id_customer`);
 
 --
--- Indeks untuk tabel `employee`
+-- Indexes for table `employee`
 --
 ALTER TABLE `employee`
   ADD PRIMARY KEY (`id_employee`);
 
 --
--- Indeks untuk tabel `orderitem`
+-- Indexes for table `order`
+--
+ALTER TABLE `order`
+  ADD PRIMARY KEY (`id_order`),
+  ADD KEY `id_customer` (`customer_id`,`employee_id`);
+
+--
+-- Indexes for table `orderitem`
 --
 ALTER TABLE `orderitem`
   ADD PRIMARY KEY (`id_orderitem`),
-  ADD KEY `id_order` (`id_order`,`id_product`);
+  ADD KEY `id_order` (`order_id`,`product_id`);
 
 --
--- Indeks untuk tabel `orderr`
---
-ALTER TABLE `orderr`
-  ADD PRIMARY KEY (`id_order`),
-  ADD KEY `id_customer` (`id_customer`,`id_employee`);
-
---
--- Indeks untuk tabel `product`
+-- Indexes for table `product`
 --
 ALTER TABLE `product`
   ADD PRIMARY KEY (`id_product`),
-  ADD KEY `id_provider` (`id_provider`,`id_balance`);
+  ADD KEY `id_provider` (`provider_id`,`balance_id`);
 
 --
--- Indeks untuk tabel `progressreport`
+-- Indexes for table `progressreport`
 --
 ALTER TABLE `progressreport`
-  ADD PRIMARY KEY (`id_progress`),
-  ADD KEY `id_order` (`id_order`);
+  ADD PRIMARY KEY (`id_progressreport`),
+  ADD KEY `id_order` (`order_id`);
 
 --
--- Indeks untuk tabel `provider`
+-- Indexes for table `provider`
 --
 ALTER TABLE `provider`
   ADD PRIMARY KEY (`id_provider`);
 
 --
--- AUTO_INCREMENT untuk tabel yang dibuang
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT untuk tabel `customer`
+-- AUTO_INCREMENT for table `balance`
+--
+ALTER TABLE `balance`
+  MODIFY `id_balance` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
   MODIFY `id_customer` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `orderitem`
+-- AUTO_INCREMENT for table `employee`
+--
+ALTER TABLE `employee`
+  MODIFY `id_employee` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `order`
+--
+ALTER TABLE `order`
+  MODIFY `id_order` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `orderitem`
 --
 ALTER TABLE `orderitem`
   MODIFY `id_orderitem` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `orderr`
---
-ALTER TABLE `orderr`
-  MODIFY `id_order` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT untuk tabel `product`
+-- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
   MODIFY `id_product` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `progressreport`
+-- AUTO_INCREMENT for table `progressreport`
 --
 ALTER TABLE `progressreport`
-  MODIFY `id_progress` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_progressreport` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `provider`
+--
+ALTER TABLE `provider`
+  MODIFY `id_provider` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
