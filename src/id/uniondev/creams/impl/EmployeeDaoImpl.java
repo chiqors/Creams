@@ -26,8 +26,7 @@ public class EmployeeDaoImpl implements EmployeeDao{
 
     private Connection connection;
     
-    private final String insertEmployee = "INSERT INTO employee(username,"
-            + "password,employee_name,role) VALUES (?,?,?,?)";
+    private final String insertEmployee = "INSERT INTO employee(username,password,employee_name,role) VALUES (?,?,?,?)";
     private final String updateEmployee = "UPDATE employee SET username = ?, password = ?, "
             + "employee_name = ?, role = ? WHERE id_employee = ?";
     private final String deleteEmployee = "DELETE FROM employee WHERE id_employee = ?";
@@ -45,12 +44,13 @@ public class EmployeeDaoImpl implements EmployeeDao{
         PreparedStatement statement = null;
         try {
             connection.setAutoCommit(false);
-            statement = connection.prepareStatement(insertEmployee, Statement.RETURN_GENERATED_KEYS);
+            statement = (PreparedStatement) connection.prepareStatement(insertEmployee, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, employee.getUsername());
             statement.setString(2, employee.getPassword());
             statement.setString(3, employee.getEmployee_name());
             statement.setString(4, employee.getRole());
             statement.executeUpdate();
+            
             ResultSet result = statement.getGeneratedKeys();
             if (result.next()) {
                 employee.setId(result.getInt(1));
@@ -59,13 +59,13 @@ public class EmployeeDaoImpl implements EmployeeDao{
         } catch (SQLException e) {
             try {
                 connection.rollback();
-            } catch (Exception ex) {
+            } catch (SQLException ex) {
             }
             throw new EmployeeException(e.getMessage());
         } finally {
             try {
                 connection.setAutoCommit(true);
-            } catch (Exception ex) {
+            } catch (SQLException ex) {
             }
             if (statement != null) {
                 try {
