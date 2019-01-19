@@ -16,5 +16,5 @@ public interface EmployeeListener {
     public void onChange(EmployeeModel model);
     public void onInsert(Employee employee);
     public void onUpdate(Employee employee);
-    public void onDelete();
+    public void onDelete(Employee employee);
 }

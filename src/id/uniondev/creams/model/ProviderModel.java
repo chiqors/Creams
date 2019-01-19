@@ -82,9 +82,9 @@ public class ProviderModel {
         }
     }
     
-    protected void fireOnDelete() {
+    protected void fireOnDelete(Provider provider) {
         if (listener != null) {
-           listener.onDelete();
+           listener.onDelete(provider);
         }
     }
     
@@ -113,8 +113,9 @@ public class ProviderModel {
     
     public void deleteProvider() throws SQLException, ProviderException {
         ProviderDao dao = CreamsDatabase.getProviderDao();
+        Provider provider = new Provider();
         dao.deleteProvider(id_provider);
-        fireOnDelete();
+        fireOnDelete(provider);
     }
     
     public void resetProvider() {

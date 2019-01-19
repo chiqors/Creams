@@ -5,6 +5,7 @@
  */
 package id.uniondev.creams.view;
 
+import id.uniondev.creams.error.CustomerException;
 import id.uniondev.creams.error.EmployeeException;
 import java.awt.Color;
 import java.sql.SQLException;
@@ -20,6 +21,8 @@ public class SigninFrame extends javax.swing.JFrame {
     /**
      * Creates new form LogIn
      */
+    
+    
     public SigninFrame() {
         initComponents();
     }
@@ -44,10 +47,13 @@ public class SigninFrame extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         btnMasuk = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
         jSeparator3 = new javax.swing.JSeparator();
         jLabel7 = new javax.swing.JLabel();
         txtPassword = new javax.swing.JPasswordField();
         jLabel6 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Sign In");
@@ -60,7 +66,7 @@ public class SigninFrame extends javax.swing.JFrame {
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(240, 240, 240));
-        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/assets/creams_logo.png"))); // NOI18N
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/asset/creams_logo.png"))); // NOI18N
         jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 30, -1, -1));
 
         txtUsername.setBackground(new java.awt.Color(92, 0, 122));
@@ -98,7 +104,7 @@ public class SigninFrame extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(240, 240, 240));
         jLabel3.setText("PASSWORD : ");
-        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 340, -1, -1));
+        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 346, -1, 10));
         jPanel2.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 390, 300, 10));
 
         btnMasuk.setBackground(new java.awt.Color(92, 0, 122));
@@ -126,25 +132,28 @@ public class SigninFrame extends javax.swing.JFrame {
         jLabel4.setForeground(new java.awt.Color(240, 240, 240));
         jLabel4.setText("MASUK");
 
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/asset/icons8_Landlord_15px.png"))); // NOI18N
+
         javax.swing.GroupLayout btnMasukLayout = new javax.swing.GroupLayout(btnMasuk);
         btnMasuk.setLayout(btnMasukLayout);
         btnMasukLayout.setHorizontalGroup(
             btnMasukLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 298, Short.MAX_VALUE)
-            .addGroup(btnMasukLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(btnMasukLayout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(jLabel4)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+            .addGroup(btnMasukLayout.createSequentialGroup()
+                .addGap(121, 121, 121)
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel4)
+                .addContainerGap(120, Short.MAX_VALUE))
         );
         btnMasukLayout.setVerticalGroup(
             btnMasukLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 31, Short.MAX_VALUE)
-            .addGroup(btnMasukLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(btnMasukLayout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(jLabel4)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(btnMasukLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel4)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel2.add(btnMasuk, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 430, 300, -1));
@@ -165,6 +174,16 @@ public class SigninFrame extends javax.swing.JFrame {
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Please, fill this information before accessing the main app.");
         jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 220, -1, -1));
+
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/asset/icons8_Landlord_15px.png"))); // NOI18N
+        jPanel2.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 270, 20, 20));
+
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/asset/icons8_Landlord_15px.png"))); // NOI18N
+        jPanel2.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 340, 20, 20));
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 710, 580));
 
@@ -197,6 +216,8 @@ public class SigninFrame extends javax.swing.JFrame {
             this.setVisible(false);
         } catch (SQLException ex) {
         } catch (EmployeeException ex) {
+            Logger.getLogger(SigninFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (CustomerException ex) {
             Logger.getLogger(SigninFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnMasukMouseClicked
@@ -271,12 +292,15 @@ public class SigninFrame extends javax.swing.JFrame {
     private javax.swing.JPanel btnMasuk;
     private javax.swing.JCheckBox chkLihat;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JSeparator jSeparator1;

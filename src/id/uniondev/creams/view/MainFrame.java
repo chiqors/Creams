@@ -5,13 +5,20 @@
  */
 package id.uniondev.creams.view;
 
+import id.uniondev.creams.controller.CustomerController;
 import id.uniondev.creams.controller.EmployeeController;
 import id.uniondev.creams.database.CreamsDatabase;
+import id.uniondev.creams.entity.Customer;
 import id.uniondev.creams.entity.Employee;
+import id.uniondev.creams.error.CustomerException;
 import id.uniondev.creams.error.EmployeeException;
+import id.uniondev.creams.event.CustomerListener;
 import id.uniondev.creams.event.EmployeeListener;
+import id.uniondev.creams.model.CustomerModel;
+import id.uniondev.creams.model.CustomerTableModel;
 import id.uniondev.creams.model.EmployeeModel;
 import id.uniondev.creams.model.EmployeeTableModel;
+import id.uniondev.creams.service.CustomerDao;
 import id.uniondev.creams.service.EmployeeDao;
 import java.awt.Color;
 import java.sql.SQLException;
@@ -24,7 +31,7 @@ import javax.swing.event.ListSelectionListener;
  *
  * @author UnionDev
  */
-public class MainFrame extends javax.swing.JFrame implements EmployeeListener, ListSelectionListener {
+public class MainFrame extends javax.swing.JFrame implements EmployeeListener, CustomerListener, ListSelectionListener {
 
     /**
      * Creates new form MainFrame
@@ -36,8 +43,13 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
     private int sidemenu_active;
     
     private EmployeeTableModel employeeTableModel;
+    private CustomerTableModel customerTableModel;
+    
     private EmployeeModel employeeModel;
+    private CustomerModel customerModel;
+    
     private EmployeeController employeeController;
+    private CustomerController customerController;
     
     public MainFrame() {
         employeeTableModel = new EmployeeTableModel();
@@ -45,9 +57,20 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
         employeeModel.setListener(this);
         employeeController = new EmployeeController();
         employeeController.setModel(employeeModel);
+        
+        customerTableModel = new CustomerTableModel();
+        customerModel = new CustomerModel();
+        customerModel.setListener(this);
+        customerController = new CustomerController();
+        customerController.setModel(customerModel);
+        
         initComponents();
+        
         tblEmployee.getSelectionModel().addListSelectionListener(this);
         tblEmployee.setModel(employeeTableModel);
+        
+        tblCustomer.getSelectionModel().addListSelectionListener(this);
+        tblCustomer.setModel(customerTableModel);
     }
     
     /**
@@ -225,6 +248,33 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
         btnFormEmployeeUpdate = new javax.swing.JButton();
         btnFormEmployeeReset = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
+        panelManageCustomerView = new javax.swing.JPanel();
+        lblHeaderCustomer = new javax.swing.JLabel();
+        btnFormCustomerDelete = new javax.swing.JButton();
+        spCustomer = new javax.swing.JScrollPane();
+        tblCustomer = new javax.swing.JTable();
+        btnFormCustomer = new javax.swing.JPanel();
+        jLabel53 = new javax.swing.JLabel();
+        panelFormCustomerView = new javax.swing.JPanel();
+        lblHeaderFormEmployee1 = new javax.swing.JLabel();
+        lblFormIdEmployee1 = new javax.swing.JLabel();
+        txtId_customer = new javax.swing.JTextField();
+        lblFormPassword1 = new javax.swing.JLabel();
+        txtCustomerPassword = new javax.swing.JTextField();
+        lblEmployee_name1 = new javax.swing.JLabel();
+        txtCustomer_name = new javax.swing.JTextField();
+        lblRole1 = new javax.swing.JLabel();
+        txtCustomerPhoneNumber = new javax.swing.JTextField();
+        btnBacktoManageCustomer = new javax.swing.JPanel();
+        jLabel54 = new javax.swing.JLabel();
+        lblFormUsername1 = new javax.swing.JLabel();
+        txtCustomerUsername = new javax.swing.JTextField();
+        btnFormCustomerCreate = new javax.swing.JButton();
+        btnFormCustomerUpdate = new javax.swing.JButton();
+        btnFormCustomerReset = new javax.swing.JButton();
+        jSeparator4 = new javax.swing.JSeparator();
+        txtCustomerStatus = new javax.swing.JTextField();
+        lblRole2 = new javax.swing.JLabel();
         sidePane = new javax.swing.JPanel();
         lblAppName = new javax.swing.JLabel();
         btnHomeMenu = new javax.swing.JPanel();
@@ -265,7 +315,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
 
         headView.setBackground(new java.awt.Color(40, 53, 148));
 
-        jLabel9.setFont(new java.awt.Font("Lucida Sans Typewriter", 1, 18)); // NOI18N
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setText("WELCOME ADMIN");
 
@@ -1889,6 +1939,290 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
 
         panelView.add(panelFormEmployeeView, "card13");
 
+        panelManageCustomerView.setBackground(new java.awt.Color(0, 0, 0));
+
+        lblHeaderCustomer.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblHeaderCustomer.setForeground(new java.awt.Color(240, 240, 240));
+        lblHeaderCustomer.setText("DATA CUSTOMER");
+
+        btnFormCustomerDelete.setText("Delete");
+        btnFormCustomerDelete.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnFormCustomerDelete.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnFormCustomerDeleteMouseClicked(evt);
+            }
+        });
+        btnFormCustomerDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFormCustomerDeleteActionPerformed(evt);
+            }
+        });
+
+        tblCustomer.setBackground(new java.awt.Color(0, 0, 0));
+        tblCustomer.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
+        tblCustomer.setForeground(new java.awt.Color(240, 240, 240));
+        tblCustomer.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        spCustomer.setViewportView(tblCustomer);
+
+        btnFormCustomer.setBackground(new java.awt.Color(153, 0, 153));
+        btnFormCustomer.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnFormCustomer.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnFormCustomerMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnFormCustomerMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnFormCustomerMouseExited(evt);
+            }
+        });
+
+        jLabel53.setFont(new java.awt.Font("Segoe UI", 1, 11)); // NOI18N
+        jLabel53.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel53.setText("Form");
+
+        javax.swing.GroupLayout btnFormCustomerLayout = new javax.swing.GroupLayout(btnFormCustomer);
+        btnFormCustomer.setLayout(btnFormCustomerLayout);
+        btnFormCustomerLayout.setHorizontalGroup(
+            btnFormCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(btnFormCustomerLayout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addComponent(jLabel53)
+                .addContainerGap(39, Short.MAX_VALUE))
+        );
+        btnFormCustomerLayout.setVerticalGroup(
+            btnFormCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel53, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout panelManageCustomerViewLayout = new javax.swing.GroupLayout(panelManageCustomerView);
+        panelManageCustomerView.setLayout(panelManageCustomerViewLayout);
+        panelManageCustomerViewLayout.setHorizontalGroup(
+            panelManageCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelManageCustomerViewLayout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addGroup(panelManageCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnFormCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(spCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 684, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblHeaderCustomer)
+                    .addComponent(btnFormCustomerDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(52, Short.MAX_VALUE))
+        );
+        panelManageCustomerViewLayout.setVerticalGroup(
+            panelManageCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelManageCustomerViewLayout.createSequentialGroup()
+                .addContainerGap(20, Short.MAX_VALUE)
+                .addComponent(lblHeaderCustomer)
+                .addGap(18, 18, 18)
+                .addComponent(btnFormCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(spCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnFormCustomerDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(65, 65, 65))
+        );
+
+        panelView.add(panelManageCustomerView, "card11");
+
+        panelFormCustomerView.setBackground(new java.awt.Color(0, 0, 0));
+
+        lblHeaderFormEmployee1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblHeaderFormEmployee1.setForeground(new java.awt.Color(240, 240, 240));
+        lblHeaderFormEmployee1.setText("FORM CUSTOMER");
+
+        lblFormIdEmployee1.setForeground(new java.awt.Color(255, 255, 255));
+        lblFormIdEmployee1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblFormIdEmployee1.setText("ID");
+
+        txtId_customer.setEditable(false);
+
+        lblFormPassword1.setForeground(new java.awt.Color(255, 255, 255));
+        lblFormPassword1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblFormPassword1.setText("Password");
+
+        lblEmployee_name1.setForeground(new java.awt.Color(255, 255, 255));
+        lblEmployee_name1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblEmployee_name1.setText("Full Name");
+
+        lblRole1.setForeground(new java.awt.Color(255, 255, 255));
+        lblRole1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblRole1.setText("Phone Num.");
+
+        btnBacktoManageCustomer.setBackground(new java.awt.Color(153, 0, 153));
+        btnBacktoManageCustomer.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnBacktoManageCustomer.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnBacktoManageCustomerMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnBacktoManageCustomerMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnBacktoManageCustomerMouseExited(evt);
+            }
+        });
+
+        jLabel54.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
+        jLabel54.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel54.setText("Back");
+
+        javax.swing.GroupLayout btnBacktoManageCustomerLayout = new javax.swing.GroupLayout(btnBacktoManageCustomer);
+        btnBacktoManageCustomer.setLayout(btnBacktoManageCustomerLayout);
+        btnBacktoManageCustomerLayout.setHorizontalGroup(
+            btnBacktoManageCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, btnBacktoManageCustomerLayout.createSequentialGroup()
+                .addContainerGap(30, Short.MAX_VALUE)
+                .addComponent(jLabel54)
+                .addGap(29, 29, 29))
+        );
+        btnBacktoManageCustomerLayout.setVerticalGroup(
+            btnBacktoManageCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(btnBacktoManageCustomerLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel54)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        lblFormUsername1.setForeground(new java.awt.Color(255, 255, 255));
+        lblFormUsername1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblFormUsername1.setText("Username");
+
+        btnFormCustomerCreate.setText("Create");
+        btnFormCustomerCreate.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnFormCustomerCreateMouseClicked(evt);
+            }
+        });
+        btnFormCustomerCreate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFormCustomerCreateActionPerformed(evt);
+            }
+        });
+
+        btnFormCustomerUpdate.setText("Update");
+        btnFormCustomerUpdate.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnFormCustomerUpdateMouseClicked(evt);
+            }
+        });
+        btnFormCustomerUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFormCustomerUpdateActionPerformed(evt);
+            }
+        });
+
+        btnFormCustomerReset.setText("Reset");
+        btnFormCustomerReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFormCustomerResetActionPerformed(evt);
+            }
+        });
+
+        jSeparator4.setOrientation(javax.swing.SwingConstants.VERTICAL);
+
+        lblRole2.setForeground(new java.awt.Color(255, 255, 255));
+        lblRole2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblRole2.setText("Status");
+
+        javax.swing.GroupLayout panelFormCustomerViewLayout = new javax.swing.GroupLayout(panelFormCustomerView);
+        panelFormCustomerView.setLayout(panelFormCustomerViewLayout);
+        panelFormCustomerViewLayout.setHorizontalGroup(
+            panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelFormCustomerViewLayout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelFormCustomerViewLayout.createSequentialGroup()
+                        .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnBacktoManageCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblHeaderFormEmployee1))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(panelFormCustomerViewLayout.createSequentialGroup()
+                        .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(panelFormCustomerViewLayout.createSequentialGroup()
+                                .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(lblFormPassword1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(lblEmployee_name1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(lblFormUsername1))
+                                    .addComponent(lblFormIdEmployee1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(28, 28, 28))
+                            .addGroup(panelFormCustomerViewLayout.createSequentialGroup()
+                                .addComponent(lblRole1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(18, 18, 18))
+                            .addGroup(panelFormCustomerViewLayout.createSequentialGroup()
+                                .addComponent(lblRole2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)))
+                        .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtId_customer)
+                            .addComponent(txtCustomer_name)
+                            .addComponent(txtCustomerUsername)
+                            .addComponent(txtCustomerPassword)
+                            .addComponent(txtCustomerPhoneNumber)
+                            .addGroup(panelFormCustomerViewLayout.createSequentialGroup()
+                                .addComponent(btnFormCustomerReset, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(262, 262, 262)
+                                .addComponent(btnFormCustomerCreate, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnFormCustomerUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE))
+                            .addComponent(txtCustomerStatus))))
+                .addGap(59, 59, 59))
+        );
+        panelFormCustomerViewLayout.setVerticalGroup(
+            panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelFormCustomerViewLayout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addComponent(lblHeaderFormEmployee1)
+                .addGap(26, 26, 26)
+                .addComponent(btnBacktoManageCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(13, 13, 13)
+                .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtId_customer, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblFormIdEmployee1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtCustomerUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblFormUsername1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtCustomerPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblFormPassword1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtCustomer_name, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblEmployee_name1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtCustomerPhoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblRole1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtCustomerStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblRole2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnFormCustomerCreate, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnFormCustomerUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnFormCustomerReset, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(19, 19, 19))
+        );
+
+        panelView.add(panelFormCustomerView, "card13");
+
         backGround.add(panelView, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 120, 770, 450));
 
         sidePane.setBackground(new java.awt.Color(92, 0, 122));
@@ -1896,8 +2230,8 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
 
         lblAppName.setFont(new java.awt.Font("OCR A Extended", 1, 24)); // NOI18N
         lblAppName.setForeground(new java.awt.Color(255, 255, 255));
-        lblAppName.setText("CREAMS");
-        sidePane.add(lblAppName, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 50, -1, 40));
+        lblAppName.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/asset/creams_logo.png"))); // NOI18N
+        sidePane.add(lblAppName, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, 120));
 
         btnHomeMenu.setBackground(new java.awt.Color(92, 0, 122));
         btnHomeMenu.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -1919,7 +2253,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
             }
         });
 
-        icoHome.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/assets/icons8_Home_15px.png"))); // NOI18N
+        icoHome.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/asset/icons8_Home_15px.png"))); // NOI18N
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -1968,7 +2302,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
             }
         });
 
-        icoKartu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/assets/icons8_Bureau_15px.png"))); // NOI18N
+        icoKartu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/asset/icons8_Discover_15px.png"))); // NOI18N
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(240, 240, 240));
@@ -2017,7 +2351,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
             }
         });
 
-        icoPLNPDAM.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/assets/icons8_Discover_15px.png"))); // NOI18N
+        icoPLNPDAM.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/asset/icons8_Discover_15px.png"))); // NOI18N
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(240, 240, 240));
@@ -2066,7 +2400,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
             }
         });
 
-        icoKuota.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/assets/icons8_Discover_15px.png"))); // NOI18N
+        icoKuota.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/asset/icons8_Discover_15px.png"))); // NOI18N
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(240, 240, 240));
@@ -2115,7 +2449,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
             }
         });
 
-        icoPendapatan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/assets/icons8_Discover_15px.png"))); // NOI18N
+        icoPendapatan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/asset/icons8_Discover_15px.png"))); // NOI18N
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(240, 240, 240));
@@ -2164,7 +2498,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
             }
         });
 
-        icoAbout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/assets/icons8_Discover_15px.png"))); // NOI18N
+        icoAbout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/asset/icons8_Desktop_15px.png"))); // NOI18N
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(240, 240, 240));
@@ -2213,7 +2547,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
             }
         });
 
-        icoManage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/assets/icons8_Discover_15px.png"))); // NOI18N
+        icoManage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/asset/icons8_Discover_15px.png"))); // NOI18N
 
         jLabel19.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel19.setForeground(new java.awt.Color(240, 240, 240));
@@ -2262,7 +2596,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
             }
         });
 
-        icoLogout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/assets/icons8_Import_15px.png"))); // NOI18N
+        icoLogout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/id/uniondev/creams/asset/icons8_Import_15px.png"))); // NOI18N
 
         jLabel15.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel15.setForeground(new java.awt.Color(240, 240, 240));
@@ -2799,25 +3133,141 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
         // TODO add your handling code here:
     }//GEN-LAST:event_txtPulsaPendapatanActionPerformed
 
+    public JTable getTblCustomer() {
+        return tblCustomer;
+    }
+    
+    public JTextField getTxtCustomerPassword() {
+        return txtCustomerPassword;
+    }
+
+    public JTextField getTxtCustomerPhoneNumber() {
+        return txtCustomerPhoneNumber;
+    }
+
+    public JTextField getTxtCustomerStatus() {
+        return txtCustomerStatus;
+    }
+
+    public JTextField getTxtCustomerUsername() {
+        return txtCustomerUsername;
+    }
+
+    public JTextField getTxtCustomer_name() {
+        return txtCustomer_name;
+    }
+
+    public JTextField getTxtId_customer() {
+        return txtId_customer;
+    }
+    
     private void btnCustomerViewMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCustomerViewMouseClicked
         // TODO add your handling code here:
+        panelView.removeAll();
+        panelView.repaint();
+        panelView.revalidate();
+        
+        //add panel
+        panelView.add(panelManageCustomerView);
+        panelView.repaint();
+        panelView.revalidate();
     }//GEN-LAST:event_btnCustomerViewMouseClicked
 
     private void btnCustomerViewMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCustomerViewMouseEntered
         // TODO add your handling code here:
+        btnCustomerView.setBackground(sidemenu_entered);
     }//GEN-LAST:event_btnCustomerViewMouseEntered
 
     private void btnCustomerViewMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCustomerViewMouseExited
         // TODO add your handling code here:
+        btnCustomerView.setBackground(sidemenu_exited);
     }//GEN-LAST:event_btnCustomerViewMouseExited
 
     private void btnProviderViewMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnProviderViewMouseEntered
         // TODO add your handling code here:
+        btnProviderView.setBackground(sidemenu_entered);
     }//GEN-LAST:event_btnProviderViewMouseEntered
 
     private void btnProviderViewMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnProviderViewMouseExited
         // TODO add your handling code here:
+        btnProviderView.setBackground(sidemenu_exited);
     }//GEN-LAST:event_btnProviderViewMouseExited
+
+    private void btnFormCustomerDeleteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnFormCustomerDeleteMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnFormCustomerDeleteMouseClicked
+
+    private void btnFormCustomerDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFormCustomerDeleteActionPerformed
+        // TODO add your handling code here:
+        customerController.deleteCustomer(this);
+    }//GEN-LAST:event_btnFormCustomerDeleteActionPerformed
+
+    private void btnFormCustomerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnFormCustomerMouseClicked
+        // TODO add your handling code here:
+        panelView.removeAll();
+        panelView.repaint();
+        panelView.revalidate();
+        
+        //add panel
+        panelView.add(panelFormCustomerView);
+        panelView.repaint();
+        panelView.revalidate();
+    }//GEN-LAST:event_btnFormCustomerMouseClicked
+
+    private void btnFormCustomerMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnFormCustomerMouseEntered
+        // TODO add your handling code here:
+        btnFormCustomer.setBackground(sidemenu_entered);
+    }//GEN-LAST:event_btnFormCustomerMouseEntered
+
+    private void btnFormCustomerMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnFormCustomerMouseExited
+        // TODO add your handling code here:
+        btnFormCustomer.setBackground(sidemenu_exited);
+    }//GEN-LAST:event_btnFormCustomerMouseExited
+
+    private void btnBacktoManageCustomerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBacktoManageCustomerMouseClicked
+        // TODO add your handling code here:
+        panelView.removeAll();
+        panelView.repaint();
+        panelView.revalidate();
+        
+        //add panel
+        panelView.add(panelManageCustomerView);
+        panelView.repaint();
+        panelView.revalidate();
+    }//GEN-LAST:event_btnBacktoManageCustomerMouseClicked
+
+    private void btnFormCustomerCreateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnFormCustomerCreateMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnFormCustomerCreateMouseClicked
+
+    private void btnFormCustomerCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFormCustomerCreateActionPerformed
+        // TODO add your handling code here:
+        customerController.insertCustomer(this);
+    }//GEN-LAST:event_btnFormCustomerCreateActionPerformed
+
+    private void btnFormCustomerUpdateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnFormCustomerUpdateMouseClicked
+        // TODO add your handling code here:
+        customerController.updateCustomer(this);
+    }//GEN-LAST:event_btnFormCustomerUpdateMouseClicked
+
+    private void btnFormCustomerUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFormCustomerUpdateActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnFormCustomerUpdateActionPerformed
+
+    private void btnFormCustomerResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFormCustomerResetActionPerformed
+        // TODO add your handling code here:
+        customerController.resetCustomer(this);
+    }//GEN-LAST:event_btnFormCustomerResetActionPerformed
+
+    private void btnBacktoManageCustomerMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBacktoManageCustomerMouseEntered
+        // TODO add your handling code here:
+        btnBacktoManageCustomer.setBackground(sidemenu_entered);
+    }//GEN-LAST:event_btnBacktoManageCustomerMouseEntered
+
+    private void btnBacktoManageCustomerMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBacktoManageCustomerMouseExited
+        // TODO add your handling code here:
+        btnBacktoManageCustomer.setBackground(sidemenu_exited);
+    }//GEN-LAST:event_btnBacktoManageCustomerMouseExited
 
     /**
      * @param args the command line arguments
@@ -2862,6 +3312,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
     private javax.swing.JPanel btnAboutMenu;
     private javax.swing.JButton btnBackReStockKuota;
     private javax.swing.JButton btnBackReStockPerdana;
+    private javax.swing.JPanel btnBacktoManageCustomer;
     private javax.swing.JPanel btnBacktoManageEmployee;
     private javax.swing.JPanel btnCashView;
     private javax.swing.JButton btnCreateTagihan;
@@ -2871,6 +3322,11 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
     private javax.swing.JButton btnEditStock;
     private javax.swing.JButton btnEditTagihan;
     private javax.swing.JPanel btnEmployeeView;
+    private javax.swing.JPanel btnFormCustomer;
+    private javax.swing.JButton btnFormCustomerCreate;
+    private javax.swing.JButton btnFormCustomerDelete;
+    private javax.swing.JButton btnFormCustomerReset;
+    private javax.swing.JButton btnFormCustomerUpdate;
     private javax.swing.JPanel btnFormEmployee;
     private javax.swing.JButton btnFormEmployeeCreate;
     private javax.swing.JButton btnFormEmployeeDelete;
@@ -2969,6 +3425,8 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
     private javax.swing.JLabel jLabel50;
     private javax.swing.JLabel jLabel51;
     private javax.swing.JLabel jLabel52;
+    private javax.swing.JLabel jLabel53;
+    private javax.swing.JLabel jLabel54;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -2988,6 +3446,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JSeparator jSeparator4;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable4;
     private javax.swing.JTable jTable5;
@@ -3009,16 +3468,26 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
     private javax.swing.JTextField jTextField9;
     private javax.swing.JLabel lblAppName;
     private javax.swing.JLabel lblEmployee_name;
+    private javax.swing.JLabel lblEmployee_name1;
     private javax.swing.JLabel lblFormIdEmployee;
+    private javax.swing.JLabel lblFormIdEmployee1;
     private javax.swing.JLabel lblFormPassword;
+    private javax.swing.JLabel lblFormPassword1;
     private javax.swing.JLabel lblFormUsername;
+    private javax.swing.JLabel lblFormUsername1;
+    private javax.swing.JLabel lblHeaderCustomer;
     private javax.swing.JLabel lblHeaderEmployee;
     private javax.swing.JLabel lblHeaderFormEmployee;
+    private javax.swing.JLabel lblHeaderFormEmployee1;
     private javax.swing.JLabel lblRole;
+    private javax.swing.JLabel lblRole1;
+    private javax.swing.JLabel lblRole2;
     private javax.swing.JPanel paneFormlReStockKuota;
+    private javax.swing.JPanel panelFormCustomerView;
     private javax.swing.JPanel panelFormEmployeeView;
     private javax.swing.JPanel panelHomeView;
     private javax.swing.JPanel panelKartuView;
+    private javax.swing.JPanel panelManageCustomerView;
     private javax.swing.JPanel panelManageEmployeeView;
     private javax.swing.JPanel panelManageView;
     private javax.swing.JPanel panelPendapatanView;
@@ -3031,13 +3500,21 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
     private javax.swing.JPanel panelView;
     private javax.swing.JSeparator seperatorMenu;
     private javax.swing.JPanel sidePane;
+    private javax.swing.JScrollPane spCustomer;
     private javax.swing.JScrollPane spEmployee;
+    private javax.swing.JTable tblCustomer;
     private javax.swing.JTable tblEmployee;
     private javax.swing.JTable tblReStockPerdana;
     private javax.swing.JTable tblStock;
+    private javax.swing.JTextField txtCustomerPassword;
+    private javax.swing.JTextField txtCustomerPhoneNumber;
+    private javax.swing.JTextField txtCustomerStatus;
+    private javax.swing.JTextField txtCustomerUsername;
+    private javax.swing.JTextField txtCustomer_name;
     private javax.swing.JTextField txtEmployee_name;
     private javax.swing.JTextField txtFormNomorPulsaHome;
     private javax.swing.JTextField txtId_Employee;
+    private javax.swing.JTextField txtId_customer;
     private javax.swing.JTextField txtIsiPulsaHome;
     private javax.swing.JTextField txtJumlahNomorReStock;
     private javax.swing.JTextField txtKartuKuotaPendapatan;
@@ -3053,6 +3530,14 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
     private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables
 
+    public void loadDatabase() throws SQLException, EmployeeException, CustomerException {
+        EmployeeDao employeedao = CreamsDatabase.getEmployeeDao();
+        CustomerDao customerdao = CreamsDatabase.getCustomerDao();
+        
+        employeeTableModel.setList(employeedao.selectAllEmployee());
+        customerTableModel.setList(customerdao.selectAllCustomer());
+    }
+    
     @Override
     public void onChange(EmployeeModel model) {
         txtId_Employee.setText(model.getId_employee() + "");
@@ -3073,25 +3558,56 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, L
     }
 
     @Override
-    public void onDelete() {
+    public void onDelete(Employee employee) {
         int index = tblEmployee.getSelectedRow();
         employeeTableModel.remove(index);
     }
 
     @Override
-    public void valueChanged(ListSelectionEvent e) {
-        try {
-            Employee model = employeeTableModel.get(tblEmployee.getSelectedRow());
-            txtId_Employee.setText(model.getId_employee() + "");
-            txtUsername.setText(model.getUsername());
-            txtEmployee_name.setText(model.getEmployee_name());
-            txtRole.setText(model.getRole());
-        } catch (IndexOutOfBoundsException exception) {
-        }
+    public void onChange(CustomerModel model) {
+        txtId_customer.setText(model.getId_customer()+ "");
+        txtCustomerUsername.setText(model.getUsername());
+        txtCustomer_name.setText(model.getCustomer_name());
+        txtCustomerPhoneNumber.setText(model.getPhone_number());
+        txtCustomerStatus.setText(model.getStatus());
+    }
+
+    @Override
+    public void onInsert(Customer customer) {
+        customerTableModel.add(customer);
+    }
+
+    @Override
+    public void onUpdate(Customer customer) {
+        int index = tblCustomer.getSelectedRow();
+        customerTableModel.set(index, customer);
     }
     
-    public void loadDatabase() throws SQLException, EmployeeException {
-        EmployeeDao dao = CreamsDatabase.getEmployeeDao();
-        employeeTableModel.setList(dao.selectAllEmployee());
+    @Override
+    public void onDelete(Customer customer) {
+        int index = tblCustomer.getSelectedRow();
+        customerTableModel.remove(index);
+    }
+    
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        try {
+            Employee emp_model = employeeTableModel.get(tblEmployee.getSelectedRow());
+            txtId_Employee.setText(emp_model.getId_employee() + "");
+            txtUsername.setText(emp_model.getUsername());
+            txtEmployee_name.setText(emp_model.getEmployee_name());
+            txtRole.setText(emp_model.getRole());
+        } catch (IndexOutOfBoundsException exception) {
+        }
+        
+        try {
+            Customer cus_model = customerTableModel.get(tblCustomer.getSelectedRow());
+            txtId_customer.setText(cus_model.getId_customer()+ "");
+            txtCustomerUsername.setText(cus_model.getUsername());
+            txtCustomer_name.setText(cus_model.getCustomer_name());
+            txtCustomerPhoneNumber.setText(cus_model.getPhone_number());
+            txtCustomerStatus.setText(cus_model.getStatus());
+        } catch (IndexOutOfBoundsException exception) {
+        }
     }
 }

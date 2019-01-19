@@ -19,5 +19,5 @@ public interface CustomerDao {
     
     public Customer getCustomer(Integer id) throws CustomerException;
     public Customer getCustomer(String customer_name) throws CustomerException;
-    public List<Customer> selectAllEmployee() throws CustomerException;
+    public List<Customer> selectAllCustomer() throws CustomerException;
 }

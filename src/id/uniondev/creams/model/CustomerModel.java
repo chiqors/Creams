@@ -100,9 +100,9 @@ public class CustomerModel {
         }
     }
     
-    protected void fireOnDelete() {
+    protected void fireOnDelete(Customer customer) {
         if (listener != null) {
-           listener.onDelete();
+           listener.onDelete(customer);
         }
     }
     
@@ -133,10 +133,11 @@ public class CustomerModel {
         fireOnUpdate(customer);
     }
     
-    public void deleteEmployee() throws SQLException, CustomerException {
+    public void deleteCustomer() throws SQLException, CustomerException {
         CustomerDao dao = CreamsDatabase.getCustomerDao();
+        Customer customer = new Customer();
         dao.deleteCustomer(id_customer);
-        fireOnDelete();
+        fireOnDelete(customer);
     }
     
     public void resetCustomer() {

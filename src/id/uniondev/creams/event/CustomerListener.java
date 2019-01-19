@@ -16,5 +16,5 @@ public interface CustomerListener {
     public void onChange(CustomerModel model);
     public void onInsert(Customer customer);
     public void onUpdate(Customer customer);
-    public void onDelete();
+    public void onDelete(Customer customer);
 }

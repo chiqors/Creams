@@ -28,7 +28,7 @@ public class CustomerTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 4;
+        return 5;
     }
 
     public boolean add(Customer c) {
@@ -51,6 +51,14 @@ public class CustomerTableModel extends AbstractTableModel {
         }
     }
 
+    public Customer remove(int index) {
+        try {
+            return list.remove(index);
+        } finally {
+            fireTableRowsDeleted(index, index);
+        }
+    }
+    
     @Override
     public String getColumnName(int column) {
         switch(column) {

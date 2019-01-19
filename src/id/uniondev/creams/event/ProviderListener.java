@@ -16,5 +16,5 @@ public interface ProviderListener {
     public void onChange(ProviderModel model);
     public void onInsert(Provider provider);
     public void onUpdate(Provider provider);
-    public void onDelete();
+    public void onDelete(Provider provider);
 }

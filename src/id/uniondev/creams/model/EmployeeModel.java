@@ -96,9 +96,9 @@ public class EmployeeModel {
         }
     }
     
-    protected void fireOnDelete() {
+    protected void fireOnDelete(Employee employee) {
         if (listener != null) {
-           listener.onDelete();
+           listener.onDelete(employee);
         }
     }
     
@@ -129,8 +129,9 @@ public class EmployeeModel {
     
     public void deleteEmployee() throws SQLException, EmployeeException {
         EmployeeDao dao = CreamsDatabase.getEmployeeDao();
+        Employee employee = new Employee();
         dao.deleteEmployee(id_employee);
-        fireOnDelete();
+        fireOnDelete(employee);
     }
     
     public void resetEmployee() {

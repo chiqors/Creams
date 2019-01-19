@@ -221,7 +221,7 @@ public class CustomerDaoImpl implements CustomerDao {
     }
 
     @Override
-    public List<Customer> selectAllEmployee() throws CustomerException {
+    public List<Customer> selectAllCustomer() throws CustomerException {
         Statement statement = null;
         List<Customer> list = new ArrayList<Customer>();
         try {
