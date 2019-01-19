@@ -74,7 +74,7 @@ public class Employee {
         return true;
     }
 
-    public void setId(Integer id_employee) {
+    public void setId_employee(Integer id_employee) {
         this.id_employee = id_employee;
     }
 

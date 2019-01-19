@@ -13,9 +13,9 @@ import java.util.List;
  * @author ACER
  */
 public interface CustomerDao {
-    public void insertEmployee(Customer customer) throws CustomerException;
-    public void updateEmployee(Customer customer) throws CustomerException;
-    public void deleteEmployee(Integer id) throws CustomerException;
+    public void insertCustomer(Customer customer) throws CustomerException;
+    public void updateCustomer(Customer customer) throws CustomerException;
+    public void deleteCustomer(Integer id) throws CustomerException;
     
     public Customer getCustomer(Integer id) throws CustomerException;
     public Customer getCustomer(String customer_name) throws CustomerException;

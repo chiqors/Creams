@@ -5,9 +5,9 @@
  */
 package id.uniondev.creams.impl;
 
-import id.uniondev.creams.entity.Employee;
-import id.uniondev.creams.error.EmployeeException;
-import id.uniondev.creams.service.EmployeeDao;
+import id.uniondev.creams.entity.Provider;
+import id.uniondev.creams.error.ProviderException;
+import id.uniondev.creams.service.ProviderDao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,45 +15,41 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author ACER
  */
-public class EmployeeDaoImpl implements EmployeeDao {
-
+public class ProviderDaoImpl implements ProviderDao {
     private Connection connection;
     
-    private final String insertEmployee = "INSERT INTO employee(username,"
-            + "password,employee_name,role) VALUES (?,?,?,?)";
-    private final String updateEmployee = "UPDATE employee SET username = ?, password = ?, "
-            + "employee_name = ?, role = ? WHERE id_employee = ?";
-    private final String deleteEmployee = "DELETE FROM employee WHERE id_employee = ?";
-    private final String getById = "SELECT * FROM employee WHERE id_employee = ?";
-    private final String getByEmployee_name = "SELECT * FROM employee WHERE "
-            + "employee_name = ?";
-    private final String selectAll = "SELECT * FROM employee";
-    
-    public EmployeeDaoImpl(Connection connection) {
+    private final String insertProvider = "INSERT INTO provider(provider_name,"
+            + "status,balance) VALUES (?,?,?)";
+    private final String updateProvider = "UPDATE provider SET provider_name = ?, status = ?, "
+            + "balance = ? WHERE id_provider = ?";
+    private final String deleteProvider = "DELETE FROM provider WHERE id_provider = ?";
+    private final String getById = "SELECT * FROM provider WHERE id_provider = ?";
+    private final String getByProvider_name = "SELECT * FROM provider WHERE "
+            + "provider_name = ?";
+    private final String selectAll = "SELECT * FROM provider";
+
+    public ProviderDaoImpl(Connection connection) {
         this.connection = connection;
     }
 
     @Override
-    public void insertEmployee(Employee employee) throws EmployeeException {
+    public void insertProvider(Provider provider) throws ProviderException {
         PreparedStatement statement = null;
         try {
             connection.setAutoCommit(false);
-            statement = connection.prepareStatement(insertEmployee, Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, employee.getUsername());
-            statement.setString(2, employee.getPassword());
-            statement.setString(3, employee.getEmployee_name());
-            statement.setString(4, employee.getRole());
+            statement = connection.prepareStatement(insertProvider, Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1, provider.getProvider_name());
+            statement.setString(2, provider.getStatus());
+            statement.setInt(3, provider.getBalance());
             statement.executeUpdate();
             ResultSet result = statement.getGeneratedKeys();
             if (result.next()) {
-                employee.setId_employee(result.getInt(1));
+                provider.setId_provider(result.getInt(1));
             }
             connection.commit();
         } catch (SQLException e) {
@@ -61,7 +57,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 connection.rollback();
             } catch (Exception ex) {
             }
-            throw new EmployeeException(e.getMessage());
+            throw new ProviderException(e.getMessage());
         } finally {
             try {
                 connection.setAutoCommit(true);
@@ -77,16 +73,15 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     @Override
-    public void updateEmployee(Employee employee) throws EmployeeException {
+    public void updateProvider(Provider provider) throws ProviderException {
         PreparedStatement statement = null;
         try {
             connection.setAutoCommit(false);
-            statement = connection.prepareStatement(updateEmployee);
-            statement.setString(1, employee.getUsername());
-            statement.setString(2, employee.getPassword());
-            statement.setString(3, employee.getEmployee_name());
-            statement.setString(4, employee.getRole());
-            statement.setInt(5, employee.getId_employee());
+            statement = connection.prepareStatement(updateProvider);
+            statement.setString(1, provider.getProvider_name());
+            statement.setString(2, provider.getStatus());
+            statement.setInt(3, provider.getBalance());
+            statement.setInt(4, provider.getId_provider());
             statement.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
@@ -94,7 +89,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 connection.rollback();
             } catch (SQLException ex) {
             }
-            throw new EmployeeException(e.getMessage());
+            throw new ProviderException(e.getMessage());
         } finally {
             try {
                 connection.setAutoCommit(true);
@@ -110,11 +105,11 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     @Override
-    public void deleteEmployee(Integer id) throws EmployeeException {
+    public void deleteProvider(Integer id) throws ProviderException {
         PreparedStatement statement = null;
         try {
             connection.setAutoCommit(false);
-            statement = connection.prepareStatement(deleteEmployee);
+            statement = connection.prepareStatement(deleteProvider);
             statement.setInt(1, id);
             statement.executeUpdate();
             connection.commit();
@@ -123,7 +118,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 connection.rollback();
             } catch (Exception ex) {
             }
-            throw new EmployeeException(e.getMessage());
+            throw new ProviderException(e.getMessage());
         } finally {
             try {
                 connection.setAutoCommit(true);
@@ -139,32 +134,31 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     @Override
-    public Employee getEmployee(Integer id) throws EmployeeException {
+    public Provider getProvider(Integer id) throws ProviderException {
         PreparedStatement statement = null;
         try {
             connection.setAutoCommit(false);
             statement = connection.prepareStatement(getById);
             statement.setInt(1, id);
             ResultSet result = statement.executeQuery();
-            Employee employee = null;
+            Provider provider = null;
             if (result.next()) {
-                employee = new Employee();
-                employee.setId_employee(result.getInt("ID_EMPLOYEE"));
-                employee.setUsername(result.getString("USERNAME"));
-                employee.setPassword(result.getString("PASSWORD"));
-                employee.setEmployee_name(result.getString("EMPLOYEE_NAME"));
-                employee.setRole(result.getString("ROLE"));
+                provider = new Provider();
+                provider.setId_provider(result.getInt("ID_PROVIDER"));
+                provider.setProvider_name(result.getString("PROVIDER_NAME"));
+                provider.setStatus(result.getString("STATUS"));
+                provider.setBalance(result.getInt("BALANCE"));
             } else {
-                throw new EmployeeException("Employee with id " + id + " could not be find");
+                throw new ProviderException("Provider with id " + id + " could not be find");
             }
             connection.commit();
-            return employee;
+            return provider;
         } catch (SQLException e) {
             try {
                 connection.rollback();
             } catch (Exception ex) {
             }
-            throw new EmployeeException(e.getMessage());
+            throw new ProviderException(e.getMessage());
         } finally {
             try {
                 connection.setAutoCommit(true);
@@ -180,32 +174,31 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     @Override
-    public Employee getEmployee(String employee_name) throws EmployeeException {
+    public Provider getProvider(String provider_name) throws ProviderException {
         PreparedStatement statement = null;
         try {
             connection.setAutoCommit(false);
-            statement = connection.prepareStatement(getByEmployee_name);
-            statement.setString(1, employee_name);
+            statement = connection.prepareStatement(getById);
+            statement.setString(1, provider_name);
             ResultSet result = statement.executeQuery();
-            Employee employee = null;
+            Provider provider = null;
             if (result.next()) {
-                employee = new Employee();
-                employee.setId_employee(result.getInt("ID_EMPLOYEE"));
-                employee.setUsername(result.getString("USERNAME"));
-                employee.setPassword(result.getString("PASSWORD"));
-                employee.setEmployee_name(result.getString("EMPLOYEE_NAME"));
-                employee.setRole(result.getString("ROLE"));
+                provider = new Provider();
+                provider.setId_provider(result.getInt("ID_PROVIDER"));
+                provider.setProvider_name(result.getString("PROVIDER_NAME"));
+                provider.setStatus(result.getString("STATUS"));
+                provider.setBalance(result.getInt("BALANCE"));
             } else {
-                throw new EmployeeException("Employee with name " + employee_name + " could not be find");
+                throw new ProviderException("Provider with name " + provider_name + " could not be find");
             }
             connection.commit();
-            return employee;
+            return provider;
         } catch (SQLException e) {
             try {
                 connection.rollback();
             } catch (Exception ex) {
             }
-            throw new EmployeeException(e.getMessage());
+            throw new ProviderException(e.getMessage());
         } finally {
             try {
                 connection.setAutoCommit(true);
@@ -221,22 +214,21 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     @Override
-    public List<Employee> selectAllEmployee() throws EmployeeException {
+    public List<Provider> selectAllProvider() throws ProviderException {
         Statement statement = null;
-        List<Employee> list = new ArrayList<Employee>();
+        List<Provider> list = new ArrayList<Provider>();
         try {
             connection.setAutoCommit(false);
             statement = connection.createStatement();
             ResultSet result = statement.executeQuery(selectAll);
-            Employee employee = null;
+            Provider provider = null;
             while (result.next()) {
-                employee = new Employee();
-                employee.setId_employee(result.getInt("ID_EMPLOYEE"));
-                employee.setUsername(result.getString("USERNAME"));
-                employee.setPassword(result.getString("PASSWORD"));
-                employee.setEmployee_name(result.getString("EMPLOYEE_NAME"));
-                employee.setRole(result.getString("ROLE"));
-                list.add(employee);
+                provider = new Provider();
+                provider.setId_provider(result.getInt("ID_PROVIDER"));
+                provider.setProvider_name(result.getString("PROVIDER_NAME"));
+                provider.setStatus(result.getString("STATUS"));
+                provider.setBalance(result.getInt("BALANCE"));
+                list.add(provider);
             }
             connection.commit();
             return list;
@@ -245,7 +237,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 connection.rollback();
             } catch (Exception ex) {
             }
-            throw new EmployeeException(e.getMessage());
+            throw new ProviderException(e.getMessage());
         } finally {
             try {
                 connection.setAutoCommit(true);

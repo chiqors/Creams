@@ -5,9 +5,9 @@
  */
 package id.uniondev.creams.impl;
 
-import id.uniondev.creams.entity.Employee;
-import id.uniondev.creams.error.EmployeeException;
-import id.uniondev.creams.service.EmployeeDao;
+import id.uniondev.creams.entity.Customer;
+import id.uniondev.creams.error.CustomerException;
+import id.uniondev.creams.service.CustomerDao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,45 +15,43 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author ACER
  */
-public class EmployeeDaoImpl implements EmployeeDao {
-
+public class CustomerDaoImpl implements CustomerDao {
     private Connection connection;
     
-    private final String insertEmployee = "INSERT INTO employee(username,"
-            + "password,employee_name,role) VALUES (?,?,?,?)";
-    private final String updateEmployee = "UPDATE employee SET username = ?, password = ?, "
-            + "employee_name = ?, role = ? WHERE id_employee = ?";
-    private final String deleteEmployee = "DELETE FROM employee WHERE id_employee = ?";
-    private final String getById = "SELECT * FROM employee WHERE id_employee = ?";
-    private final String getByEmployee_name = "SELECT * FROM employee WHERE "
-            + "employee_name = ?";
-    private final String selectAll = "SELECT * FROM employee";
-    
-    public EmployeeDaoImpl(Connection connection) {
+    private final String insertCustomer = "INSERT INTO customer(username,"
+            + "password,customer_name,phone_number,status) VALUES (?,?,?,?,?)";
+    private final String updateCustomer = "UPDATE customer SET username = ?, password = ?, "
+            + "customer_name = ?, phone_number = ?, status = ? WHERE id_customer = ?";
+    private final String deleteCustomer = "DELETE FROM customer WHERE id_customer = ?";
+    private final String getById = "SELECT * FROM customer WHERE id_customer = ?";
+    private final String getByPhoneNumber = "SELECT * FROM customer WHERE "
+            + "phone_number = ?";
+    private final String selectAll = "SELECT * FROM customer";
+
+    public CustomerDaoImpl(Connection connection) {
         this.connection = connection;
     }
 
     @Override
-    public void insertEmployee(Employee employee) throws EmployeeException {
+    public void insertCustomer(Customer customer) throws CustomerException {
         PreparedStatement statement = null;
         try {
             connection.setAutoCommit(false);
-            statement = connection.prepareStatement(insertEmployee, Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, employee.getUsername());
-            statement.setString(2, employee.getPassword());
-            statement.setString(3, employee.getEmployee_name());
-            statement.setString(4, employee.getRole());
+            statement = connection.prepareStatement(insertCustomer, Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1, customer.getUsername());
+            statement.setString(2, customer.getPassword());
+            statement.setString(3, customer.getCustomer_name());
+            statement.setString(4, customer.getPhone_number());
+            statement.setString(5, customer.getStatus());
             statement.executeUpdate();
             ResultSet result = statement.getGeneratedKeys();
             if (result.next()) {
-                employee.setId_employee(result.getInt(1));
+                customer.setId_customer(result.getInt(1));
             }
             connection.commit();
         } catch (SQLException e) {
@@ -61,7 +59,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 connection.rollback();
             } catch (Exception ex) {
             }
-            throw new EmployeeException(e.getMessage());
+            throw new CustomerException(e.getMessage());
         } finally {
             try {
                 connection.setAutoCommit(true);
@@ -77,16 +75,17 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     @Override
-    public void updateEmployee(Employee employee) throws EmployeeException {
+    public void updateCustomer(Customer customer) throws CustomerException {
         PreparedStatement statement = null;
         try {
             connection.setAutoCommit(false);
-            statement = connection.prepareStatement(updateEmployee);
-            statement.setString(1, employee.getUsername());
-            statement.setString(2, employee.getPassword());
-            statement.setString(3, employee.getEmployee_name());
-            statement.setString(4, employee.getRole());
-            statement.setInt(5, employee.getId_employee());
+            statement = connection.prepareStatement(updateCustomer);
+            statement.setString(1, customer.getUsername());
+            statement.setString(2, customer.getPassword());
+            statement.setString(3, customer.getCustomer_name());
+            statement.setString(4, customer.getPhone_number());
+            statement.setString(5, customer.getStatus());
+            statement.setInt(6, customer.getId_customer());
             statement.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
@@ -94,7 +93,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 connection.rollback();
             } catch (SQLException ex) {
             }
-            throw new EmployeeException(e.getMessage());
+            throw new CustomerException(e.getMessage());
         } finally {
             try {
                 connection.setAutoCommit(true);
@@ -110,11 +109,11 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     @Override
-    public void deleteEmployee(Integer id) throws EmployeeException {
+    public void deleteCustomer(Integer id) throws CustomerException {
         PreparedStatement statement = null;
         try {
             connection.setAutoCommit(false);
-            statement = connection.prepareStatement(deleteEmployee);
+            statement = connection.prepareStatement(deleteCustomer);
             statement.setInt(1, id);
             statement.executeUpdate();
             connection.commit();
@@ -123,7 +122,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 connection.rollback();
             } catch (Exception ex) {
             }
-            throw new EmployeeException(e.getMessage());
+            throw new CustomerException(e.getMessage());
         } finally {
             try {
                 connection.setAutoCommit(true);
@@ -139,32 +138,33 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     @Override
-    public Employee getEmployee(Integer id) throws EmployeeException {
+    public Customer getCustomer(Integer id) throws CustomerException {
         PreparedStatement statement = null;
         try {
             connection.setAutoCommit(false);
             statement = connection.prepareStatement(getById);
             statement.setInt(1, id);
             ResultSet result = statement.executeQuery();
-            Employee employee = null;
+            Customer customer = null;
             if (result.next()) {
-                employee = new Employee();
-                employee.setId_employee(result.getInt("ID_EMPLOYEE"));
-                employee.setUsername(result.getString("USERNAME"));
-                employee.setPassword(result.getString("PASSWORD"));
-                employee.setEmployee_name(result.getString("EMPLOYEE_NAME"));
-                employee.setRole(result.getString("ROLE"));
+                customer = new Customer();
+                customer.setId_customer(result.getInt("ID_CUSTOMER"));
+                customer.setUsername(result.getString("USERNAME"));
+                customer.setPassword(result.getString("PASSWORD"));
+                customer.setCustomer_name(result.getString("CUSTOMER_NAME"));
+                customer.setPhone_number(result.getString("PHONE_NUMBER"));
+                customer.setStatus(result.getString("STATUS"));
             } else {
-                throw new EmployeeException("Employee with id " + id + " could not be find");
+                throw new CustomerException("Customer with id " + id + " could not be find");
             }
             connection.commit();
-            return employee;
+            return customer;
         } catch (SQLException e) {
             try {
                 connection.rollback();
             } catch (Exception ex) {
             }
-            throw new EmployeeException(e.getMessage());
+            throw new CustomerException(e.getMessage());
         } finally {
             try {
                 connection.setAutoCommit(true);
@@ -180,32 +180,32 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     @Override
-    public Employee getEmployee(String employee_name) throws EmployeeException {
+    public Customer getCustomer(String customer_name) throws CustomerException {
         PreparedStatement statement = null;
         try {
             connection.setAutoCommit(false);
-            statement = connection.prepareStatement(getByEmployee_name);
-            statement.setString(1, employee_name);
+            statement = connection.prepareStatement(getByPhoneNumber);
+            statement.setString(1, customer_name);
             ResultSet result = statement.executeQuery();
-            Employee employee = null;
+            Customer customer = null;
             if (result.next()) {
-                employee = new Employee();
-                employee.setId_employee(result.getInt("ID_EMPLOYEE"));
-                employee.setUsername(result.getString("USERNAME"));
-                employee.setPassword(result.getString("PASSWORD"));
-                employee.setEmployee_name(result.getString("EMPLOYEE_NAME"));
-                employee.setRole(result.getString("ROLE"));
+                customer = new Customer();
+                customer.setId_customer(result.getInt("ID_CUSTOMER"));
+                customer.setUsername(result.getString("USERNAME"));
+                customer.setPassword(result.getString("PASSWORD"));
+                customer.setCustomer_name(result.getString("CUSTOMER_NAME"));
+                customer.setPhone_number(result.getString("STATUS"));
             } else {
-                throw new EmployeeException("Employee with name " + employee_name + " could not be find");
+                throw new CustomerException("Customer with name " + customer_name + " could not be find");
             }
             connection.commit();
-            return employee;
+            return customer;
         } catch (SQLException e) {
             try {
                 connection.rollback();
             } catch (Exception ex) {
             }
-            throw new EmployeeException(e.getMessage());
+            throw new CustomerException(e.getMessage());
         } finally {
             try {
                 connection.setAutoCommit(true);
@@ -221,22 +221,23 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     @Override
-    public List<Employee> selectAllEmployee() throws EmployeeException {
+    public List<Customer> selectAllEmployee() throws CustomerException {
         Statement statement = null;
-        List<Employee> list = new ArrayList<Employee>();
+        List<Customer> list = new ArrayList<Customer>();
         try {
             connection.setAutoCommit(false);
             statement = connection.createStatement();
             ResultSet result = statement.executeQuery(selectAll);
-            Employee employee = null;
+            Customer customer = null;
             while (result.next()) {
-                employee = new Employee();
-                employee.setId_employee(result.getInt("ID_EMPLOYEE"));
-                employee.setUsername(result.getString("USERNAME"));
-                employee.setPassword(result.getString("PASSWORD"));
-                employee.setEmployee_name(result.getString("EMPLOYEE_NAME"));
-                employee.setRole(result.getString("ROLE"));
-                list.add(employee);
+                customer = new Customer();
+                customer.setId_customer(result.getInt("ID_CUSTOMER"));
+                customer.setUsername(result.getString("USERNAME"));
+                customer.setPassword(result.getString("PASSWORD"));
+                customer.setCustomer_name(result.getString("CUSTOMER_NAME"));
+                customer.setPhone_number(result.getString("PHONE_NUMBER"));
+                customer.setPhone_number(result.getString("STATUS"));
+                list.add(customer);
             }
             connection.commit();
             return list;
@@ -245,7 +246,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 connection.rollback();
             } catch (Exception ex) {
             }
-            throw new EmployeeException(e.getMessage());
+            throw new CustomerException(e.getMessage());
         } finally {
             try {
                 connection.setAutoCommit(true);
@@ -259,4 +260,5 @@ public class EmployeeDaoImpl implements EmployeeDao {
             }
         }
     }
+    
 }

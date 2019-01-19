@@ -121,7 +121,7 @@ public class EmployeeModel {
         employee.setPassword(password);
         employee.setEmployee_name(employee_name);
         employee.setRole(role);
-        employee.setId(id_employee);
+        employee.setId_employee(id_employee);
         
         dao.updateEmployee(employee);
         fireOnUpdate(employee);
