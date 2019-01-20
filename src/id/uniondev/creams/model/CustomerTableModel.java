@@ -28,7 +28,7 @@ public class CustomerTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 5;
+        return 4;
     }
 
     public boolean add(Customer c) {
@@ -63,10 +63,9 @@ public class CustomerTableModel extends AbstractTableModel {
     public String getColumnName(int column) {
         switch(column) {
             case 0 : return "Id";
-            case 1 : return "Username";
-            case 2 : return "Customer Name";
-            case 3 : return "Phone Number";
-            case 4 : return "Status";
+            case 1 : return "Customer Name";
+            case 2 : return "Phone Number";
+            case 3 : return "Status";
             default : return null;
         }
     }
@@ -75,10 +74,9 @@ public class CustomerTableModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch(columnIndex) {
             case 0 : return list.get(rowIndex).getId_customer();
-            case 1 : return list.get(rowIndex).getUsername();
-            case 2 : return list.get(rowIndex).getCustomer_name();
-            case 3 : return list.get(rowIndex).getPhone_number();
-            case 4 : return list.get(rowIndex).getStatus();
+            case 1 : return list.get(rowIndex).getCustomer_name();
+            case 2 : return list.get(rowIndex).getPhone_number();
+            case 3 : return list.get(rowIndex).getStatus();
             default : return null;
         }
     }

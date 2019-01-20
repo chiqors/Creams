@@ -19,6 +19,7 @@ public interface EmployeeDao {
     public void deleteEmployee(Integer id) throws EmployeeException;
     
     public Employee getEmployee(Integer id) throws EmployeeException;
+    public Employee getEmployee(String username, String password) throws EmployeeException;
     public Employee getEmployee(String employee_name) throws EmployeeException;
     public List<Employee> selectAllEmployee() throws EmployeeException;
 }

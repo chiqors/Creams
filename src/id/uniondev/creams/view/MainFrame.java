@@ -22,6 +22,7 @@ import id.uniondev.creams.service.CustomerDao;
 import id.uniondev.creams.service.EmployeeDao;
 import java.awt.Color;
 import java.sql.SQLException;
+import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
@@ -87,6 +88,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         backGround = new javax.swing.JPanel();
         headView = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
+        lblHeaderName = new javax.swing.JLabel();
         panelView = new javax.swing.JPanel();
         panelHomeView = new javax.swing.JPanel();
         btnFormSubmitPulsaHome = new javax.swing.JButton();
@@ -217,12 +219,8 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         panelManageView = new javax.swing.JPanel();
         btnEmployeeView = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
-        btnCashView = new javax.swing.JPanel();
-        jLabel20 = new javax.swing.JLabel();
         btnCustomerView = new javax.swing.JPanel();
         jLabel47 = new javax.swing.JLabel();
-        btnProviderView = new javax.swing.JPanel();
-        jLabel52 = new javax.swing.JLabel();
         panelManageEmployeeView = new javax.swing.JPanel();
         lblHeaderEmployee = new javax.swing.JLabel();
         btnFormEmployeeDelete = new javax.swing.JButton();
@@ -259,16 +257,12 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         lblHeaderFormEmployee1 = new javax.swing.JLabel();
         lblFormIdEmployee1 = new javax.swing.JLabel();
         txtId_customer = new javax.swing.JTextField();
-        lblFormPassword1 = new javax.swing.JLabel();
-        txtCustomerPassword = new javax.swing.JTextField();
         lblEmployee_name1 = new javax.swing.JLabel();
         txtCustomer_name = new javax.swing.JTextField();
         lblRole1 = new javax.swing.JLabel();
         txtCustomerPhoneNumber = new javax.swing.JTextField();
         btnBacktoManageCustomer = new javax.swing.JPanel();
         jLabel54 = new javax.swing.JLabel();
-        lblFormUsername1 = new javax.swing.JLabel();
-        txtCustomerUsername = new javax.swing.JTextField();
         btnFormCustomerCreate = new javax.swing.JButton();
         btnFormCustomerUpdate = new javax.swing.JButton();
         btnFormCustomerReset = new javax.swing.JButton();
@@ -307,7 +301,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         jRadioButtonMenuItem1.setText("jRadioButtonMenuItem1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("APLIKASI TES CREAMS");
+        setTitle("Creams - Your Management App");
         setLocationByPlatform(true);
 
         backGround.setBackground(new java.awt.Color(0, 0, 0));
@@ -317,7 +311,11 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setText("WELCOME ADMIN");
+        jLabel9.setText("WELCOME");
+
+        lblHeaderName.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
+        lblHeaderName.setForeground(new java.awt.Color(255, 255, 255));
+        lblHeaderName.setText("-");
 
         javax.swing.GroupLayout headViewLayout = new javax.swing.GroupLayout(headView);
         headView.setLayout(headViewLayout);
@@ -325,14 +323,18 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
             headViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(headViewLayout.createSequentialGroup()
                 .addGap(34, 34, 34)
-                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(553, Short.MAX_VALUE))
+                .addComponent(jLabel9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblHeaderName)
+                .addContainerGap(632, Short.MAX_VALUE))
         );
         headViewLayout.setVerticalGroup(
             headViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(headViewLayout.createSequentialGroup()
                 .addGap(23, 23, 23)
-                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(headViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblHeaderName))
                 .addContainerGap(37, Short.MAX_VALUE))
         );
 
@@ -1550,38 +1552,6 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
                 .addContainerGap())
         );
 
-        btnCashView.setBackground(new java.awt.Color(153, 0, 153));
-        btnCashView.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnCashView.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnCashViewMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnCashViewMouseExited(evt);
-            }
-        });
-
-        jLabel20.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel20.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel20.setText("Cash");
-
-        javax.swing.GroupLayout btnCashViewLayout = new javax.swing.GroupLayout(btnCashView);
-        btnCashView.setLayout(btnCashViewLayout);
-        btnCashViewLayout.setHorizontalGroup(
-            btnCashViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, btnCashViewLayout.createSequentialGroup()
-                .addContainerGap(67, Short.MAX_VALUE)
-                .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40))
-        );
-        btnCashViewLayout.setVerticalGroup(
-            btnCashViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, btnCashViewLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel20, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
         btnCustomerView.setBackground(new java.awt.Color(153, 0, 153));
         btnCustomerView.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnCustomerView.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1617,65 +1587,25 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
                 .addContainerGap())
         );
 
-        btnProviderView.setBackground(new java.awt.Color(153, 0, 153));
-        btnProviderView.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnProviderView.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnProviderViewMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnProviderViewMouseExited(evt);
-            }
-        });
-
-        jLabel52.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel52.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel52.setText("Provider");
-
-        javax.swing.GroupLayout btnProviderViewLayout = new javax.swing.GroupLayout(btnProviderView);
-        btnProviderView.setLayout(btnProviderViewLayout);
-        btnProviderViewLayout.setHorizontalGroup(
-            btnProviderViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, btnProviderViewLayout.createSequentialGroup()
-                .addContainerGap(54, Short.MAX_VALUE)
-                .addComponent(jLabel52, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(53, 53, 53))
-        );
-        btnProviderViewLayout.setVerticalGroup(
-            btnProviderViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, btnProviderViewLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel52, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
         javax.swing.GroupLayout panelManageViewLayout = new javax.swing.GroupLayout(panelManageView);
         panelManageView.setLayout(panelManageViewLayout);
         panelManageViewLayout.setHorizontalGroup(
             panelManageViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelManageViewLayout.createSequentialGroup()
-                .addGap(121, 121, 121)
+            .addGroup(panelManageViewLayout.createSequentialGroup()
+                .addGap(176, 176, 176)
                 .addComponent(btnEmployeeView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
-                .addGroup(panelManageViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnCashView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(panelManageViewLayout.createSequentialGroup()
-                        .addComponent(btnCustomerView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(45, 45, 45)
-                        .addComponent(btnProviderView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(62, 62, 62))
+                .addComponent(btnCustomerView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(221, 221, 221))
         );
         panelManageViewLayout.setVerticalGroup(
             panelManageViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelManageViewLayout.createSequentialGroup()
-                .addGap(89, 89, 89)
+                .addGap(199, 199, 199)
                 .addGroup(panelManageViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnCustomerView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEmployeeView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnProviderView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(29, 29, 29)
-                .addComponent(btnCashView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(238, Short.MAX_VALUE))
+                    .addComponent(btnEmployeeView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(204, Short.MAX_VALUE))
         );
 
         panelView.add(panelManageView, "card12");
@@ -2047,10 +1977,6 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
 
         txtId_customer.setEditable(false);
 
-        lblFormPassword1.setForeground(new java.awt.Color(255, 255, 255));
-        lblFormPassword1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblFormPassword1.setText("Password");
-
         lblEmployee_name1.setForeground(new java.awt.Color(255, 255, 255));
         lblEmployee_name1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblEmployee_name1.setText("Full Name");
@@ -2094,10 +2020,6 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        lblFormUsername1.setForeground(new java.awt.Color(255, 255, 255));
-        lblFormUsername1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblFormUsername1.setText("Username");
-
         btnFormCustomerCreate.setText("Create");
         btnFormCustomerCreate.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -2139,7 +2061,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         panelFormCustomerView.setLayout(panelFormCustomerViewLayout);
         panelFormCustomerViewLayout.setHorizontalGroup(
             panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelFormCustomerViewLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFormCustomerViewLayout.createSequentialGroup()
                 .addGap(37, 37, 37)
                 .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelFormCustomerViewLayout.createSequentialGroup()
@@ -2148,27 +2070,20 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
                             .addComponent(lblHeaderFormEmployee1))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(panelFormCustomerViewLayout.createSequentialGroup()
-                        .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelFormCustomerViewLayout.createSequentialGroup()
-                                .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(lblFormPassword1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(lblEmployee_name1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(lblFormUsername1))
-                                    .addComponent(lblFormIdEmployee1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(lblFormIdEmployee1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(28, 28, 28))
-                            .addGroup(panelFormCustomerViewLayout.createSequentialGroup()
-                                .addComponent(lblRole1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(18, 18, 18))
-                            .addGroup(panelFormCustomerViewLayout.createSequentialGroup()
-                                .addComponent(lblRole2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFormCustomerViewLayout.createSequentialGroup()
+                                .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(panelFormCustomerViewLayout.createSequentialGroup()
+                                        .addComponent(lblEmployee_name1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(10, 10, 10))
+                                    .addComponent(lblRole1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblRole2, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)))
                         .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtId_customer)
-                            .addComponent(txtCustomer_name)
-                            .addComponent(txtCustomerUsername)
-                            .addComponent(txtCustomerPassword)
-                            .addComponent(txtCustomerPhoneNumber)
                             .addGroup(panelFormCustomerViewLayout.createSequentialGroup()
                                 .addComponent(btnFormCustomerReset, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(262, 262, 262)
@@ -2176,9 +2091,11 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
                                 .addGap(18, 18, 18)
                                 .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnFormCustomerUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE))
-                            .addComponent(txtCustomerStatus))))
-                .addGap(59, 59, 59))
+                                .addComponent(btnFormCustomerUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE))
+                            .addComponent(txtCustomerPhoneNumber)
+                            .addComponent(txtCustomer_name, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtCustomerStatus, javax.swing.GroupLayout.Alignment.TRAILING))))
+                .addGap(32, 32, 32))
         );
         panelFormCustomerViewLayout.setVerticalGroup(
             panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2191,15 +2108,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
                 .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtId_customer, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblFormIdEmployee1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtCustomerUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblFormUsername1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtCustomerPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblFormPassword1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtCustomer_name, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblEmployee_name1))
@@ -2211,7 +2120,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
                 .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtCustomerStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblRole2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
                 .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnFormCustomerCreate, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2643,6 +2552,14 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    public JLabel getLblHeaderName() {
+        return lblHeaderName;
+    }
+
+    public void setLblHeaderName(JLabel lblHeaderName) {
+        this.lblHeaderName = lblHeaderName;
+    }
+    
     private void btnHomeMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHomeMenuMouseClicked
         panelView.removeAll();
         panelView.repaint();
@@ -3086,16 +3003,6 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         btnEmployeeView.setBackground(sidemenu_exited);
     }//GEN-LAST:event_btnEmployeeViewMouseExited
 
-    private void btnCashViewMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCashViewMouseEntered
-        // TODO add your handling code here:
-        btnCashView.setBackground(sidemenu_entered);
-    }//GEN-LAST:event_btnCashViewMouseEntered
-
-    private void btnCashViewMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCashViewMouseExited
-        // TODO add your handling code here:
-        btnCashView.setBackground(sidemenu_exited);
-    }//GEN-LAST:event_btnCashViewMouseExited
-
     private void btnFormEmployeeResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFormEmployeeResetActionPerformed
         // TODO add your handling code here:
         employeeController.resetEmployee(this);
@@ -3136,10 +3043,6 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     public JTable getTblCustomer() {
         return tblCustomer;
     }
-    
-    public JTextField getTxtCustomerPassword() {
-        return txtCustomerPassword;
-    }
 
     public JTextField getTxtCustomerPhoneNumber() {
         return txtCustomerPhoneNumber;
@@ -3147,10 +3050,6 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
 
     public JTextField getTxtCustomerStatus() {
         return txtCustomerStatus;
-    }
-
-    public JTextField getTxtCustomerUsername() {
-        return txtCustomerUsername;
     }
 
     public JTextField getTxtCustomer_name() {
@@ -3182,16 +3081,6 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         // TODO add your handling code here:
         btnCustomerView.setBackground(sidemenu_exited);
     }//GEN-LAST:event_btnCustomerViewMouseExited
-
-    private void btnProviderViewMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnProviderViewMouseEntered
-        // TODO add your handling code here:
-        btnProviderView.setBackground(sidemenu_entered);
-    }//GEN-LAST:event_btnProviderViewMouseEntered
-
-    private void btnProviderViewMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnProviderViewMouseExited
-        // TODO add your handling code here:
-        btnProviderView.setBackground(sidemenu_exited);
-    }//GEN-LAST:event_btnProviderViewMouseExited
 
     private void btnFormCustomerDeleteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnFormCustomerDeleteMouseClicked
         // TODO add your handling code here:
@@ -3314,7 +3203,6 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JButton btnBackReStockPerdana;
     private javax.swing.JPanel btnBacktoManageCustomer;
     private javax.swing.JPanel btnBacktoManageEmployee;
-    private javax.swing.JPanel btnCashView;
     private javax.swing.JButton btnCreateTagihan;
     private javax.swing.JPanel btnCustomerView;
     private javax.swing.JButton btnDeleteStock;
@@ -3340,7 +3228,6 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JButton btnNextReStock;
     private javax.swing.JPanel btnPendapatanMenu;
     private javax.swing.JPanel btnPlnPdamMenu;
-    private javax.swing.JPanel btnProviderView;
     private javax.swing.JPanel btnPulsaMenu;
     private javax.swing.JButton btnReStock;
     private javax.swing.JButton btnReStockKuotaPulsa;
@@ -3389,7 +3276,6 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
@@ -3424,7 +3310,6 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel50;
     private javax.swing.JLabel jLabel51;
-    private javax.swing.JLabel jLabel52;
     private javax.swing.JLabel jLabel53;
     private javax.swing.JLabel jLabel54;
     private javax.swing.JLabel jLabel6;
@@ -3472,13 +3357,12 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JLabel lblFormIdEmployee;
     private javax.swing.JLabel lblFormIdEmployee1;
     private javax.swing.JLabel lblFormPassword;
-    private javax.swing.JLabel lblFormPassword1;
     private javax.swing.JLabel lblFormUsername;
-    private javax.swing.JLabel lblFormUsername1;
     private javax.swing.JLabel lblHeaderCustomer;
     private javax.swing.JLabel lblHeaderEmployee;
     private javax.swing.JLabel lblHeaderFormEmployee;
     private javax.swing.JLabel lblHeaderFormEmployee1;
+    private javax.swing.JLabel lblHeaderName;
     private javax.swing.JLabel lblRole;
     private javax.swing.JLabel lblRole1;
     private javax.swing.JLabel lblRole2;
@@ -3506,10 +3390,8 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JTable tblEmployee;
     private javax.swing.JTable tblReStockPerdana;
     private javax.swing.JTable tblStock;
-    private javax.swing.JTextField txtCustomerPassword;
     private javax.swing.JTextField txtCustomerPhoneNumber;
     private javax.swing.JTextField txtCustomerStatus;
-    private javax.swing.JTextField txtCustomerUsername;
     private javax.swing.JTextField txtCustomer_name;
     private javax.swing.JTextField txtEmployee_name;
     private javax.swing.JTextField txtFormNomorPulsaHome;
@@ -3536,6 +3418,11 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         
         employeeTableModel.setList(employeedao.selectAllEmployee());
         customerTableModel.setList(customerdao.selectAllCustomer());
+    }
+    
+    @Override
+    public void onSignin(EmployeeModel model) {
+        
     }
     
     @Override
@@ -3566,7 +3453,6 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     @Override
     public void onChange(CustomerModel model) {
         txtId_customer.setText(model.getId_customer()+ "");
-        txtCustomerUsername.setText(model.getUsername());
         txtCustomer_name.setText(model.getCustomer_name());
         txtCustomerPhoneNumber.setText(model.getPhone_number());
         txtCustomerStatus.setText(model.getStatus());
@@ -3603,7 +3489,6 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         try {
             Customer cus_model = customerTableModel.get(tblCustomer.getSelectedRow());
             txtId_customer.setText(cus_model.getId_customer()+ "");
-            txtCustomerUsername.setText(cus_model.getUsername());
             txtCustomer_name.setText(cus_model.getCustomer_name());
             txtCustomerPhoneNumber.setText(cus_model.getPhone_number());
             txtCustomerStatus.setText(cus_model.getStatus());

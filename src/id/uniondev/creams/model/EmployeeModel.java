@@ -84,6 +84,12 @@ public class EmployeeModel {
         }
     }
     
+    protected void fireOnSignin(Employee employee) {
+        if (listener != null) {
+           listener.onSignin(this);
+        }
+    }
+    
     protected void fireOnInsert(Employee employee) {
         if (listener != null) {
            listener.onInsert(employee);
@@ -100,6 +106,16 @@ public class EmployeeModel {
         if (listener != null) {
            listener.onDelete(employee);
         }
+    }
+    
+    public void signinEmployee() throws SQLException, EmployeeException {
+        EmployeeDao dao = CreamsDatabase.getEmployeeDao();
+        Employee employee = new Employee();
+        employee.setUsername(username);
+        employee.setPassword(password);
+        
+        dao.getEmployee(username,password);
+        fireOnSignin(employee);
     }
     
     public void insertEmployee() throws SQLException, EmployeeException {
@@ -140,5 +156,10 @@ public class EmployeeModel {
         setPassword("");
         setEmployee_name("");
         setRole("");
+    }
+    
+    public void signinresetEmployee() {
+        setUsername("");
+        setPassword("");
     }
 }

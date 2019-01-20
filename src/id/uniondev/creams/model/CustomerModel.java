@@ -18,8 +18,6 @@ import java.sql.SQLException;
  */
 public class CustomerModel {
     private Integer id_customer;
-    private String username;
-    private String password;
     private String customer_name;
     private String phone_number;
     private String status;
@@ -40,22 +38,6 @@ public class CustomerModel {
 
     public void setId_customer(Integer id_customer) {
         this.id_customer = id_customer;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getCustomer_name() {
@@ -109,8 +91,6 @@ public class CustomerModel {
     public void insertCustomer() throws SQLException, CustomerException {
         CustomerDao dao = CreamsDatabase.getCustomerDao();
         Customer customer = new Customer();
-        customer.setUsername(username);
-        customer.setPassword(password);
         customer.setCustomer_name(customer_name);
         customer.setPhone_number(phone_number);
         customer.setStatus(status);
@@ -122,8 +102,6 @@ public class CustomerModel {
     public void updateCustomer() throws SQLException, CustomerException {
         CustomerDao dao = CreamsDatabase.getCustomerDao();
         Customer customer = new Customer();
-        customer.setUsername(username);
-        customer.setPassword(password);
         customer.setCustomer_name(customer_name);
         customer.setPhone_number(phone_number);
         customer.setStatus(status);
@@ -142,8 +120,6 @@ public class CustomerModel {
     
     public void resetCustomer() {
         setId_customer(0);
-        setUsername("");
-        setPassword("");
         setCustomer_name("");
         setStatus("");
     }

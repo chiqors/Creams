@@ -13,8 +13,6 @@ import java.util.Objects;
  */
 public class Customer {
     private Integer id_customer;
-    private String username;
-    private String password;
     private String customer_name;
     private String phone_number;
     private String status;
@@ -27,8 +25,6 @@ public class Customer {
     public int hashCode() {
         int hash = 5;
         hash = 97 * hash + Objects.hashCode(this.id_customer);
-        hash = 97 * hash + Objects.hashCode(this.username);
-        hash = 97 * hash + Objects.hashCode(this.password);
         hash = 97 * hash + Objects.hashCode(this.customer_name);
         hash = 97 * hash + Objects.hashCode(this.phone_number);
         hash = 97 * hash + Objects.hashCode(this.status);
@@ -47,12 +43,6 @@ public class Customer {
             return false;
         }
         final Customer other = (Customer) obj;
-        if (!Objects.equals(this.username, other.username)) {
-            return false;
-        }
-        if (!Objects.equals(this.password, other.password)) {
-            return false;
-        }
         if (!Objects.equals(this.customer_name, other.customer_name)) {
             return false;
         }
@@ -70,22 +60,6 @@ public class Customer {
     
     public void setId_customer(Integer id_customer) {
         this.id_customer = id_customer;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getCustomer_name() {

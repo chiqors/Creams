@@ -23,10 +23,10 @@ import java.util.List;
 public class CustomerDaoImpl implements CustomerDao {
     private Connection connection;
     
-    private final String insertCustomer = "INSERT INTO customer(username,"
-            + "password,customer_name,phone_number,status) VALUES (?,?,?,?,?)";
-    private final String updateCustomer = "UPDATE customer SET username = ?, password = ?, "
-            + "customer_name = ?, phone_number = ?, status = ? WHERE id_customer = ?";
+    private final String insertCustomer = "INSERT INTO customer(customer_name,"
+            + "phone_number,status) VALUES (?,?,?)";
+    private final String updateCustomer = "UPDATE customer SET customer_name = ?, "
+            + "phone_number = ?, status = ? WHERE id_customer = ?";
     private final String deleteCustomer = "DELETE FROM customer WHERE id_customer = ?";
     private final String getById = "SELECT * FROM customer WHERE id_customer = ?";
     private final String getByPhoneNumber = "SELECT * FROM customer WHERE "
@@ -43,11 +43,9 @@ public class CustomerDaoImpl implements CustomerDao {
         try {
             connection.setAutoCommit(false);
             statement = connection.prepareStatement(insertCustomer, Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, customer.getUsername());
-            statement.setString(2, customer.getPassword());
-            statement.setString(3, customer.getCustomer_name());
-            statement.setString(4, customer.getPhone_number());
-            statement.setString(5, customer.getStatus());
+            statement.setString(1, customer.getCustomer_name());
+            statement.setString(2, customer.getPhone_number());
+            statement.setString(3, customer.getStatus());
             statement.executeUpdate();
             ResultSet result = statement.getGeneratedKeys();
             if (result.next()) {
@@ -80,12 +78,10 @@ public class CustomerDaoImpl implements CustomerDao {
         try {
             connection.setAutoCommit(false);
             statement = connection.prepareStatement(updateCustomer);
-            statement.setString(1, customer.getUsername());
-            statement.setString(2, customer.getPassword());
-            statement.setString(3, customer.getCustomer_name());
-            statement.setString(4, customer.getPhone_number());
-            statement.setString(5, customer.getStatus());
-            statement.setInt(6, customer.getId_customer());
+            statement.setString(1, customer.getCustomer_name());
+            statement.setString(2, customer.getPhone_number());
+            statement.setString(3, customer.getStatus());
+            statement.setInt(4, customer.getId_customer());
             statement.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
@@ -149,8 +145,6 @@ public class CustomerDaoImpl implements CustomerDao {
             if (result.next()) {
                 customer = new Customer();
                 customer.setId_customer(result.getInt("ID_CUSTOMER"));
-                customer.setUsername(result.getString("USERNAME"));
-                customer.setPassword(result.getString("PASSWORD"));
                 customer.setCustomer_name(result.getString("CUSTOMER_NAME"));
                 customer.setPhone_number(result.getString("PHONE_NUMBER"));
                 customer.setStatus(result.getString("STATUS"));
@@ -191,10 +185,9 @@ public class CustomerDaoImpl implements CustomerDao {
             if (result.next()) {
                 customer = new Customer();
                 customer.setId_customer(result.getInt("ID_CUSTOMER"));
-                customer.setUsername(result.getString("USERNAME"));
-                customer.setPassword(result.getString("PASSWORD"));
                 customer.setCustomer_name(result.getString("CUSTOMER_NAME"));
-                customer.setPhone_number(result.getString("STATUS"));
+                customer.setPhone_number(result.getString("PHONE_NUMBER"));
+                customer.setStatus(result.getString("STATUS"));
             } else {
                 throw new CustomerException("Customer with name " + customer_name + " could not be find");
             }
@@ -232,11 +225,9 @@ public class CustomerDaoImpl implements CustomerDao {
             while (result.next()) {
                 customer = new Customer();
                 customer.setId_customer(result.getInt("ID_CUSTOMER"));
-                customer.setUsername(result.getString("USERNAME"));
-                customer.setPassword(result.getString("PASSWORD"));
                 customer.setCustomer_name(result.getString("CUSTOMER_NAME"));
                 customer.setPhone_number(result.getString("PHONE_NUMBER"));
-                customer.setPhone_number(result.getString("STATUS"));
+                customer.setStatus(result.getString("STATUS"));
                 list.add(customer);
             }
             connection.commit();

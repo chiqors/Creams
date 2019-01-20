@@ -14,6 +14,7 @@ import id.uniondev.creams.model.EmployeeModel;
  */
 public interface EmployeeListener {
     public void onChange(EmployeeModel model);
+    public void onSignin(EmployeeModel model);
     public void onInsert(Employee employee);
     public void onUpdate(Employee employee);
     public void onDelete(Employee employee);

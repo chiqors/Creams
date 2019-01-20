@@ -32,6 +32,8 @@ public class EmployeeDaoImpl implements EmployeeDao {
             + "employee_name = ?, role = ? WHERE id_employee = ?";
     private final String deleteEmployee = "DELETE FROM employee WHERE id_employee = ?";
     private final String getById = "SELECT * FROM employee WHERE id_employee = ?";
+    private final String getBySignin = "SELECT * FROM employee WHERE "
+            + "username = ? AND password = ?";
     private final String getByEmployee_name = "SELECT * FROM employee WHERE "
             + "employee_name = ?";
     private final String selectAll = "SELECT * FROM employee";
@@ -240,6 +242,48 @@ public class EmployeeDaoImpl implements EmployeeDao {
             }
             connection.commit();
             return list;
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (Exception ex) {
+            }
+            throw new EmployeeException(e.getMessage());
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (Exception ex) {
+            }
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch(SQLException e) {
+                }
+            }
+        }
+    }
+
+    @Override
+    public Employee getEmployee(String username, String password) throws EmployeeException {
+        PreparedStatement statement = null;
+        try {
+            connection.setAutoCommit(false);
+            statement = connection.prepareStatement(getBySignin);
+            statement.setString(1, username);
+            statement.setString(2, password);
+            ResultSet result = statement.executeQuery();
+            Employee employee = null;
+            if (result.next()) {
+                employee = new Employee();
+                employee.setId_employee(result.getInt("ID_EMPLOYEE"));
+                employee.setUsername(result.getString("USERNAME"));
+                employee.setPassword(result.getString("PASSWORD"));
+                employee.setEmployee_name(result.getString("EMPLOYEE_NAME"));
+                employee.setRole(result.getString("ROLE"));
+            } else {
+                throw new EmployeeException("Your account is invalid. Please login back!");
+            }
+            connection.commit();
+            return employee;
         } catch (SQLException e) {
             try {
                 connection.rollback();

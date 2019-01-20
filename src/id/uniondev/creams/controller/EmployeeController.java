@@ -5,8 +5,13 @@
  */
 package id.uniondev.creams.controller;
 
+import id.uniondev.creams.error.EmployeeException;
 import id.uniondev.creams.model.EmployeeModel;
 import id.uniondev.creams.view.MainFrame;
+import id.uniondev.creams.view.SigninFrame;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -22,6 +27,33 @@ public class EmployeeController {
     
     public void resetEmployee(MainFrame frame) {
         model.resetEmployee();
+    }
+    
+    public void signinEmployee(SigninFrame signinframe) {
+        String username = signinframe.getTxtUsername().getText();
+        String password = signinframe.getTxtPassword().getText();
+        if (username.trim().equals("")) {
+            JOptionPane.showMessageDialog(signinframe, "Username still empty!");
+        } else if (password.trim().equals("")) {
+            JOptionPane.showMessageDialog(signinframe, "Password still empty");
+        } else {
+            model.setUsername(username);
+            model.setPassword(password);
+            try {
+                model.signinEmployee();
+                JOptionPane.showMessageDialog(signinframe, "Your account is successfully signed in!");
+                model.signinresetEmployee();
+                MainFrame main = new MainFrame();
+                main.getLblHeaderName().setText(signinframe.getTxtUsername().getText());
+                main.loadDatabase();
+                main.setVisible(true);
+                signinframe.setVisible(false);
+            } catch (Throwable throwable) {
+                JOptionPane.showMessageDialog(signinframe, new Object[]{
+                    "Error Signin appeared with message ", throwable.getMessage()
+                });
+            }
+        }
     }
     
     public void insertEmployee(MainFrame frame) {

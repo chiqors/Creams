@@ -5,26 +5,39 @@
  */
 package id.uniondev.creams.view;
 
+import id.uniondev.creams.controller.EmployeeController;
+import id.uniondev.creams.entity.Employee;
 import id.uniondev.creams.error.CustomerException;
 import id.uniondev.creams.error.EmployeeException;
+import id.uniondev.creams.event.EmployeeListener;
+import id.uniondev.creams.model.EmployeeModel;
 import java.awt.Color;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JCheckBox;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
 /**
  *
  * @author Geo Syah
  */
-public class SigninFrame extends javax.swing.JFrame {
+public class SigninFrame extends javax.swing.JFrame implements EmployeeListener {
 
     /**
-     * Creates new form LogIn
+     * Creates new form SignIn
      */
     
+    private EmployeeModel employeeModel;
+    private EmployeeController employeeController;
     
     public SigninFrame() {
         initComponents();
+        employeeModel = new EmployeeModel();
+        employeeModel.setListener(this);
+        employeeController = new EmployeeController();
+        employeeController.setModel(employeeModel);
     }
 
     /**
@@ -42,7 +55,7 @@ public class SigninFrame extends javax.swing.JFrame {
         txtUsername = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        chkLihat = new javax.swing.JCheckBox();
+        chkRemember = new javax.swing.JCheckBox();
         jLabel3 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         btnMasuk = new javax.swing.JPanel();
@@ -56,7 +69,7 @@ public class SigninFrame extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Sign In");
+        setTitle("Creams - Sign In");
         setResizable(false);
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -91,15 +104,15 @@ public class SigninFrame extends javax.swing.JFrame {
         jLabel1.setText("SIGN IN");
         jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 190, -1, -1));
 
-        chkLihat.setBackground(new java.awt.Color(92, 0, 122));
-        chkLihat.setForeground(new java.awt.Color(240, 240, 240));
-        chkLihat.setText("Remember me ?");
-        chkLihat.addActionListener(new java.awt.event.ActionListener() {
+        chkRemember.setBackground(new java.awt.Color(92, 0, 122));
+        chkRemember.setForeground(new java.awt.Color(240, 240, 240));
+        chkRemember.setText("Remember me ?");
+        chkRemember.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chkLihatActionPerformed(evt);
+                chkRememberActionPerformed(evt);
             }
         });
-        jPanel2.add(chkLihat, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 400, -1, -1));
+        jPanel2.add(chkRemember, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 400, -1, -1));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(240, 240, 240));
@@ -168,6 +181,11 @@ public class SigninFrame extends javax.swing.JFrame {
         txtPassword.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
         txtPassword.setForeground(new java.awt.Color(255, 255, 255));
         txtPassword.setBorder(null);
+        txtPassword.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtPasswordMouseClicked(evt);
+            }
+        });
         jPanel2.add(txtPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 360, 300, 30));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -209,22 +227,12 @@ public class SigninFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMasukMousePressed
 
     private void btnMasukMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMasukMouseClicked
-       MainFrame main = new MainFrame();
-        try {
-            main.loadDatabase();
-            main.setVisible(true);
-            this.setVisible(false);
-        } catch (SQLException ex) {
-        } catch (EmployeeException ex) {
-            Logger.getLogger(SigninFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (CustomerException ex) {
-            Logger.getLogger(SigninFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        employeeController.signinEmployee(this);
     }//GEN-LAST:event_btnMasukMouseClicked
 
-    private void chkLihatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkLihatActionPerformed
+    private void chkRememberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkRememberActionPerformed
 
-    }//GEN-LAST:event_chkLihatActionPerformed
+    }//GEN-LAST:event_chkRememberActionPerformed
 
     private void btnMasukMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMasukMouseEntered
         // TODO add your handling code here:
@@ -245,6 +253,11 @@ public class SigninFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         txtUsername.setText("");
     }//GEN-LAST:event_txtUsernameMouseClicked
+
+    private void txtPasswordMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtPasswordMouseClicked
+        // TODO add your handling code here:
+        txtPassword.setText("");
+    }//GEN-LAST:event_txtPasswordMouseClicked
 
     /**
      * @param args the command line arguments
@@ -290,7 +303,7 @@ public class SigninFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel btnMasuk;
-    private javax.swing.JCheckBox chkLihat;
+    private javax.swing.JCheckBox chkRemember;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -308,4 +321,41 @@ public class SigninFrame extends javax.swing.JFrame {
     private javax.swing.JPasswordField txtPassword;
     private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables
+    
+    @Override
+    public void onChange(EmployeeModel model) {
+        
+    }
+
+    public JCheckBox getChkRemember() {
+        return chkRemember;
+    }
+
+    public JPasswordField getTxtPassword() {
+        return txtPassword;
+    }
+
+    public JTextField getTxtUsername() {
+        return txtUsername;
+    }
+
+    @Override
+    public void onSignin(EmployeeModel model) {
+        
+    }
+
+    @Override
+    public void onInsert(Employee employee) {
+        
+    }
+
+    @Override
+    public void onUpdate(Employee employee) {
+        
+    }
+
+    @Override
+    public void onDelete(Employee employee) {
+        
+    }
 }
