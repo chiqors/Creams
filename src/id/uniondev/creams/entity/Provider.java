@@ -14,15 +14,15 @@ import java.util.Objects;
 public class Provider {
     private Integer id_provider;
     private String provider_name;
-    private String status;
-    private Integer balance;
+    private String phone_number;
+    private String balance;
 
     @Override
     public int hashCode() {
         int hash = 3;
         hash = 59 * hash + Objects.hashCode(this.id_provider);
         hash = 59 * hash + Objects.hashCode(this.provider_name);
-        hash = 59 * hash + Objects.hashCode(this.status);
+        hash = 59 * hash + Objects.hashCode(this.phone_number);
         hash = 59 * hash + Objects.hashCode(this.balance);
         return hash;
     }
@@ -42,10 +42,10 @@ public class Provider {
         if (!Objects.equals(this.provider_name, other.provider_name)) {
             return false;
         }
-        if (!Objects.equals(this.status, other.status)) {
+        if (!Objects.equals(this.balance, other.balance)) {
             return false;
         }
-        if (!Objects.equals(this.balance, other.balance)) {
+        if (!Objects.equals(this.phone_number, other.phone_number)) {
             return false;
         }
         if (!Objects.equals(this.id_provider, other.id_provider)) {
@@ -70,19 +70,21 @@ public class Provider {
         this.provider_name = provider_name;
     }
 
-    public String getStatus() {
-        return status;
+    public String getPhone_number() {
+        return phone_number;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setPhone_number(String phone_number) {
+        this.phone_number = phone_number;
     }
 
-    public Integer getBalance() {
+ 
+
+    public String getBalance() {
         return balance;
     }
 
-    public void setBalance(Integer balance) {
+    public void setBalance(String balance) {
         this.balance = balance;
     }
     

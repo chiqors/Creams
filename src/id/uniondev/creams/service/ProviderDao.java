@@ -15,8 +15,6 @@ import java.util.List;
  */
 public interface ProviderDao {
     public void insertProvider(Provider provider) throws ProviderException;
-    public void updateProvider(Provider provider) throws ProviderException;
-    public void deleteProvider(Integer id) throws ProviderException;
     
     public Provider getProvider(Integer id) throws ProviderException;
     public Provider getProvider(String provider_name) throws ProviderException;

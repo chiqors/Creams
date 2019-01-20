@@ -44,8 +44,8 @@ public class ProviderDaoImpl implements ProviderDao {
             connection.setAutoCommit(false);
             statement = connection.prepareStatement(insertProvider, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, provider.getProvider_name());
-            statement.setString(2, provider.getStatus());
-            statement.setInt(3, provider.getBalance());
+            statement.setString(2, provider.getPhone_number());
+            statement.setString(3, provider.getBalance());
             statement.executeUpdate();
             ResultSet result = statement.getGeneratedKeys();
             if (result.next()) {
@@ -72,66 +72,7 @@ public class ProviderDaoImpl implements ProviderDao {
         }
     }
 
-    @Override
-    public void updateProvider(Provider provider) throws ProviderException {
-        PreparedStatement statement = null;
-        try {
-            connection.setAutoCommit(false);
-            statement = connection.prepareStatement(updateProvider);
-            statement.setString(1, provider.getProvider_name());
-            statement.setString(2, provider.getStatus());
-            statement.setInt(3, provider.getBalance());
-            statement.setInt(4, provider.getId_provider());
-            statement.executeUpdate();
-            connection.commit();
-        } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-            }
-            throw new ProviderException(e.getMessage());
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException ex) {
-            }
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch(SQLException e) {
-                }
-            }
-        }
-    }
-
-    @Override
-    public void deleteProvider(Integer id) throws ProviderException {
-        PreparedStatement statement = null;
-        try {
-            connection.setAutoCommit(false);
-            statement = connection.prepareStatement(deleteProvider);
-            statement.setInt(1, id);
-            statement.executeUpdate();
-            connection.commit();
-        } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (Exception ex) {
-            }
-            throw new ProviderException(e.getMessage());
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (Exception ex) {
-            }
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch(SQLException e) {
-                }
-            }
-        }
-    }
+   
 
     @Override
     public Provider getProvider(Integer id) throws ProviderException {
@@ -146,8 +87,8 @@ public class ProviderDaoImpl implements ProviderDao {
                 provider = new Provider();
                 provider.setId_provider(result.getInt("ID_PROVIDER"));
                 provider.setProvider_name(result.getString("PROVIDER_NAME"));
-                provider.setStatus(result.getString("STATUS"));
-                provider.setBalance(result.getInt("BALANCE"));
+                provider.setPhone_number(result.getString("STATUS"));
+                provider.setBalance(result.getString("BALANCE"));
             } else {
                 throw new ProviderException("Provider with id " + id + " could not be find");
             }
@@ -186,8 +127,8 @@ public class ProviderDaoImpl implements ProviderDao {
                 provider = new Provider();
                 provider.setId_provider(result.getInt("ID_PROVIDER"));
                 provider.setProvider_name(result.getString("PROVIDER_NAME"));
-                provider.setStatus(result.getString("STATUS"));
-                provider.setBalance(result.getInt("BALANCE"));
+                provider.setPhone_number(result.getString("STATUS"));
+                provider.setBalance(result.getString("BALANCE"));
             } else {
                 throw new ProviderException("Provider with name " + provider_name + " could not be find");
             }
@@ -226,8 +167,8 @@ public class ProviderDaoImpl implements ProviderDao {
                 provider = new Provider();
                 provider.setId_provider(result.getInt("ID_PROVIDER"));
                 provider.setProvider_name(result.getString("PROVIDER_NAME"));
-                provider.setStatus(result.getString("STATUS"));
-                provider.setBalance(result.getInt("BALANCE"));
+                provider.setPhone_number(result.getString("STATUS"));
+                provider.setBalance(result.getString("BALANCE"));
                 list.add(provider);
             }
             connection.commit();

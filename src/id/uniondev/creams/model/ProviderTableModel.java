@@ -15,14 +15,18 @@ import javax.swing.table.AbstractTableModel;
  * @author ACER
  */
 public class ProviderTableModel extends AbstractTableModel {
+    
     private List<Provider> list = new ArrayList<Provider>();
 
     public void setList(List<Provider> list) {
         this.list = list;
     }
     
+    
+            
     @Override
     public int getRowCount() {
+        
         return list.size();
     }
 
@@ -31,11 +35,11 @@ public class ProviderTableModel extends AbstractTableModel {
         return 3;
     }
 
-    public boolean add(Provider p) {
+    public boolean add(Provider e) {
         try {
-            return list.add(p);
+            return list.add(e);
         } finally {
-            fireTableRowsInserted(getRowCount()-1, getColumnCount()-1);
+            fireTableRowsInserted(getRowCount()-1, getRowCount()-1);
         }
     }
 
@@ -49,35 +53,48 @@ public class ProviderTableModel extends AbstractTableModel {
         } finally {
             fireTableRowsUpdated(index, index);
         }
+        
+        
     }
 
     public Provider remove(int index) {
         try {
-            return list.remove(index);
+            
+        return list.remove(index);
         } finally {
             fireTableRowsDeleted(index, index);
         }
     }
 
+    
+    
     @Override
     public String getColumnName(int column) {
-        switch(column) {
-            case 0 : return "Id";
-            case 1 : return "Provider Name";
-            case 2 : return "Status";
-            case 3 : return "Balance";
-            default : return null;
+         //To change body of generated methods, choose Tools | Templates.
+        switch (column){
+            case 1:
+                return "PROVIDER_NAME";
+            case 2:
+                return "PHONE_NUMBER";
+            case 3:
+                return "BALANCE";
+            default :
+                return null;
+        }
+    }
+
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        switch (columnIndex){
+            case 1:
+                return list.get(rowIndex).getProvider_name();
+            case 2:
+                return list.get(rowIndex).getPhone_number();
+            case 3:
+                return list.get(rowIndex).getBalance();
+            default :
+                return null;
         }
     }
     
-    @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
-        switch(columnIndex) {
-            case 0 : return list.get(rowIndex).getId_provider();
-            case 1 : return list.get(rowIndex).getProvider_name();
-            case 2 : return list.get(rowIndex).getStatus();
-            case 3 : return list.get(rowIndex).getBalance();
-            default : return null;
-        }
-    }
 }

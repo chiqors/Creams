@@ -7,6 +7,7 @@ package id.uniondev.creams.view;
 
 import id.uniondev.creams.controller.CustomerController;
 import id.uniondev.creams.controller.EmployeeController;
+import id.uniondev.creams.controller.ProviderController;
 import id.uniondev.creams.database.CreamsDatabase;
 import id.uniondev.creams.entity.Customer;
 import id.uniondev.creams.entity.Employee;
@@ -14,15 +15,20 @@ import id.uniondev.creams.error.CustomerException;
 import id.uniondev.creams.error.EmployeeException;
 import id.uniondev.creams.event.CustomerListener;
 import id.uniondev.creams.event.EmployeeListener;
+import id.uniondev.creams.event.ProviderListener;
 import id.uniondev.creams.model.CustomerModel;
 import id.uniondev.creams.model.CustomerTableModel;
 import id.uniondev.creams.model.EmployeeModel;
 import id.uniondev.creams.model.EmployeeTableModel;
+import id.uniondev.creams.model.ProviderModel;
+import id.uniondev.creams.model.ProviderTableModel;
 import id.uniondev.creams.service.CustomerDao;
 import id.uniondev.creams.service.EmployeeDao;
 import java.awt.Color;
 import java.sql.SQLException;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
@@ -45,12 +51,17 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     
     private EmployeeTableModel employeeTableModel;
     private CustomerTableModel customerTableModel;
+    private ProviderTableModel providerTableModel;
     
     private EmployeeModel employeeModel;
     private CustomerModel customerModel;
+    private ProviderModel providerModel;
     
     private EmployeeController employeeController;
     private CustomerController customerController;
+    private ProviderController providerController;
+    
+    
     
     public MainFrame() {
         employeeTableModel = new EmployeeTableModel();
@@ -65,6 +76,13 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         customerController = new CustomerController();
         customerController.setModel(customerModel);
         
+        providerTableModel = new ProviderTableModel();
+        providerModel = new ProviderModel();
+        providerModel.setListener((ProviderListener) this);
+        providerController = new ProviderController();
+        providerController.setModel(providerModel);
+        
+        
         initComponents();
         
         tblEmployee.getSelectionModel().addListSelectionListener(this);
@@ -72,6 +90,32 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         
         tblCustomer.getSelectionModel().addListSelectionListener(this);
         tblCustomer.setModel(customerTableModel);
+    }
+
+    public JTable getTabelPulsa() {
+        return tabelPulsa;
+    }
+
+    public void setTabelPulsa(JTable tabelPulsa) {
+        this.tabelPulsa = tabelPulsa;
+    }
+
+    
+
+    public JComboBox getCbBesarPulsaHome() {
+        return cbBesarPulsaHome;
+    }
+
+    public JComboBox getCbProviderPulsaHome() {
+        return cbProviderPulsaHome;
+    }
+
+    public JTextField getTxtFormNomorPulsaHome() {
+        return txtFormNomorPulsaHome;
+    }
+
+    public JTextField getTxtIsiPulsaHome() {
+        return txtIsiPulsaHome;
     }
     
     /**
@@ -178,7 +222,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         btnReStockKuotaTagihan = new javax.swing.JButton();
         panelPulsaView = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
-        jTable5 = new javax.swing.JTable();
+        tabelPulsa = new javax.swing.JTable();
         jScrollBar5 = new javax.swing.JScrollBar();
         jScrollPane6 = new javax.swing.JScrollPane();
         jTable6 = new javax.swing.JTable();
@@ -346,6 +390,11 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         panelHomeView.setBackground(new java.awt.Color(0, 0, 0));
 
         btnFormSubmitPulsaHome.setText("SAVE");
+        btnFormSubmitPulsaHome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFormSubmitPulsaHomeActionPerformed(evt);
+            }
+        });
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(240, 240, 240));
@@ -374,6 +423,20 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
 
         cbBesarPulsaHome.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
         cbBesarPulsaHome.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "--BESAR--", "5", "10", "20", "25", "50", "100" }));
+        cbBesarPulsaHome.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+                cbBesarPulsaHomePopupMenuWillBecomeInvisible(evt);
+            }
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+        });
+        cbBesarPulsaHome.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cbBesarPulsaHomeMouseClicked(evt);
+            }
+        });
 
         txtIsiPulsaHome.setEditable(false);
 
@@ -1155,10 +1218,10 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
 
         panelPulsaView.setBackground(new java.awt.Color(0, 0, 0));
 
-        jTable5.setBackground(new java.awt.Color(0, 0, 0));
-        jTable5.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
-        jTable5.setForeground(new java.awt.Color(240, 240, 240));
-        jTable5.setModel(new javax.swing.table.DefaultTableModel(
+        tabelPulsa.setBackground(new java.awt.Color(0, 0, 0));
+        tabelPulsa.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
+        tabelPulsa.setForeground(new java.awt.Color(240, 240, 240));
+        tabelPulsa.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -1177,7 +1240,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
                 return types [columnIndex];
             }
         });
-        jScrollPane5.setViewportView(jTable5);
+        jScrollPane5.setViewportView(tabelPulsa);
 
         jTable6.setBackground(new java.awt.Color(0, 0, 0));
         jTable6.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
@@ -3158,6 +3221,39 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         btnBacktoManageCustomer.setBackground(sidemenu_exited);
     }//GEN-LAST:event_btnBacktoManageCustomerMouseExited
 
+    private void cbBesarPulsaHomePopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_cbBesarPulsaHomePopupMenuWillBecomeInvisible
+        
+    }//GEN-LAST:event_cbBesarPulsaHomePopupMenuWillBecomeInvisible
+
+    private void cbBesarPulsaHomeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cbBesarPulsaHomeMouseClicked
+        if (cbBesarPulsaHome.getSelectedItem().equals("5")) {
+            txtIsiPulsaHome.setText("Rp. 7000");
+            
+        }else if (cbBesarPulsaHome.getSelectedItem().equals("10")){
+            txtIsiPulsaHome.setText("Rp. 12000");
+            
+        }else if (cbBesarPulsaHome.getSelectedItem().equals("20")){
+            txtIsiPulsaHome.setText("Rp. 22000");
+            
+        }else if (cbBesarPulsaHome.getSelectedItem().equals("25")){
+            txtIsiPulsaHome.setText("Rp. 25000");
+            
+        }else if (cbBesarPulsaHome.getSelectedItem().equals("50")){
+            txtIsiPulsaHome.setText("Rp. 50000");
+            
+        }else if (cbBesarPulsaHome.getSelectedItem().equals("100")){
+            txtIsiPulsaHome.setText("Rp. 100000");
+            
+        }else {
+            
+        }
+    }//GEN-LAST:event_cbBesarPulsaHomeMouseClicked
+
+    private void btnFormSubmitPulsaHomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFormSubmitPulsaHomeActionPerformed
+        // TODO add your handling code here:
+        providerController.insertProvider(this);
+    }//GEN-LAST:event_btnFormSubmitPulsaHomeActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -3334,7 +3430,6 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable4;
-    private javax.swing.JTable jTable5;
     private javax.swing.JTable jTable6;
     private javax.swing.JTextField jTextField11;
     private javax.swing.JTextField jTextField12;
@@ -3386,6 +3481,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JPanel sidePane;
     private javax.swing.JScrollPane spCustomer;
     private javax.swing.JScrollPane spEmployee;
+    private javax.swing.JTable tabelPulsa;
     private javax.swing.JTable tblCustomer;
     private javax.swing.JTable tblEmployee;
     private javax.swing.JTable tblReStockPerdana;
@@ -3495,4 +3591,6 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         } catch (IndexOutOfBoundsException exception) {
         }
     }
+
+    
 }

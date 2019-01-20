@@ -15,6 +15,4 @@ import id.uniondev.creams.model.ProviderModel;
 public interface ProviderListener {
     public void onChange(ProviderModel model);
     public void onInsert(Provider provider);
-    public void onUpdate(Provider provider);
-    public void onDelete(Provider provider);
 }

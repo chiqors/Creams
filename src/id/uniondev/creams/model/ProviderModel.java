@@ -19,8 +19,8 @@ import java.sql.SQLException;
 public class ProviderModel {
     private Integer id_provider;
     private String provider_name;
-    private String status;
-    private Integer balance;
+    private String phone_number;
+    private String balance;
     
     private ProviderListener listener;
 
@@ -47,22 +47,22 @@ public class ProviderModel {
     public void setProvider_name(String provider_name) {
         this.provider_name = provider_name;
     }
-
-    public String getStatus() {
-        return status;
+    public String getPhone_number() {
+        return phone_number;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setPhone_number(String phone_number) {
+        this.phone_number = phone_number;
     }
-
-    public Integer getBalance() {
+    public String getBalance() {
         return balance;
     }
 
-    public void setBalance(Integer balance) {
+    public void setBalance(String balance) {
         this.balance = balance;
     }
+
+    
     
     protected void fireOnChange() {
         if (listener != null) {
@@ -76,52 +76,23 @@ public class ProviderModel {
         }
     }
     
-    protected void fireOnUpdate(Provider provider) {
-        if (listener != null) {
-           listener.onUpdate(provider);
-        }
-    }
     
-    protected void fireOnDelete(Provider provider) {
-        if (listener != null) {
-           listener.onDelete(provider);
-        }
-    }
     
     public void insertProvider() throws SQLException, ProviderException {
         ProviderDao dao = CreamsDatabase.getProviderDao();
         Provider provider = new Provider();
         provider.setProvider_name(provider_name);
-        provider.setStatus(status);
+        provider.setPhone_number(phone_number);
         provider.setBalance(balance);
         
         dao.insertProvider(provider);
         fireOnInsert(provider);
     }
     
-    public void updateProvider() throws SQLException, ProviderException {
-        ProviderDao dao = CreamsDatabase.getProviderDao();
-        Provider provider = new Provider();
-        provider.setProvider_name(provider_name);
-        provider.setStatus(status);
-        provider.setBalance(balance);
-        provider.setId_provider(id_provider);
-        
-        dao.updateProvider(provider);
-        fireOnUpdate(provider);
-    }
-    
-    public void deleteProvider() throws SQLException, ProviderException {
-        ProviderDao dao = CreamsDatabase.getProviderDao();
-        Provider provider = new Provider();
-        dao.deleteProvider(id_provider);
-        fireOnDelete(provider);
-    }
-    
     public void resetProvider() {
         setId_provider(0);
         setProvider_name("");
-        setStatus("");
-        setBalance(0);
+        setPhone_number("");
+        setBalance("");
     }
 }
