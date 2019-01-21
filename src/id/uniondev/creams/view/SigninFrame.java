@@ -55,7 +55,6 @@ public class SigninFrame extends javax.swing.JFrame implements EmployeeListener 
         txtUsername = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        chkRemember = new javax.swing.JCheckBox();
         jLabel3 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         btnMasuk = new javax.swing.JPanel();
@@ -103,16 +102,6 @@ public class SigninFrame extends javax.swing.JFrame implements EmployeeListener 
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("SIGN IN");
         jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 190, -1, -1));
-
-        chkRemember.setBackground(new java.awt.Color(92, 0, 122));
-        chkRemember.setForeground(new java.awt.Color(240, 240, 240));
-        chkRemember.setText("Remember me ?");
-        chkRemember.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chkRememberActionPerformed(evt);
-            }
-        });
-        jPanel2.add(chkRemember, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 400, -1, -1));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(240, 240, 240));
@@ -235,10 +224,6 @@ public class SigninFrame extends javax.swing.JFrame implements EmployeeListener 
         employeeController.signinEmployee(this);
     }//GEN-LAST:event_btnMasukMouseClicked
 
-    private void chkRememberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkRememberActionPerformed
-
-    }//GEN-LAST:event_chkRememberActionPerformed
-
     private void btnMasukMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMasukMouseEntered
         // TODO add your handling code here:
         btnMasuk.setBackground(new Color(142,36,171));
@@ -313,7 +298,6 @@ public class SigninFrame extends javax.swing.JFrame implements EmployeeListener 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel btnMasuk;
-    private javax.swing.JCheckBox chkRemember;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -337,9 +321,7 @@ public class SigninFrame extends javax.swing.JFrame implements EmployeeListener 
         
     }
 
-    public JCheckBox getChkRemember() {
-        return chkRemember;
-    }
+    
 
     public JPasswordField getTxtPassword() {
         return txtPassword;
