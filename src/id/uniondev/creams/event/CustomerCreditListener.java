@@ -5,14 +5,14 @@
  */
 package id.uniondev.creams.event;
 
-import id.uniondev.creams.entity.Provider;
-import id.uniondev.creams.model.ProviderModel;
+import id.uniondev.creams.entity.CustomerCredit;
+import id.uniondev.creams.model.CustomerCreditModel;
 
 /**
  *
  * @author ACER
  */
-public interface ProviderListener {
-    public void onChange(ProviderModel model);
-    public void onInsert(Provider provider);
+public interface CustomerCreditListener {
+    public void onChange(CustomerCreditModel model);
+    public void onInsert(CustomerCredit customerCredit);
 }

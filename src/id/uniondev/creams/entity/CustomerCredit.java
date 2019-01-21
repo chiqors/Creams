@@ -11,8 +11,8 @@ import java.util.Objects;
  *
  * @author ACER
  */
-public class Provider {
-    private Integer id_provider;
+public class CustomerCredit {
+    private Integer id_customer_credit;
     private String provider_name;
     private String phone_number;
     private String balance;
@@ -20,7 +20,7 @@ public class Provider {
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 59 * hash + Objects.hashCode(this.id_provider);
+        hash = 59 * hash + Objects.hashCode(this.id_customer_credit);
         hash = 59 * hash + Objects.hashCode(this.provider_name);
         hash = 59 * hash + Objects.hashCode(this.phone_number);
         hash = 59 * hash + Objects.hashCode(this.balance);
@@ -38,7 +38,7 @@ public class Provider {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Provider other = (Provider) obj;
+        final CustomerCredit other = (CustomerCredit) obj;
         if (!Objects.equals(this.provider_name, other.provider_name)) {
             return false;
         }
@@ -48,20 +48,20 @@ public class Provider {
         if (!Objects.equals(this.phone_number, other.phone_number)) {
             return false;
         }
-        if (!Objects.equals(this.id_provider, other.id_provider)) {
+        if (!Objects.equals(this.id_customer_credit, other.id_customer_credit)) {
             return false;
         }
         return true;
     }
+
+    public Integer getId_customer_credit() {
+        return id_customer_credit;
+    }
+
+    public void setId_customer_credit(Integer id_customer_credit) {
+        this.id_customer_credit = id_customer_credit;
+    }
     
-    public Integer getId_provider() {
-        return id_provider;
-    }
-
-    public void setId_provider(Integer id_provider) {
-        this.id_provider = id_provider;
-    }
-
     public String getProvider_name() {
         return provider_name;
     }
@@ -77,8 +77,6 @@ public class Provider {
     public void setPhone_number(String phone_number) {
         this.phone_number = phone_number;
     }
-
- 
 
     public String getBalance() {
         return balance;

@@ -3,8 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/ACER/Documents/NetBeansProjects/creams/src/id/uniondev/creams/impl/CustomerCreditDaoImpl.java</file>
             <file>file:/C:/Users/ACER/Documents/NetBeansProjects/creams/src/id/uniondev/creams/view/MainFrame.java</file>
             <file>file:/C:/Users/ACER/Documents/NetBeansProjects/creams/src/id/uniondev/creams/view/SigninFrame.java</file>
+            <file>file:/C:/Users/ACER/Documents/NetBeansProjects/creams/src/id/uniondev/creams/model/CustomerCreditModel.java</file>
+            <file>file:/C:/Users/ACER/Documents/NetBeansProjects/creams/src/id/uniondev/creams/error/CustomerCreditException.java</file>
+            <file>file:/C:/Users/ACER/Documents/NetBeansProjects/creams/src/id/uniondev/creams/service/CustomerCreditDao.java</file>
+            <file>file:/C:/Users/ACER/Documents/NetBeansProjects/creams/src/id/uniondev/creams/entity/CustomerCredit.java</file>
+            <file>file:/C:/Users/ACER/Documents/NetBeansProjects/creams/src/id/uniondev/creams/event/CustomerCreditListener.java</file>
+            <file>file:/C:/Users/ACER/Documents/NetBeansProjects/creams/src/id/uniondev/creams/controller/CustomerCreditController.java</file>
+            <file>file:/C:/Users/ACER/Documents/NetBeansProjects/creams/src/id/uniondev/creams/model/CustomerCreditTableModel.java</file>
         </group>
     </open-files>
 </project-private>

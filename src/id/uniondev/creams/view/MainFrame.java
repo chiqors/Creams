@@ -7,21 +7,26 @@ package id.uniondev.creams.view;
 
 import id.uniondev.creams.controller.CustomerController;
 import id.uniondev.creams.controller.EmployeeController;
-import id.uniondev.creams.controller.ProviderController;
+import id.uniondev.creams.controller.CustomerCreditController;
+import id.uniondev.creams.controller.CreditRestockKuotaController;
 import id.uniondev.creams.database.CreamsDatabase;
+import id.uniondev.creams.entity.CreditRestockKuota;
 import id.uniondev.creams.entity.Customer;
 import id.uniondev.creams.entity.Employee;
+import id.uniondev.creams.entity.CustomerCredit;
+import id.uniondev.creams.error.CreditRestockKuotaException;
+import id.uniondev.creams.error.CustomerCreditException;
 import id.uniondev.creams.error.CustomerException;
 import id.uniondev.creams.error.EmployeeException;
+import id.uniondev.creams.event.CreditRestockKuotaListener;
 import id.uniondev.creams.event.CustomerListener;
 import id.uniondev.creams.event.EmployeeListener;
-import id.uniondev.creams.event.ProviderListener;
 import id.uniondev.creams.model.CustomerModel;
 import id.uniondev.creams.model.CustomerTableModel;
 import id.uniondev.creams.model.EmployeeModel;
 import id.uniondev.creams.model.EmployeeTableModel;
-import id.uniondev.creams.model.ProviderModel;
-import id.uniondev.creams.model.ProviderTableModel;
+import id.uniondev.creams.model.CustomerCreditModel;
+import id.uniondev.creams.model.CustomerCreditTableModel;
 import id.uniondev.creams.service.CustomerDao;
 import id.uniondev.creams.service.EmployeeDao;
 import java.awt.Color;
@@ -33,12 +38,17 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import id.uniondev.creams.event.CustomerCreditListener;
+import id.uniondev.creams.model.CreditRestockKuotaModel;
+import id.uniondev.creams.model.CreditRestockKuotaTableModel;
+import id.uniondev.creams.service.CreditRestockKuotaDao;
+import id.uniondev.creams.service.CustomerCreditDao;
 
 /**
  *
  * @author UnionDev
  */
-public class MainFrame extends javax.swing.JFrame implements EmployeeListener, CustomerListener, ListSelectionListener {
+public class MainFrame extends javax.swing.JFrame implements EmployeeListener, CustomerListener, CustomerCreditListener, CreditRestockKuotaListener, ListSelectionListener {
 
     /**
      * Creates new form MainFrame
@@ -51,17 +61,18 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     
     private EmployeeTableModel employeeTableModel;
     private CustomerTableModel customerTableModel;
-    private ProviderTableModel providerTableModel;
+    private CustomerCreditTableModel customerCreditTableModel;
+    private CreditRestockKuotaTableModel creditRestockKuotaTableModel;
     
     private EmployeeModel employeeModel;
     private CustomerModel customerModel;
-    private ProviderModel providerModel;
+    private CustomerCreditModel customerCreditModel;
+    private CreditRestockKuotaModel creditRestockKuotaModel;
     
     private EmployeeController employeeController;
     private CustomerController customerController;
-    private ProviderController providerController;
-    
-    
+    private CustomerCreditController customerCreditController;
+    private CreditRestockKuotaController creditRestockKuotaController;
     
     public MainFrame() {
         employeeTableModel = new EmployeeTableModel();
@@ -76,12 +87,17 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         customerController = new CustomerController();
         customerController.setModel(customerModel);
         
-        providerTableModel = new ProviderTableModel();
-        providerModel = new ProviderModel();
-        providerModel.setListener((ProviderListener) this);
-        providerController = new ProviderController();
-        providerController.setModel(providerModel);
+        customerCreditTableModel = new CustomerCreditTableModel();
+        customerCreditModel = new CustomerCreditModel();
+        customerCreditModel.setListener(this);
+        customerCreditController = new CustomerCreditController();
+        customerCreditController.setModel(customerCreditModel);
         
+        creditRestockKuotaTableModel = new CreditRestockKuotaTableModel();
+        creditRestockKuotaModel = new CreditRestockKuotaModel();
+        creditRestockKuotaModel.setListener(this);
+        creditRestockKuotaController = new CreditRestockKuotaController();
+        creditRestockKuotaController.setModel(creditRestockKuotaModel);
         
         initComponents();
         
@@ -90,18 +106,18 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         
         tblCustomer.getSelectionModel().addListSelectionListener(this);
         tblCustomer.setModel(customerTableModel);
+        
+        tblCustomerCredit.getSelectionModel().addListSelectionListener(this);
+        tblCustomerCredit.setModel(customerCreditTableModel);
+        
+        tblRestockKuotaPulsa.getSelectionModel().addListSelectionListener(this);
+        tblRestockKuotaPulsa.setModel(creditRestockKuotaTableModel);
     }
 
-    public JTable getTabelPulsa() {
-        return tabelPulsa;
+    public JTable getTblCustomerCredit() {
+        return tblCustomerCredit;
     }
-
-    public void setTabelPulsa(JTable tabelPulsa) {
-        this.tabelPulsa = tabelPulsa;
-    }
-
     
-
     public JComboBox getCbBesarPulsaHome() {
         return cbBesarPulsaHome;
     }
@@ -145,6 +161,16 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         jLabel18 = new javax.swing.JLabel();
         cbBesarPulsaHome = new javax.swing.JComboBox();
         txtIsiPulsaHome = new javax.swing.JTextField();
+        jLabel20 = new javax.swing.JLabel();
+        panelPulsaView = new javax.swing.JPanel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        tblCustomerCredit = new javax.swing.JTable();
+        jScrollBar5 = new javax.swing.JScrollBar();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        tblRestockKuotaPulsa = new javax.swing.JTable();
+        btnReStockKuotaPulsa = new javax.swing.JButton();
+        cbProviderPulsa = new javax.swing.JComboBox();
+        cbBesarPulsa = new javax.swing.JComboBox();
         panelKartuView = new javax.swing.JPanel();
         btnReStock = new javax.swing.JButton();
         btnStock = new javax.swing.JButton();
@@ -172,34 +198,11 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         btnSaveReStockKuota = new javax.swing.JButton();
         btnSubmitReStockKuota = new javax.swing.JButton();
         paneFormlReStockKuota = new javax.swing.JPanel();
-        jLabel43 = new javax.swing.JLabel();
-        jTextField11 = new javax.swing.JTextField();
-        jTextField12 = new javax.swing.JTextField();
-        jButton18 = new javax.swing.JButton();
-        jLabel44 = new javax.swing.JLabel();
-        jTextField13 = new javax.swing.JTextField();
-        jTextField14 = new javax.swing.JTextField();
-        jButton19 = new javax.swing.JButton();
-        jLabel45 = new javax.swing.JLabel();
-        jTextField15 = new javax.swing.JTextField();
-        jTextField16 = new javax.swing.JTextField();
-        jButton20 = new javax.swing.JButton();
-        jLabel46 = new javax.swing.JLabel();
-        jTextField17 = new javax.swing.JTextField();
-        jTextField18 = new javax.swing.JTextField();
-        jButton21 = new javax.swing.JButton();
-        jButton22 = new javax.swing.JButton();
-        jTextField19 = new javax.swing.JTextField();
-        jTextField20 = new javax.swing.JTextField();
-        jLabel48 = new javax.swing.JLabel();
-        jTextField22 = new javax.swing.JTextField();
-        jLabel49 = new javax.swing.JLabel();
-        jTextField23 = new javax.swing.JTextField();
-        jButton23 = new javax.swing.JButton();
-        jLabel50 = new javax.swing.JLabel();
-        jTextField24 = new javax.swing.JTextField();
-        jTextField25 = new javax.swing.JTextField();
-        jButton24 = new javax.swing.JButton();
+        btnRestockKuotaSave = new javax.swing.JButton();
+        txtRestockKuotaBalance_current = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        txtRestockKuotaProviderName = new javax.swing.JTextField();
+        txtRestockKuotaType = new javax.swing.JTextField();
         panelStockView = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tblStock = new javax.swing.JTable();
@@ -220,15 +223,6 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         txtSisaKuota = new javax.swing.JTextField();
         jLabel51 = new javax.swing.JLabel();
         btnReStockKuotaTagihan = new javax.swing.JButton();
-        panelPulsaView = new javax.swing.JPanel();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        tabelPulsa = new javax.swing.JTable();
-        jScrollBar5 = new javax.swing.JScrollBar();
-        jScrollPane6 = new javax.swing.JScrollPane();
-        jTable6 = new javax.swing.JTable();
-        btnReStockKuotaPulsa = new javax.swing.JButton();
-        cbProviderPulsa = new javax.swing.JComboBox();
-        cbBesarPulsa = new javax.swing.JComboBox();
         panelPendapatanView = new javax.swing.JPanel();
         jLabel23 = new javax.swing.JLabel();
         jLabel24 = new javax.swing.JLabel();
@@ -440,6 +434,9 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
 
         txtIsiPulsaHome.setEditable(false);
 
+        jLabel20.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel20.setText("Rp.");
+
         javax.swing.GroupLayout panelHomeViewLayout = new javax.swing.GroupLayout(panelHomeView);
         panelHomeView.setLayout(panelHomeViewLayout);
         panelHomeViewLayout.setHorizontalGroup(
@@ -456,8 +453,10 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
                             .addComponent(jLabel18)
                             .addGroup(panelHomeViewLayout.createSequentialGroup()
                                 .addComponent(cbBesarPulsaHome, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtIsiPulsaHome, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(10, 10, 10)
+                                .addComponent(jLabel20)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtIsiPulsaHome, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(btnFormSubmitPulsaHome, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 385, Short.MAX_VALUE))
                     .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -485,13 +484,121 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelHomeViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbBesarPulsaHome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtIsiPulsaHome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtIsiPulsaHome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel20))
                 .addGap(30, 30, 30)
                 .addComponent(btnFormSubmitPulsaHome)
                 .addGap(63, 63, 63))
         );
 
         panelView.add(panelHomeView, "card2");
+
+        panelPulsaView.setBackground(new java.awt.Color(0, 0, 0));
+
+        tblCustomerCredit.setBackground(new java.awt.Color(0, 0, 0));
+        tblCustomerCredit.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
+        tblCustomerCredit.setForeground(new java.awt.Color(240, 240, 240));
+        tblCustomerCredit.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "PROVIDER", "NOMOR", "BESAR PULSA"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.Integer.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane5.setViewportView(tblCustomerCredit);
+
+        tblRestockKuotaPulsa.setBackground(new java.awt.Color(0, 0, 0));
+        tblRestockKuotaPulsa.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
+        tblRestockKuotaPulsa.setForeground(new java.awt.Color(240, 240, 240));
+        tblRestockKuotaPulsa.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {"TELKOMSEL", null},
+                {"TRI", null},
+                {"INDOSAT", null},
+                {"XL", null},
+                {"AXIS", null},
+                {"SMARTFREN", null}
+            },
+            new String [] {
+                "PROVIDER", "KUOTA"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Integer.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane6.setViewportView(tblRestockKuotaPulsa);
+
+        btnReStockKuotaPulsa.setText("RE STOCK KUOTA");
+        btnReStockKuotaPulsa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReStockKuotaPulsaActionPerformed(evt);
+            }
+        });
+
+        cbProviderPulsa.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
+        cbProviderPulsa.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "--PROVIDER--", "TELKOMSEL", "TRI", "XL", "AXIS", "INDOSAT", "SMARTFREN", " " }));
+
+        cbBesarPulsa.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
+        cbBesarPulsa.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "--BESAR--", "5", "10", "20", "25", "50", "100" }));
+
+        javax.swing.GroupLayout panelPulsaViewLayout = new javax.swing.GroupLayout(panelPulsaView);
+        panelPulsaView.setLayout(panelPulsaViewLayout);
+        panelPulsaViewLayout.setHorizontalGroup(
+            panelPulsaViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelPulsaViewLayout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addGroup(panelPulsaViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelPulsaViewLayout.createSequentialGroup()
+                        .addComponent(cbProviderPulsa, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(cbBesarPulsa, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panelPulsaViewLayout.createSequentialGroup()
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollBar5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
+                        .addGroup(panelPulsaViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(btnReStockKuotaPulsa, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE))
+                        .addGap(30, 30, 30))))
+        );
+        panelPulsaViewLayout.setVerticalGroup(
+            panelPulsaViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelPulsaViewLayout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(panelPulsaViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbProviderPulsa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbBesarPulsa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPulsaViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollBar5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(panelPulsaViewLayout.createSequentialGroup()
+                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                        .addComponent(btnReStockKuotaPulsa)))
+                .addContainerGap(87, Short.MAX_VALUE))
+        );
+
+        panelView.add(panelPulsaView, "card5");
 
         panelKartuView.setBackground(new java.awt.Color(0, 0, 0));
 
@@ -783,241 +890,59 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
 
         paneFormlReStockKuota.setBackground(new java.awt.Color(0, 0, 0));
 
-        jLabel43.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel43.setForeground(new java.awt.Color(240, 240, 240));
-        jLabel43.setText("AXIS : ");
+        btnRestockKuotaSave.setText("SAVE");
+        btnRestockKuotaSave.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnRestockKuotaSaveMouseClicked(evt);
+            }
+        });
 
-        jTextField11.setBackground(new java.awt.Color(0, 0, 0));
-        jTextField11.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
-        jTextField11.setForeground(new java.awt.Color(240, 240, 240));
-        jTextField11.setText("150");
+        txtRestockKuotaBalance_current.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
 
-        jTextField12.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
-        jTextField12.setText("350");
+        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel13.setText("KARTU PROVIDER");
 
-        jButton18.setText("SAVE");
+        txtRestockKuotaProviderName.setEditable(false);
+        txtRestockKuotaProviderName.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
+        txtRestockKuotaProviderName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtRestockKuotaProviderNameActionPerformed(evt);
+            }
+        });
 
-        jLabel44.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel44.setForeground(new java.awt.Color(240, 240, 240));
-        jLabel44.setText("INDOSAT : ");
-
-        jTextField13.setBackground(new java.awt.Color(0, 0, 0));
-        jTextField13.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
-        jTextField13.setForeground(new java.awt.Color(240, 240, 240));
-        jTextField13.setText("150");
-
-        jTextField14.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
-        jTextField14.setText("350");
-
-        jButton19.setText("SAVE");
-
-        jLabel45.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel45.setForeground(new java.awt.Color(240, 240, 240));
-        jLabel45.setText("SMARTFREN : ");
-
-        jTextField15.setBackground(new java.awt.Color(0, 0, 0));
-        jTextField15.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
-        jTextField15.setForeground(new java.awt.Color(240, 240, 240));
-        jTextField15.setText("150");
-
-        jTextField16.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
-        jTextField16.setText("350");
-
-        jButton20.setText("SAVE");
-
-        jLabel46.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel46.setForeground(new java.awt.Color(240, 240, 240));
-        jLabel46.setText("TELKOMSEL : ");
-
-        jTextField17.setBackground(new java.awt.Color(0, 0, 0));
-        jTextField17.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
-        jTextField17.setForeground(new java.awt.Color(240, 240, 240));
-        jTextField17.setText("150");
-
-        jTextField18.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
-        jTextField18.setText("350");
-
-        jButton21.setText("SAVE");
-
-        jButton22.setText("SAVE");
-
-        jTextField19.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
-        jTextField19.setText("350");
-
-        jTextField20.setBackground(new java.awt.Color(0, 0, 0));
-        jTextField20.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
-        jTextField20.setForeground(new java.awt.Color(240, 240, 240));
-        jTextField20.setText("150");
-
-        jLabel48.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel48.setForeground(new java.awt.Color(240, 240, 240));
-        jLabel48.setText("XL : ");
-
-        jTextField22.setBackground(new java.awt.Color(0, 0, 0));
-        jTextField22.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
-        jTextField22.setForeground(new java.awt.Color(240, 240, 240));
-        jTextField22.setText("1.250.000");
-
-        jLabel49.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel49.setForeground(new java.awt.Color(240, 240, 240));
-        jLabel49.setText("PLN/PDAM : Rp ");
-
-        jTextField23.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
-        jTextField23.setText("3.000.000");
-
-        jButton23.setText("SAVE");
-
-        jLabel50.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel50.setForeground(new java.awt.Color(240, 240, 240));
-        jLabel50.setText("TRI : ");
-
-        jTextField24.setBackground(new java.awt.Color(0, 0, 0));
-        jTextField24.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
-        jTextField24.setForeground(new java.awt.Color(240, 240, 240));
-        jTextField24.setText("150");
-
-        jTextField25.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
-        jTextField25.setText("350");
-
-        jButton24.setText("SAVE");
+        txtRestockKuotaType.setEditable(false);
+        txtRestockKuotaType.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
 
         javax.swing.GroupLayout paneFormlReStockKuotaLayout = new javax.swing.GroupLayout(paneFormlReStockKuota);
         paneFormlReStockKuota.setLayout(paneFormlReStockKuotaLayout);
         paneFormlReStockKuotaLayout.setHorizontalGroup(
             paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(paneFormlReStockKuotaLayout.createSequentialGroup()
-                .addGap(33, 33, 33)
-                .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(paneFormlReStockKuotaLayout.createSequentialGroup()
-                        .addComponent(jLabel46)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField18)
-                            .addComponent(jTextField17, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton21))
-                    .addGroup(paneFormlReStockKuotaLayout.createSequentialGroup()
-                        .addComponent(jLabel45)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField16)
-                            .addComponent(jTextField15, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton20))
-                    .addGroup(paneFormlReStockKuotaLayout.createSequentialGroup()
-                        .addComponent(jLabel44)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField14)
-                            .addComponent(jTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton19))
-                    .addGroup(paneFormlReStockKuotaLayout.createSequentialGroup()
-                        .addComponent(jLabel43)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField12, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
-                            .addComponent(jTextField11))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton18)))
-                .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(paneFormlReStockKuotaLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 141, Short.MAX_VALUE)
-                        .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(paneFormlReStockKuotaLayout.createSequentialGroup()
-                                .addComponent(jLabel48)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jTextField19)
-                                    .addComponent(jTextField20, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton22))
-                            .addGroup(paneFormlReStockKuotaLayout.createSequentialGroup()
-                                .addComponent(jLabel50)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jTextField25)
-                                    .addComponent(jTextField24, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton24)))
-                        .addGap(185, 185, 185))
-                    .addGroup(paneFormlReStockKuotaLayout.createSequentialGroup()
-                        .addGap(67, 67, 67)
-                        .addComponent(jLabel49)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField22)
-                            .addComponent(jTextField23, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton23)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneFormlReStockKuotaLayout.createSequentialGroup()
+                .addContainerGap(322, Short.MAX_VALUE)
+                .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(txtRestockKuotaType)
+                    .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(btnRestockKuotaSave, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel13)
+                        .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txtRestockKuotaBalance_current, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
+                            .addComponent(txtRestockKuotaProviderName, javax.swing.GroupLayout.Alignment.LEADING))))
+                .addGap(231, 231, 231))
         );
         paneFormlReStockKuotaLayout.setVerticalGroup(
             paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(paneFormlReStockKuotaLayout.createSequentialGroup()
-                .addGap(45, 45, 45)
-                .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(paneFormlReStockKuotaLayout.createSequentialGroup()
-                        .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel43)
-                            .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton18)))
-                    .addGroup(paneFormlReStockKuotaLayout.createSequentialGroup()
-                        .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel50)
-                            .addComponent(jTextField24, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField25, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton24))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(paneFormlReStockKuotaLayout.createSequentialGroup()
-                        .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel44)
-                            .addComponent(jTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton19)))
-                    .addGroup(paneFormlReStockKuotaLayout.createSequentialGroup()
-                        .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel48)
-                            .addComponent(jTextField20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField19, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton22))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(paneFormlReStockKuotaLayout.createSequentialGroup()
-                        .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel45)
-                            .addComponent(jTextField15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton20))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel46)
-                            .addComponent(jTextField17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton21)))
-                    .addGroup(paneFormlReStockKuotaLayout.createSequentialGroup()
-                        .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel49)
-                            .addComponent(jTextField22, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField23, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton23))))
-                .addContainerGap(168, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneFormlReStockKuotaLayout.createSequentialGroup()
+                .addContainerGap(172, Short.MAX_VALUE)
+                .addComponent(jLabel13)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtRestockKuotaProviderName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtRestockKuotaBalance_current, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addComponent(txtRestockKuotaType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnRestockKuotaSave)
+                .addGap(150, 150, 150))
         );
 
         panelView.add(paneFormlReStockKuota, "card11");
@@ -1215,113 +1140,6 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         );
 
         panelView.add(panelTagihanView, "card4");
-
-        panelPulsaView.setBackground(new java.awt.Color(0, 0, 0));
-
-        tabelPulsa.setBackground(new java.awt.Color(0, 0, 0));
-        tabelPulsa.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
-        tabelPulsa.setForeground(new java.awt.Color(240, 240, 240));
-        tabelPulsa.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
-            },
-            new String [] {
-                "PROVIDER", "NOMOR", "BESAR PULSA"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Integer.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-        jScrollPane5.setViewportView(tabelPulsa);
-
-        jTable6.setBackground(new java.awt.Color(0, 0, 0));
-        jTable6.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
-        jTable6.setForeground(new java.awt.Color(240, 240, 240));
-        jTable6.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"TELKOMSEL", null},
-                {"TRI", null},
-                {"INDOSAT", null},
-                {"XL", null},
-                {"AXIS", null},
-                {"SMARTFREN", null}
-            },
-            new String [] {
-                "PROVIDER", "KUOTA"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Integer.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-        jScrollPane6.setViewportView(jTable6);
-
-        btnReStockKuotaPulsa.setText("RE STOCK KUOTA");
-        btnReStockKuotaPulsa.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnReStockKuotaPulsaActionPerformed(evt);
-            }
-        });
-
-        cbProviderPulsa.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
-        cbProviderPulsa.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "--PROVIDER--", "TELKOMSEL", "TRI", "XL", "AXIS", "INDOSAT", "SMARTFREN", " " }));
-
-        cbBesarPulsa.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
-        cbBesarPulsa.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "--BESAR--", "5", "10", "20", "25", "50", "100" }));
-
-        javax.swing.GroupLayout panelPulsaViewLayout = new javax.swing.GroupLayout(panelPulsaView);
-        panelPulsaView.setLayout(panelPulsaViewLayout);
-        panelPulsaViewLayout.setHorizontalGroup(
-            panelPulsaViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelPulsaViewLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addGroup(panelPulsaViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelPulsaViewLayout.createSequentialGroup()
-                        .addComponent(cbProviderPulsa, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(cbBesarPulsa, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(panelPulsaViewLayout.createSequentialGroup()
-                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollBar5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
-                        .addGroup(panelPulsaViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(btnReStockKuotaPulsa, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE))
-                        .addGap(30, 30, 30))))
-        );
-        panelPulsaViewLayout.setVerticalGroup(
-            panelPulsaViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelPulsaViewLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(panelPulsaViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbProviderPulsa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbBesarPulsa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelPulsaViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollBar5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addGroup(panelPulsaViewLayout.createSequentialGroup()
-                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
-                        .addComponent(btnReStockKuotaPulsa)))
-                .addContainerGap(87, Short.MAX_VALUE))
-        );
-
-        panelView.add(panelPulsaView, "card5");
 
         panelPendapatanView.setBackground(new java.awt.Color(0, 0, 0));
 
@@ -2301,7 +2119,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
                 .addContainerGap())
         );
 
-        sidePane.add(btnKartuMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 190, 200, -1));
+        sidePane.add(btnKartuMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 270, 200, -1));
 
         btnPlnPdamMenu.setBackground(new java.awt.Color(92, 0, 122));
         btnPlnPdamMenu.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -2399,7 +2217,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
                 .addContainerGap())
         );
 
-        sidePane.add(btnPulsaMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 270, 200, -1));
+        sidePane.add(btnPulsaMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 190, 200, -1));
 
         btnPendapatanMenu.setBackground(new java.awt.Color(92, 0, 122));
         btnPendapatanMenu.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -3222,37 +3040,63 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     }//GEN-LAST:event_btnBacktoManageCustomerMouseExited
 
     private void cbBesarPulsaHomePopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_cbBesarPulsaHomePopupMenuWillBecomeInvisible
-        
+        String cboxBesarHome = (String)cbBesarPulsaHome.getSelectedItem();
+        String cboxBesarHomeValue = cbBesarPulsaHome.getSelectedItem().toString();
+        if (cboxBesarHomeValue.equals("5")) {
+            txtIsiPulsaHome.setText("7000");
+            
+        } else if (cboxBesarHomeValue.equals("10")){
+            txtIsiPulsaHome.setText("12000");
+            
+        } else if (cboxBesarHomeValue.equals("20")){
+            txtIsiPulsaHome.setText("22000");
+            
+        } else if (cboxBesarHomeValue.equals("25")){
+            txtIsiPulsaHome.setText("25000");
+            
+        } else if (cboxBesarHomeValue.equals("50")){
+            txtIsiPulsaHome.setText("50000");
+            
+        } else if (cboxBesarHomeValue.equals("100")){
+            txtIsiPulsaHome.setText("100000");
+        } else {
+            txtIsiPulsaHome.setText("100000");
+        }
     }//GEN-LAST:event_cbBesarPulsaHomePopupMenuWillBecomeInvisible
 
     private void cbBesarPulsaHomeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cbBesarPulsaHomeMouseClicked
-        if (cbBesarPulsaHome.getSelectedItem().equals("5")) {
-            txtIsiPulsaHome.setText("Rp. 7000");
-            
-        }else if (cbBesarPulsaHome.getSelectedItem().equals("10")){
-            txtIsiPulsaHome.setText("Rp. 12000");
-            
-        }else if (cbBesarPulsaHome.getSelectedItem().equals("20")){
-            txtIsiPulsaHome.setText("Rp. 22000");
-            
-        }else if (cbBesarPulsaHome.getSelectedItem().equals("25")){
-            txtIsiPulsaHome.setText("Rp. 25000");
-            
-        }else if (cbBesarPulsaHome.getSelectedItem().equals("50")){
-            txtIsiPulsaHome.setText("Rp. 50000");
-            
-        }else if (cbBesarPulsaHome.getSelectedItem().equals("100")){
-            txtIsiPulsaHome.setText("Rp. 100000");
-            
-        }else {
-            
-        }
+        
     }//GEN-LAST:event_cbBesarPulsaHomeMouseClicked
 
     private void btnFormSubmitPulsaHomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFormSubmitPulsaHomeActionPerformed
         // TODO add your handling code here:
-        providerController.insertProvider(this);
+        customerCreditController.insertCustomerCredit(this);
     }//GEN-LAST:event_btnFormSubmitPulsaHomeActionPerformed
+
+    private void txtRestockKuotaProviderNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRestockKuotaProviderNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtRestockKuotaProviderNameActionPerformed
+
+    public JTable getTblRestockKuotaPulsa() {
+        return tblRestockKuotaPulsa;
+    }
+
+    public JTextField getTxtRestockKuotaType() {
+        return txtRestockKuotaType;
+    }
+    
+    public JTextField getTxtRestockKuotaBalance_current() {
+        return txtRestockKuotaBalance_current;
+    }
+
+    public JTextField getTxtRestockKuotaProviderName() {
+        return txtRestockKuotaProviderName;
+    }
+    
+    private void btnRestockKuotaSaveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRestockKuotaSaveMouseClicked
+        // TODO add your handling code here:
+        creditRestockKuotaController.updateCreditRestockKuota(this);
+    }//GEN-LAST:event_btnRestockKuotaSaveMouseClicked
 
     /**
      * @param args the command line arguments
@@ -3328,6 +3172,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JButton btnReStock;
     private javax.swing.JButton btnReStockKuotaPulsa;
     private javax.swing.JButton btnReStockKuotaTagihan;
+    private javax.swing.JButton btnRestockKuotaSave;
     private javax.swing.JButton btnSaveReStockKuota;
     private javax.swing.JButton btnSaveReStockPerdana;
     private javax.swing.JButton btnStock;
@@ -3353,18 +3198,12 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JLabel icoManage;
     private javax.swing.JLabel icoPLNPDAM;
     private javax.swing.JLabel icoPendapatan;
-    private javax.swing.JButton jButton18;
-    private javax.swing.JButton jButton19;
-    private javax.swing.JButton jButton20;
-    private javax.swing.JButton jButton21;
-    private javax.swing.JButton jButton22;
-    private javax.swing.JButton jButton23;
-    private javax.swing.JButton jButton24;
     private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
@@ -3372,6 +3211,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
@@ -3396,15 +3236,8 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JLabel jLabel40;
     private javax.swing.JLabel jLabel41;
     private javax.swing.JLabel jLabel42;
-    private javax.swing.JLabel jLabel43;
-    private javax.swing.JLabel jLabel44;
-    private javax.swing.JLabel jLabel45;
-    private javax.swing.JLabel jLabel46;
     private javax.swing.JLabel jLabel47;
-    private javax.swing.JLabel jLabel48;
-    private javax.swing.JLabel jLabel49;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel50;
     private javax.swing.JLabel jLabel51;
     private javax.swing.JLabel jLabel53;
     private javax.swing.JLabel jLabel54;
@@ -3430,21 +3263,6 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable4;
-    private javax.swing.JTable jTable6;
-    private javax.swing.JTextField jTextField11;
-    private javax.swing.JTextField jTextField12;
-    private javax.swing.JTextField jTextField13;
-    private javax.swing.JTextField jTextField14;
-    private javax.swing.JTextField jTextField15;
-    private javax.swing.JTextField jTextField16;
-    private javax.swing.JTextField jTextField17;
-    private javax.swing.JTextField jTextField18;
-    private javax.swing.JTextField jTextField19;
-    private javax.swing.JTextField jTextField20;
-    private javax.swing.JTextField jTextField22;
-    private javax.swing.JTextField jTextField23;
-    private javax.swing.JTextField jTextField24;
-    private javax.swing.JTextField jTextField25;
     private javax.swing.JTextField jTextField9;
     private javax.swing.JLabel lblAppName;
     private javax.swing.JLabel lblEmployee_name;
@@ -3481,10 +3299,11 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JPanel sidePane;
     private javax.swing.JScrollPane spCustomer;
     private javax.swing.JScrollPane spEmployee;
-    private javax.swing.JTable tabelPulsa;
     private javax.swing.JTable tblCustomer;
+    private javax.swing.JTable tblCustomerCredit;
     private javax.swing.JTable tblEmployee;
     private javax.swing.JTable tblReStockPerdana;
+    private javax.swing.JTable tblRestockKuotaPulsa;
     private javax.swing.JTable tblStock;
     private javax.swing.JTextField txtCustomerPhoneNumber;
     private javax.swing.JTextField txtCustomerStatus;
@@ -3502,18 +3321,25 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JTextField txtPassword;
     private javax.swing.JTextField txtPengeluaranPendapatan;
     private javax.swing.JTextField txtPulsaPendapatan;
+    private javax.swing.JTextField txtRestockKuotaBalance_current;
+    private javax.swing.JTextField txtRestockKuotaProviderName;
+    private javax.swing.JTextField txtRestockKuotaType;
     private javax.swing.JTextField txtRole;
     private javax.swing.JTextField txtSisaKuota;
     private javax.swing.JLabel txtTotalPendapatan;
     private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables
 
-    public void loadDatabase() throws SQLException, EmployeeException, CustomerException {
+    public void loadDatabase() throws SQLException, EmployeeException, CustomerException, CustomerCreditException, CreditRestockKuotaException {
         EmployeeDao employeedao = CreamsDatabase.getEmployeeDao();
         CustomerDao customerdao = CreamsDatabase.getCustomerDao();
+        CustomerCreditDao customercreditdao = CreamsDatabase.getCustomerCreditDao();
+        CreditRestockKuotaDao creditrestockkuotadao = CreamsDatabase.getCreditRestockKuotaDao();
         
         employeeTableModel.setList(employeedao.selectAllEmployee());
         customerTableModel.setList(customerdao.selectAllCustomer());
+        customerCreditTableModel.setList(customercreditdao.selectAllCustomerCredit());
+        creditRestockKuotaTableModel.setList(creditrestockkuotadao.selectAllCreditRestockKuota());
     }
     
     @Override
@@ -3590,7 +3416,35 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
             txtCustomerStatus.setText(cus_model.getStatus());
         } catch (IndexOutOfBoundsException exception) {
         }
+        
+        try {
+            CreditRestockKuota cre = creditRestockKuotaTableModel.get(tblRestockKuotaPulsa.getSelectedRow());
+            txtRestockKuotaProviderName.setText(cre.getProvider_name());
+            txtRestockKuotaBalance_current.setText(cre.getBalance_current() + "");
+            txtRestockKuotaType.setText(cre.getType());
+        } catch (IndexOutOfBoundsException exception) {
+        }
     }
 
-    
+    @Override
+    public void onChange(CustomerCreditModel model) {
+        txtFormNomorPulsaHome.setText(model.getId_customer_credit()+ "");
+    }
+
+    @Override
+    public void onInsert(CustomerCredit customerCredit) {
+        customerCreditTableModel.add(customerCredit);
+    }
+
+    @Override
+    public void onChange(CreditRestockKuotaModel model) {
+        txtRestockKuotaProviderName.setText(model.getProvider_name());
+        txtFormNomorPulsaHome.setText(model.getBalance_current()+ "");
+    }
+
+    @Override
+    public void onUpdate(CreditRestockKuota creditRestockKuota) {
+        int index = tblRestockKuotaPulsa.getSelectedRow();
+        creditRestockKuotaTableModel.set(index, creditRestockKuota);
+    }
 }

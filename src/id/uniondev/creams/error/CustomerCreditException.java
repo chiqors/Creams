@@ -9,22 +9,22 @@ package id.uniondev.creams.error;
  *
  * @author ACER
  */
-public class ProviderException extends Exception {
+public class CustomerCreditException extends Exception {
 
     /**
-     * Creates a new instance of <code>ProviderException</code> without detail
-     * message.
+     * Creates a new instance of <code>CustomerCreditException</code> without
+     * detail message.
      */
-    public ProviderException() {
+    public CustomerCreditException() {
     }
 
     /**
-     * Constructs an instance of <code>ProviderException</code> with the
+     * Constructs an instance of <code>CustomerCreditException</code> with the
      * specified detail message.
      *
      * @param msg the detail message.
      */
-    public ProviderException(String msg) {
+    public CustomerCreditException(String msg) {
         super(msg);
     }
 }

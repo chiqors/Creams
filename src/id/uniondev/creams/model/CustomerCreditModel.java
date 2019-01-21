@@ -6,40 +6,40 @@
 package id.uniondev.creams.model;
 
 import id.uniondev.creams.database.CreamsDatabase;
-import id.uniondev.creams.entity.Provider;
-import id.uniondev.creams.error.ProviderException;
-import id.uniondev.creams.event.ProviderListener;
-import id.uniondev.creams.service.ProviderDao;
+import id.uniondev.creams.entity.CustomerCredit;
+import id.uniondev.creams.error.CustomerCreditException;
+import id.uniondev.creams.service.CustomerCreditDao;
 import java.sql.SQLException;
+import id.uniondev.creams.event.CustomerCreditListener;
 
 /**
  *
  * @author ACER
  */
-public class ProviderModel {
-    private Integer id_provider;
+public class CustomerCreditModel {
+    private Integer id_customer_credit;
     private String provider_name;
     private String phone_number;
     private String balance;
     
-    private ProviderListener listener;
+    private CustomerCreditListener listener;
 
-    public ProviderListener getListener() {
+    public CustomerCreditListener getListener() {
         return listener;
     }
 
-    public void setListener(ProviderListener listener) {
+    public void setListener(CustomerCreditListener listener) {
         this.listener = listener;
     }
+
+    public Integer getId_customer_credit() {
+        return id_customer_credit;
+    }
+
+    public void setId_customer_credit(Integer id_customer_credit) {
+        this.id_customer_credit = id_customer_credit;
+    }
     
-    public Integer getId_provider() {
-        return id_provider;
-    }
-
-    public void setId_provider(Integer id_provider) {
-        this.id_provider = id_provider;
-    }
-
     public String getProvider_name() {
         return provider_name;
     }
@@ -61,8 +61,6 @@ public class ProviderModel {
     public void setBalance(String balance) {
         this.balance = balance;
     }
-
-    
     
     protected void fireOnChange() {
         if (listener != null) {
@@ -70,27 +68,25 @@ public class ProviderModel {
         }
     }
     
-    protected void fireOnInsert(Provider provider) {
+    protected void fireOnInsert(CustomerCredit provider) {
         if (listener != null) {
            listener.onInsert(provider);
         }
     }
     
-    
-    
-    public void insertProvider() throws SQLException, ProviderException {
-        ProviderDao dao = CreamsDatabase.getProviderDao();
-        Provider provider = new Provider();
-        provider.setProvider_name(provider_name);
-        provider.setPhone_number(phone_number);
-        provider.setBalance(balance);
+    public void insertCustomerCredit() throws SQLException, CustomerCreditException {
+        CustomerCreditDao dao = CreamsDatabase.getCustomerCreditDao();
+        CustomerCredit customerCredit = new CustomerCredit();
+        customerCredit.setProvider_name(provider_name);
+        customerCredit.setPhone_number(phone_number);
+        customerCredit.setBalance(balance);
         
-        dao.insertProvider(provider);
-        fireOnInsert(provider);
+        dao.insertCustomerCredit(customerCredit);
+        fireOnInsert(customerCredit);
     }
     
-    public void resetProvider() {
-        setId_provider(0);
+    public void resetCustomerCredit() {
+        setId_customer_credit(0);
         setProvider_name("");
         setPhone_number("");
         setBalance("");
