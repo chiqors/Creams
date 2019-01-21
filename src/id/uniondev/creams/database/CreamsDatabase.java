@@ -12,6 +12,7 @@ import id.uniondev.creams.impl.CustomerDaoImpl;
 import id.uniondev.creams.impl.EmployeeDaoImpl;
 import id.uniondev.creams.impl.CustomerCreditDaoImpl;
 import id.uniondev.creams.service.CreditRestockKuotaDao;
+import id.uniondev.creams.service.CreditRestockPlnPdamDao;
 import id.uniondev.creams.service.CustomerDao;
 import id.uniondev.creams.service.EmployeeDao;
 import id.uniondev.creams.service.CustomerCreditDao;
@@ -28,6 +29,7 @@ public class CreamsDatabase {
     private static CustomerDao customerDao;
     private static CustomerCreditDao customerCreditDao;
     private static CreditRestockKuotaDao creditRestockKuotaDao;
+    private static CreditRestockPlnPdamDao creditRestockPlnPdamDao;
     
     public static Connection getConnection() throws SQLException {
         if (connection == null) {
@@ -67,4 +69,10 @@ public class CreamsDatabase {
         }
         return creditRestockKuotaDao;
     }
+
+    public static CreditRestockPlnPdamDao getCreditRestockPlnPdamDao() {
+        return creditRestockPlnPdamDao;
+    }
+    
 }
+
