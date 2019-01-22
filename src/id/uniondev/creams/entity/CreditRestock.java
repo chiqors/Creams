@@ -11,19 +11,20 @@ import java.util.Objects;
  *
  * @author ACER
  */
-public class CreditRestockKuota {
-    private Integer id_credit_restock_kuota;
+public class CreditRestock {
+    private Integer id_credit_restock;
     private String provider_name;
     private String type;
     private Integer balance_current;
 
-    public Integer getId_credit_restock_kuota() {
-        return id_credit_restock_kuota;
+    public Integer getId_credit_restock() {
+        return id_credit_restock;
     }
 
-    public void setId_credit_restock_kuota(Integer id_credit_restock_kuota) {
-        this.id_credit_restock_kuota = id_credit_restock_kuota;
+    public void setId_credit_restock(Integer id_credit_restock) {
+        this.id_credit_restock = id_credit_restock;
     }
+
 
     public String getProvider_name() {
         return provider_name;
@@ -52,7 +53,7 @@ public class CreditRestockKuota {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 79 * hash + Objects.hashCode(this.id_credit_restock_kuota);
+        hash = 79 * hash + Objects.hashCode(this.id_credit_restock);
         hash = 79 * hash + Objects.hashCode(this.provider_name);
         hash = 79 * hash + Objects.hashCode(this.type);
         hash = 79 * hash + Objects.hashCode(this.balance_current);
@@ -70,14 +71,14 @@ public class CreditRestockKuota {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final CreditRestockKuota other = (CreditRestockKuota) obj;
+        final CreditRestock other = (CreditRestock) obj;
         if (!Objects.equals(this.provider_name, other.provider_name)) {
             return false;
         }
         if (!Objects.equals(this.type, other.type)) {
             return false;
         }
-        if (!Objects.equals(this.id_credit_restock_kuota, other.id_credit_restock_kuota)) {
+        if (!Objects.equals(this.id_credit_restock, other.id_credit_restock)) {
             return false;
         }
         if (!Objects.equals(this.balance_current, other.balance_current)) {

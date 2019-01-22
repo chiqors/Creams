@@ -9,22 +9,22 @@ package id.uniondev.creams.error;
  *
  * @author ACER
  */
-public class CreditRestockKuotaException extends Exception {
+public class CreditRestockException extends Exception {
 
     /**
-     * Creates a new instance of <code>CreditRestockKuotaException</code>
+     * Creates a new instance of <code>CreditRestockException</code>
      * without detail message.
      */
-    public CreditRestockKuotaException() {
+    public CreditRestockException() {
     }
 
     /**
-     * Constructs an instance of <code>CreditRestockKuotaException</code> with
+     * Constructs an instance of <code>CreditRestockException</code> with
      * the specified detail message.
      *
      * @param msg the detail message.
      */
-    public CreditRestockKuotaException(String msg) {
+    public CreditRestockException(String msg) {
         super(msg);
     }
 }

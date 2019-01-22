@@ -5,7 +5,7 @@
  */
 package id.uniondev.creams.controller;
 
-import id.uniondev.creams.model.CreditRestockKuotaModel;
+import id.uniondev.creams.model.CreditRestockModel;
 import id.uniondev.creams.view.MainFrame;
 import javax.swing.JOptionPane;
 
@@ -13,40 +13,42 @@ import javax.swing.JOptionPane;
  *
  * @author ACER
  */
-public class CreditRestockKuotaController {
-    private CreditRestockKuotaModel model;
+public class CreditRestockController {
+    private CreditRestockModel model;
 
-    public void setModel(CreditRestockKuotaModel model) {
+    public void setModel(CreditRestockModel model) {
         this.model = model;
     }
     
-    public void resetCreditRestockKuota(MainFrame frame) {
-        model.resetCreditRestockKuota();
+    public void resetCreditRestock(MainFrame frame) {
+        model.resetCreditRestock();
     }
     
-    public void updateCreditRestockKuota(MainFrame frame) {
+    public void updateCreditRestock(MainFrame frame) {
         //jika tidak ada yang diseleksi kasih peringatan
-        if (frame.getTblRestockKuotaPulsa().getSelectedRowCount() == 0) {
+        if (frame.getTblRestockPulsa().getSelectedRowCount() == 0) {
             JOptionPane.showMessageDialog(frame, "Please, select the row data that you wanted to update");
             return;
         }
 
-        String provider_name = frame.getTxtRestockKuotaProviderName().getText();
-        Integer balance_current = Integer.parseInt(frame.getTxtRestockKuotaBalance_current().getText());
+        String provider_name = frame.getTxtRestockProviderName().getText();
+        String type = frame.getTxtRestockType().getText();
+        Integer balance_current = Integer.parseInt(frame.getTxtRestockBalance_current().getText());
 
         if (provider_name.trim().equals("")) {
             JOptionPane.showMessageDialog(frame, "Provider Name still empty!");
+        } else if (type.equals("")) {
+            JOptionPane.showMessageDialog(frame, "Type still empty!");
         } else if (balance_current.equals(0)) {
-            JOptionPane.showMessageDialog(frame, "Balance still empty!");
-        } else if (balance_current.equals("")) {
-            JOptionPane.showMessageDialog(frame, "Balance still empty!");
+            JOptionPane.showMessageDialog(frame, "Stock still empty!");
         } else {
             model.setProvider_name(provider_name);
             model.setBalance_current(balance_current);
+            model.setType(type);
             try {
-                model.updateCreditRestockKuota();
+                model.updateCreditRestock();
                 JOptionPane.showMessageDialog(frame, "Credit Restock is successfully updated");
-                model.resetCreditRestockKuota();
+                model.resetCreditRestock();
             } catch (Throwable throwable) {
                 JOptionPane.showMessageDialog(frame, new Object[]{
                     "Error appeared with message ", throwable.getMessage()

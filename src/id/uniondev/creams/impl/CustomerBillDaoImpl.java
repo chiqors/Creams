@@ -5,11 +5,9 @@
  */
 package id.uniondev.creams.impl;
 
-import id.uniondev.creams.entity.CreditRestockPlnPdam;
-import id.uniondev.creams.entity.Employee;
-import id.uniondev.creams.error.CreditRestockPlnPdamException;
-import id.uniondev.creams.error.EmployeeException;
-import id.uniondev.creams.service.CreditRestockPlnPdamDao;
+import id.uniondev.creams.entity.CustomerBill;
+import id.uniondev.creams.error.CustomerBillException;
+import id.uniondev.creams.service.CustomerBillDao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,39 +20,39 @@ import java.util.List;
  *
  * @author Aditya Nur Iskandar
  */
-public class CreditRestockPlnPdamImpl implements CreditRestockPlnPdamDao {
+public class CustomerBillDaoImpl implements CustomerBillDao {
     private Connection connection;
     
-    private final String insertCreditRestockPlnPdam = "INSERT INTO credit_restock_plnpdam(no_pelanggan,"
-            + "nama_pelanggan,type,balance) VALUES (?,?,?,?)";
-    private final String updateCreditRestockPlnPdam = "UPDATE credit_restock_plnpdam SET no_pelanggan = ?, "
-            + "nama_pelanggan = ?, type = ?, balance = ? WHERE id_credit_restock_plnpdam = ?";
-    private final String deleteCreditRestockPlnPdam = "DELETE FROM credit_restock_plnpdam WHERE "
-            + "id_credit_restock_plnpdam = ?";
-    private final String getById = "SELECT * FROM customer WHERE id_credit_restock_plnpdam = ?";
-    private final String getByNoPelanggan = "SELECT * FROM customer WHERE "
-            + "phone_number = ?";
-    private final String selectAll = "SELECT * FROM customer";
+    private final String insertCustomerBill = "INSERT INTO customer_bill(customer_number,"
+            + "customer_name,type,balance) VALUES (?,?,?,?)";
+    private final String updateCustomerBill = "UPDATE customer_bill SET customer_number = ?, "
+            + "customer_name = ?, type = ?, balance = ? WHERE id_customer_bill = ?";
+    private final String deleteCustomerBill = "DELETE FROM customer_bill WHERE "
+            + "id_customer_bill = ?";
+    private final String getById = "SELECT * FROM customer_bill WHERE id_customer_bill = ?";
+    private final String getByCustomer_name = "SELECT * FROM customer_bill WHERE "
+            + "customer_name = ?";
+    private final String selectAll = "SELECT * FROM customer_bill";
 
-    public CreditRestockPlnPdamImpl(Connection connection) {
+    public CustomerBillDaoImpl(Connection connection) {
         this.connection = connection;
     }
 
     @Override
-    public void insertCreditRestockPlnPdam(CreditRestockPlnPdam creditRestockPlnPdam) throws CreditRestockPlnPdamException {
+    public void insertCustomerBill(CustomerBill customerBill) throws CustomerBillException {
 
          PreparedStatement statement = null;
         try {
             connection.setAutoCommit(false);
-            statement = connection.prepareStatement(insertCreditRestockPlnPdam, Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, creditRestockPlnPdam.getNo_pelanggan());
-            statement.setString(1, creditRestockPlnPdam.getNama_pelanggan());
-            statement.setString(2, creditRestockPlnPdam.getType());
-            statement.setString(3, creditRestockPlnPdam.getBalance());
+            statement = connection.prepareStatement(insertCustomerBill, Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1, customerBill.getCustomer_number());
+            statement.setString(2, customerBill.getCustomer_name());
+            statement.setString(3, customerBill.getType());
+            statement.setInt(4, customerBill.getBalance());
             statement.executeUpdate();
             ResultSet result = statement.getGeneratedKeys();
             if (result.next()) {
-                creditRestockPlnPdam.setId_credit_restock_plnpdam(result.getInt(1));
+                customerBill.setId_customer_bill(result.getInt(1));
             }
             connection.commit();
         } catch (SQLException e) {
@@ -62,7 +60,7 @@ public class CreditRestockPlnPdamImpl implements CreditRestockPlnPdamDao {
                 connection.rollback();
             } catch (Exception ex) {
             }
-            throw new CreditRestockPlnPdamException(e.getMessage());
+            throw new CustomerBillException(e.getMessage());
         } finally {
             try {
                 connection.setAutoCommit(true);
@@ -78,19 +76,20 @@ public class CreditRestockPlnPdamImpl implements CreditRestockPlnPdamDao {
     }
 
     @Override
-    public void updateCreditRestockPlnPdam(CreditRestockPlnPdam creditRestockPlnPdam) throws CreditRestockPlnPdamException {
+    public void updateCustomerBill(CustomerBill customerBill) throws CustomerBillException {
         PreparedStatement statement = null;
         try {
             connection.setAutoCommit(false);
-            statement = connection.prepareStatement(updateCreditRestockPlnPdam, Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, creditRestockPlnPdam.getNo_pelanggan());
-            statement.setString(1, creditRestockPlnPdam.getNama_pelanggan());
-            statement.setString(2, creditRestockPlnPdam.getType());
-            statement.setString(3, creditRestockPlnPdam.getBalance());
+            statement = connection.prepareStatement(updateCustomerBill, Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1, customerBill.getCustomer_number());
+            statement.setString(2, customerBill.getCustomer_name());
+            statement.setString(3, customerBill.getType());
+            statement.setInt(4, customerBill.getBalance());
+            statement.setInt(5, customerBill.getId_customer_bill());
             statement.executeUpdate();
             ResultSet result = statement.getGeneratedKeys();
             if (result.next()) {
-                creditRestockPlnPdam.setId_credit_restock_plnpdam(result.getInt(1));
+                customerBill.setId_customer_bill(result.getInt(1));
             }
             connection.commit();
         } catch (SQLException e) {
@@ -98,7 +97,7 @@ public class CreditRestockPlnPdamImpl implements CreditRestockPlnPdamDao {
                 connection.rollback();
             } catch (Exception ex) {
             }
-            throw new CreditRestockPlnPdamException(e.getMessage());
+            throw new CustomerBillException(e.getMessage());
         } finally {
             try {
                 connection.setAutoCommit(true);
@@ -111,17 +110,15 @@ public class CreditRestockPlnPdamImpl implements CreditRestockPlnPdamDao {
                 }
             }
         }
-        
-        
     }
 
     @Override
-    public void deleteCreditRestockPlnPdam(Integer id_credit_restock_plnpdam) throws CreditRestockPlnPdamException {
+    public void deleteCustomerBill(Integer id_customer_bill) throws CustomerBillException {
          PreparedStatement statement = null;
         try {
             connection.setAutoCommit(false);
-            statement = connection.prepareStatement(deleteCreditRestockPlnPdam);
-            statement.setInt(1, id_credit_restock_plnpdam);
+            statement = connection.prepareStatement(deleteCustomerBill);
+            statement.setInt(1, id_customer_bill);
             statement.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
@@ -129,7 +126,7 @@ public class CreditRestockPlnPdamImpl implements CreditRestockPlnPdamDao {
                 connection.rollback();
             } catch (Exception ex) {
             }
-            throw new CreditRestockPlnPdamException(e.getMessage());
+            throw new CustomerBillException(e.getMessage());
         } finally {
             try {
                 connection.setAutoCommit(true);
@@ -145,23 +142,23 @@ public class CreditRestockPlnPdamImpl implements CreditRestockPlnPdamDao {
     }
 
     @Override
-    public CreditRestockPlnPdam getCreditRestockPlnPdam(Integer id_credit_restock_plnpdam) throws CreditRestockPlnPdamException {
+    public CustomerBill getCustomerBill(Integer id_customer_bill) throws CustomerBillException {
         PreparedStatement statement = null;
         try {
             connection.setAutoCommit(false);
             statement = connection.prepareStatement(getById);
-            statement.setInt(1, id_credit_restock_plnpdam);
+            statement.setInt(1, id_customer_bill);
             ResultSet result = statement.executeQuery();
-            CreditRestockPlnPdam creditRestockPlnPdam = null;
+            CustomerBill creditRestockPlnPdam = null;
             if (result.next()) {
-                creditRestockPlnPdam = new CreditRestockPlnPdam();
-                creditRestockPlnPdam.setId_credit_restock_plnpdam(result.getInt("ID_CREDIT_RESTOCK_PLNPDAM"));
-                creditRestockPlnPdam.setNo_pelanggan(result.getString("NO_PELANGGAN"));
-                creditRestockPlnPdam.setNama_pelanggan(result.getString("NAMA_PELANGGAN"));
+                creditRestockPlnPdam = new CustomerBill();
+                creditRestockPlnPdam.setId_customer_bill(result.getInt("ID_CUSTOMER_BILL"));
+                creditRestockPlnPdam.setCustomer_number(result.getString("CUSTOMER_NUMBER"));
+                creditRestockPlnPdam.setCustomer_name(result.getString("CUSTOMER_NAME"));
                 creditRestockPlnPdam.setType(result.getString("TYPE"));
-                creditRestockPlnPdam.setBalance(result.getString("BALANCE"));
+                creditRestockPlnPdam.setBalance(result.getInt("BALANCE"));
             } else {
-               throw new CreditRestockPlnPdamException("Customer with id " + id_credit_restock_plnpdam + " could not be find");
+               throw new CustomerBillException("Billing with id " + id_customer_bill + " could not be find");
             }
             connection.commit();
             return creditRestockPlnPdam;
@@ -170,7 +167,7 @@ public class CreditRestockPlnPdamImpl implements CreditRestockPlnPdamDao {
                 connection.rollback();
             } catch (Exception ex) {
             }
-            throw new CreditRestockPlnPdamException(e.getMessage());
+            throw new CustomerBillException(e.getMessage());
         } finally {
             try {
                 connection.setAutoCommit(true);
@@ -186,23 +183,23 @@ public class CreditRestockPlnPdamImpl implements CreditRestockPlnPdamDao {
     }
 
     @Override
-    public CreditRestockPlnPdam getCreditRestockPlnPdam(String nama_pelanggan, String type) throws CreditRestockPlnPdamException {
+    public CustomerBill getCustomerBill(String customer_name) throws CustomerBillException {
     PreparedStatement statement = null;
         try {
             connection.setAutoCommit(false);
-            statement = connection.prepareStatement(getByNoPelanggan);
-            statement.setString(1, nama_pelanggan);
+            statement = connection.prepareStatement(getByCustomer_name);
+            statement.setString(1, customer_name);
             ResultSet result = statement.executeQuery();
-            CreditRestockPlnPdam creditRestockPlnPdam = null;
+            CustomerBill creditRestockPlnPdam = null;
             if (result.next()) {
-                creditRestockPlnPdam = new CreditRestockPlnPdam();
-                creditRestockPlnPdam.setId_credit_restock_plnpdam(result.getInt("ID_CREDIT_RESTOCK_PLNPDAM"));
-                creditRestockPlnPdam.setNo_pelanggan(result.getString("NO_PELANGGAN"));
-                creditRestockPlnPdam.setNama_pelanggan(result.getString("NAMA_PELANGGAN"));
+                creditRestockPlnPdam = new CustomerBill();
+                creditRestockPlnPdam.setId_customer_bill(result.getInt("ID_CUSTOMER_BILL"));
+                creditRestockPlnPdam.setCustomer_number(result.getString("CUSTOMER_NUMBER"));
+                creditRestockPlnPdam.setCustomer_name(result.getString("CUSTOMER_NAME"));
                 creditRestockPlnPdam.setType(result.getString("TYPE"));
-                creditRestockPlnPdam.setBalance(result.getString("BALANCE"));
+                creditRestockPlnPdam.setBalance(result.getInt("BALANCE"));
             } else {
-                throw new CreditRestockPlnPdamException("Customer with name " + nama_pelanggan + " could not be find");
+                throw new CustomerBillException("Billing with customer name " + customer_name + " could not be find");
             }
             connection.commit();
             return creditRestockPlnPdam;
@@ -211,7 +208,7 @@ public class CreditRestockPlnPdamImpl implements CreditRestockPlnPdamDao {
                 connection.rollback();
             } catch (Exception ex) {
             }
-            throw new CreditRestockPlnPdamException(e.getMessage());
+            throw new CustomerBillException(e.getMessage());
         } finally {
             try {
                 connection.setAutoCommit(true);
@@ -227,21 +224,21 @@ public class CreditRestockPlnPdamImpl implements CreditRestockPlnPdamDao {
     }
 
     @Override
-    public List<CreditRestockPlnPdam> selectAllCreditRestockPlnPdam() throws CreditRestockPlnPdamException {
+    public List<CustomerBill> selectAllCustomerBill() throws CustomerBillException {
         Statement statement = null;
-        List<CreditRestockPlnPdam> list = new ArrayList<CreditRestockPlnPdam>();
+        List<CustomerBill> list = new ArrayList<CustomerBill>();
         try {
             connection.setAutoCommit(false);
             statement = connection.createStatement();
             ResultSet result = statement.executeQuery(selectAll);
-            CreditRestockPlnPdam creditRestockPlnPdam = null;
+            CustomerBill creditRestockPlnPdam = null;
             while (result.next()) {
-                creditRestockPlnPdam = new CreditRestockPlnPdam();
-                creditRestockPlnPdam.setId_credit_restock_plnpdam(result.getInt("ID_CREDIT_RESTOCK_PLNPDAM"));
-                creditRestockPlnPdam.setNo_pelanggan(result.getString("NO_PELANGGAN"));
-                creditRestockPlnPdam.setNama_pelanggan(result.getString("NAMA_PELANGGAN"));
+                creditRestockPlnPdam = new CustomerBill();
+                creditRestockPlnPdam.setId_customer_bill(result.getInt("ID_CUSTOMER_BILL"));
+                creditRestockPlnPdam.setCustomer_number(result.getString("CUSTOMER_NUMBER"));
+                creditRestockPlnPdam.setCustomer_name(result.getString("CUSTOMER_NAME"));
                 creditRestockPlnPdam.setType(result.getString("TYPE"));
-                creditRestockPlnPdam.setBalance(result.getString("BALANCE"));
+                creditRestockPlnPdam.setBalance(result.getInt("BALANCE"));
                 list.add(creditRestockPlnPdam);
             }
             connection.commit();
@@ -251,7 +248,7 @@ public class CreditRestockPlnPdamImpl implements CreditRestockPlnPdamDao {
                 connection.rollback();
             } catch (Exception ex) {
             }
-            throw new CreditRestockPlnPdamException(e.getMessage());
+            throw new CustomerBillException(e.getMessage());
         } finally {
             try {
                 connection.setAutoCommit(true);

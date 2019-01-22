@@ -5,7 +5,7 @@
  */
 package id.uniondev.creams.model;
 
-import id.uniondev.creams.entity.CreditRestockKuota;
+import id.uniondev.creams.entity.CreditRestock;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
@@ -14,10 +14,10 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author ACER
  */
-public class CreditRestockKuotaTableModel extends AbstractTableModel {
-    private List<CreditRestockKuota> list = new ArrayList<CreditRestockKuota>();
+public class CreditRestockTableModel extends AbstractTableModel {
+    private List<CreditRestock> list = new ArrayList<CreditRestock>();
 
-    public void setList(List<CreditRestockKuota> list) {
+    public void setList(List<CreditRestock> list) {
         this.list = list;
     }
     
@@ -28,10 +28,10 @@ public class CreditRestockKuotaTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 2;
+        return 3;
     }
 
-    public boolean add(CreditRestockKuota c) {
+    public boolean add(CreditRestock c) {
         try {
             return list.add(c);
         } finally {
@@ -39,11 +39,11 @@ public class CreditRestockKuotaTableModel extends AbstractTableModel {
         }
     }
     
-    public CreditRestockKuota get(int index) {
+    public CreditRestock get(int index) {
         return list.get(index);
     }
 
-    public CreditRestockKuota set(int index, CreditRestockKuota element) {
+    public CreditRestock set(int index, CreditRestock element) {
         try {
             return list.set(index, element);
         } finally {
@@ -51,7 +51,7 @@ public class CreditRestockKuotaTableModel extends AbstractTableModel {
         }
     }
 
-    public CreditRestockKuota remove(int index) {
+    public CreditRestock remove(int index) {
         try {
             return list.remove(index);
         } finally {
@@ -63,7 +63,8 @@ public class CreditRestockKuotaTableModel extends AbstractTableModel {
     public String getColumnName(int column) {
         switch(column) {
             case 0 : return "Provider Name";
-            case 1 : return "Balance Stock";
+            case 1 : return "Stock";
+            case 2 : return "Type";
             default : return null;
         }
     }
@@ -73,6 +74,7 @@ public class CreditRestockKuotaTableModel extends AbstractTableModel {
         switch(columnIndex) {
             case 0 : return list.get(rowIndex).getProvider_name();
             case 1 : return list.get(rowIndex).getBalance_current();
+            case 2 : return list.get(rowIndex).getType();
             default : return null;
         }
     }

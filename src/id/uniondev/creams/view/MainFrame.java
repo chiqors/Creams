@@ -8,20 +8,21 @@ package id.uniondev.creams.view;
 import id.uniondev.creams.controller.CustomerController;
 import id.uniondev.creams.controller.EmployeeController;
 import id.uniondev.creams.controller.CustomerCreditController;
-import id.uniondev.creams.controller.CreditRestockKuotaController;
-import id.uniondev.creams.controller.CreditRestockPlnPdamController;
+import id.uniondev.creams.controller.CreditRestockController;
+import id.uniondev.creams.controller.CustomerBillController;
 import id.uniondev.creams.database.CreamsDatabase;
-import id.uniondev.creams.entity.CreditRestockKuota;
-import id.uniondev.creams.entity.CreditRestockPlnPdam;
+import id.uniondev.creams.entity.CreditRestock;
+import id.uniondev.creams.entity.CustomerBill;
 import id.uniondev.creams.entity.Customer;
 import id.uniondev.creams.entity.Employee;
 import id.uniondev.creams.entity.CustomerCredit;
-import id.uniondev.creams.error.CreditRestockKuotaException;
+import id.uniondev.creams.error.CreditRestockException;
+import id.uniondev.creams.error.CustomerBillException;
 import id.uniondev.creams.error.CustomerCreditException;
 import id.uniondev.creams.error.CustomerException;
 import id.uniondev.creams.error.EmployeeException;
-import id.uniondev.creams.event.CreditRestockKuotaListener;
-import id.uniondev.creams.event.CreditRestockPlnPdamListener;
+import id.uniondev.creams.event.CustomerCreditListener;
+import id.uniondev.creams.event.CustomerBillListener;
 import id.uniondev.creams.event.CustomerListener;
 import id.uniondev.creams.event.EmployeeListener;
 import id.uniondev.creams.model.CustomerModel;
@@ -30,8 +31,12 @@ import id.uniondev.creams.model.EmployeeModel;
 import id.uniondev.creams.model.EmployeeTableModel;
 import id.uniondev.creams.model.CustomerCreditModel;
 import id.uniondev.creams.model.CustomerCreditTableModel;
+import id.uniondev.creams.model.CustomerBillModel;
+import id.uniondev.creams.model.CustomerBillTableModel;
 import id.uniondev.creams.service.CustomerDao;
 import id.uniondev.creams.service.EmployeeDao;
+import id.uniondev.creams.service.CustomerBillDao;
+import id.uniondev.creams.service.CustomerCreditDao;
 import java.awt.Color;
 import java.sql.SQLException;
 import javax.swing.JComboBox;
@@ -42,18 +47,23 @@ import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import id.uniondev.creams.event.CustomerCreditListener;
-import id.uniondev.creams.model.CreditRestockKuotaModel;
-import id.uniondev.creams.model.CreditRestockKuotaTableModel;
-import id.uniondev.creams.model.CreditRestockPlnPdamModel;
-import id.uniondev.creams.model.CreditRestockPlnPdamTableModel;
-import id.uniondev.creams.service.CreditRestockKuotaDao;
+import id.uniondev.creams.model.CreditRestockModel;
+import id.uniondev.creams.model.CreditRestockTableModel;
+import id.uniondev.creams.model.CustomerBillModel;
+import id.uniondev.creams.model.CustomerBillTableModel;
 import id.uniondev.creams.service.CustomerCreditDao;
+import javax.swing.JPanel;
+import id.uniondev.creams.event.CustomerBillListener;
+import id.uniondev.creams.service.CustomerBillDao;
+import id.uniondev.creams.event.CreditRestockListener;
+import id.uniondev.creams.service.CreditRestockDao;
+import id.uniondev.creams.service.CreditRestockDao;
 
 /**
  *
  * @author UnionDev
  */
-public class MainFrame extends javax.swing.JFrame implements EmployeeListener, CustomerListener, CustomerCreditListener, CreditRestockKuotaListener,CreditRestockPlnPdamListener,  ListSelectionListener {
+public class MainFrame extends javax.swing.JFrame implements EmployeeListener, CustomerListener, CustomerCreditListener, CreditRestockListener, CustomerBillListener,  ListSelectionListener {
 
     /**
      * Creates new form MainFrame
@@ -67,20 +77,20 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private EmployeeTableModel employeeTableModel;
     private CustomerTableModel customerTableModel;
     private CustomerCreditTableModel customerCreditTableModel;
-    private CreditRestockKuotaTableModel creditRestockKuotaTableModel;
-    private CreditRestockPlnPdamTableModel creditRestockPlnPdamTableModel;
+    private CreditRestockTableModel creditRestockTableModel;
+    private CustomerBillTableModel customerBillTableModel;
     
     private EmployeeModel employeeModel;
     private CustomerModel customerModel;
     private CustomerCreditModel customerCreditModel;
-    private CreditRestockKuotaModel creditRestockKuotaModel;
-    private CreditRestockPlnPdamModel creditRestockPlnPdamModel;
+    private CreditRestockModel creditRestockModel;
+    private CustomerBillModel customerBillModel;
     
     private EmployeeController employeeController;
     private CustomerController customerController;
     private CustomerCreditController customerCreditController;
-    private CreditRestockKuotaController creditRestockKuotaController;
-    private CreditRestockPlnPdamController creditRestockPlnPdamController;
+    private CreditRestockController creditRestockController;
+    private CustomerBillController customerBillController;
     
     public MainFrame() {
         employeeTableModel = new EmployeeTableModel();
@@ -101,17 +111,18 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         customerCreditController = new CustomerCreditController();
         customerCreditController.setModel(customerCreditModel);
         
-        creditRestockKuotaTableModel = new CreditRestockKuotaTableModel();
-        creditRestockKuotaModel = new CreditRestockKuotaModel();
-        creditRestockKuotaModel.setListener(this);
-        creditRestockKuotaController = new CreditRestockKuotaController();
-        creditRestockKuotaController.setModel(creditRestockKuotaModel);
+        creditRestockTableModel = new CreditRestockTableModel();
+        creditRestockModel = new CreditRestockModel();
+        creditRestockModel.setListener(this);
+        creditRestockController = new CreditRestockController();
+        creditRestockController.setModel(creditRestockModel);
         
-        creditRestockPlnPdamTableModel = new CreditRestockPlnPdamTableModel();
-        creditRestockPlnPdamModel = new CreditRestockPlnPdamModel();
-        creditRestockPlnPdamModel.setListener((CreditRestockPlnPdamListener) this);
-        creditRestockPlnPdamController = new CreditRestockPlnPdamController();
-        creditRestockPlnPdamController.setModel(creditRestockPlnPdamModel);
+        customerBillTableModel = new CustomerBillTableModel();
+        customerBillModel = new CustomerBillModel();
+        customerBillModel.setListener(this);
+        customerBillController = new CustomerBillController();
+        customerBillController.setModel(customerBillModel);
+        
         initComponents();
         
         tblEmployee.getSelectionModel().addListSelectionListener(this);
@@ -123,13 +134,23 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         tblCustomerCredit.getSelectionModel().addListSelectionListener(this);
         tblCustomerCredit.setModel(customerCreditTableModel);
         
-        tblRestockKuotaPulsa.getSelectionModel().addListSelectionListener(this);
-        tblRestockKuotaPulsa.setModel(creditRestockKuotaTableModel);
+        tblRestockPulsa.getSelectionModel().addListSelectionListener(this);
+        tblRestockPulsa.setModel(creditRestockTableModel);
         
-        tblPlnPdam.getSelectionModel().addListSelectionListener(this);
-        tblPlnPdam.setModel(creditRestockPlnPdamTableModel);
+        tblRestockKuotaView.getSelectionModel().addListSelectionListener(this);
+        tblRestockKuotaView.setModel(creditRestockTableModel);
+        
+        tblStock.getSelectionModel().addListSelectionListener(this);
+        tblStock.setModel(creditRestockTableModel);
+        
+        tblCustomerBill.getSelectionModel().addListSelectionListener(this);
+        tblCustomerBill.setModel(customerBillTableModel);
     }
 
+    public JPanel getBtnManageMenu() {
+        return btnManageMenu;
+    }
+    
     public JTable getTblCustomerCredit() {
         return tblCustomerCredit;
     }
@@ -183,22 +204,19 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         tblCustomerCredit = new javax.swing.JTable();
         jScrollBar5 = new javax.swing.JScrollBar();
         jScrollPane6 = new javax.swing.JScrollPane();
-        tblRestockKuotaPulsa = new javax.swing.JTable();
+        tblRestockPulsa = new javax.swing.JTable();
         btnReStockKuotaPulsa = new javax.swing.JButton();
         cbProviderPulsa = new javax.swing.JComboBox();
         cbBesarPulsa = new javax.swing.JComboBox();
-        panelKartuView = new javax.swing.JPanel();
-        btnReStock = new javax.swing.JButton();
-        btnStock = new javax.swing.JButton();
-        panelReStockView = new javax.swing.JPanel();
+        paneFormReStockKuota = new javax.swing.JPanel();
+        btnRestockKuotaSave = new javax.swing.JButton();
+        txtRestockBalance_current = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        txtRestockProviderName = new javax.swing.JTextField();
+        txtRestockType = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
-        cbJenisReStock = new javax.swing.JComboBox();
         jLabel16 = new javax.swing.JLabel();
-        cbProviderReStock = new javax.swing.JComboBox();
         jLabel17 = new javax.swing.JLabel();
-        txtJumlahNomorReStock = new javax.swing.JTextField();
-        btnNextReStock = new javax.swing.JButton();
-        btnSubmitReStock = new javax.swing.JButton();
         panelReStockPerdanaView = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblReStockPerdana = new javax.swing.JTable();
@@ -208,17 +226,11 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         jScrollBar1 = new javax.swing.JScrollBar();
         panelReStockKuotaView = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblRestockKuotaView = new javax.swing.JTable();
         jScrollBar2 = new javax.swing.JScrollBar();
         btnBackReStockKuota = new javax.swing.JButton();
         btnSaveReStockKuota = new javax.swing.JButton();
         btnSubmitReStockKuota = new javax.swing.JButton();
-        paneFormlReStockKuota = new javax.swing.JPanel();
-        btnRestockKuotaSave = new javax.swing.JButton();
-        txtRestockKuotaBalance_current = new javax.swing.JTextField();
-        jLabel13 = new javax.swing.JLabel();
-        txtRestockKuotaProviderName = new javax.swing.JTextField();
-        txtRestockKuotaType = new javax.swing.JTextField();
         panelStockView = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tblStock = new javax.swing.JTable();
@@ -230,7 +242,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         btnDeleteStock = new javax.swing.JButton();
         panelTagihanView = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
-        tblPlnPdam = new javax.swing.JTable();
+        tblCustomerBill = new javax.swing.JTable();
         cbJenisTagihan = new javax.swing.JComboBox();
         jScrollBar4 = new javax.swing.JScrollBar();
         btnDeleteTagihan = new javax.swing.JButton();
@@ -238,20 +250,22 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         jLabel55 = new javax.swing.JLabel();
         panelFormTagihanView = new javax.swing.JPanel();
         lblHeaderFormTagihan = new javax.swing.JLabel();
-        txtFormIdTagihan = new javax.swing.JTextField();
+        txtFormCustomerBillId_customer_bill = new javax.swing.JTextField();
         lblIdPelangganTagihan = new javax.swing.JLabel();
-        txtNoPelanggan = new javax.swing.JTextField();
-        txtNamaPelanggan = new javax.swing.JTextField();
-        txtJenisPembayaran = new javax.swing.JTextField();
+        txtFormCustomerBillCustomer_number = new javax.swing.JTextField();
+        txtFormCustomerBillCustomer_name = new javax.swing.JTextField();
+        txtFormCustomerBillType = new javax.swing.JTextField();
         lblNoPelangganTagihan = new javax.swing.JLabel();
         lblNamaPelangganTagihan = new javax.swing.JLabel();
         lblJenis = new javax.swing.JLabel();
-        txtBalancePembayaran = new javax.swing.JTextField();
+        txtFormCustomerBillBalance = new javax.swing.JTextField();
         lblBalancePembayaran = new javax.swing.JLabel();
-        btnCreatePlnPdam = new javax.swing.JButton();
-        btnUpdatePlnPdam = new javax.swing.JButton();
-        btnKembaliTagihan = new javax.swing.JPanel();
+        btnFormCustomerBillCreate = new javax.swing.JButton();
+        btnFormCustomerBillUpdate = new javax.swing.JButton();
+        btnFormCustomerBillKembali = new javax.swing.JPanel();
         jLabel49 = new javax.swing.JLabel();
+        cbJenisPembayaran = new javax.swing.JComboBox<>();
+        btnFormCustomerBillReset = new javax.swing.JButton();
         panelPendapatanView = new javax.swing.JPanel();
         jLabel23 = new javax.swing.JLabel();
         jLabel24 = new javax.swing.JLabel();
@@ -386,6 +400,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Creams - Your Management App");
         setLocationByPlatform(true);
+        setResizable(false);
 
         backGround.setBackground(new java.awt.Color(0, 0, 0));
         backGround.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -514,7 +529,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelHomeViewLayout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 105, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 113, Short.MAX_VALUE)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
                 .addComponent(jLabel12)
@@ -564,31 +579,31 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         });
         jScrollPane5.setViewportView(tblCustomerCredit);
 
-        tblRestockKuotaPulsa.setBackground(new java.awt.Color(0, 0, 0));
-        tblRestockKuotaPulsa.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
-        tblRestockKuotaPulsa.setForeground(new java.awt.Color(240, 240, 240));
-        tblRestockKuotaPulsa.setModel(new javax.swing.table.DefaultTableModel(
+        tblRestockPulsa.setBackground(new java.awt.Color(0, 0, 0));
+        tblRestockPulsa.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
+        tblRestockPulsa.setForeground(new java.awt.Color(240, 240, 240));
+        tblRestockPulsa.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"TELKOMSEL", null},
-                {"TRI", null},
-                {"INDOSAT", null},
-                {"XL", null},
-                {"AXIS", null},
-                {"SMARTFREN", null}
+                {"TELKOMSEL", null, null},
+                {"TRI", null, null},
+                {"INDOSAT", null, null},
+                {"XL", null, null},
+                {"AXIS", null, null},
+                {"SMARTFREN", null, null}
             },
             new String [] {
-                "PROVIDER", "KUOTA"
+                "PROVIDER", "KUOTA", "TYPE"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Integer.class
+                java.lang.String.class, java.lang.Integer.class, java.lang.Object.class
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
         });
-        jScrollPane6.setViewportView(tblRestockKuotaPulsa);
+        jScrollPane6.setViewportView(tblRestockPulsa);
 
         btnReStockKuotaPulsa.setText("RE STOCK KUOTA");
         btnReStockKuotaPulsa.addActionListener(new java.awt.event.ActionListener() {
@@ -619,10 +634,12 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
                         .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollBar5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
-                        .addGroup(panelPulsaViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(btnReStockKuotaPulsa, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addGroup(panelPulsaViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelPulsaViewLayout.createSequentialGroup()
+                                .addGap(0, 47, Short.MAX_VALUE)
+                                .addComponent(btnReStockKuotaPulsa, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                         .addGap(30, 30, 30))))
         );
         panelPulsaViewLayout.setVerticalGroup(
@@ -640,139 +657,104 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
                         .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
                         .addComponent(btnReStockKuotaPulsa)))
-                .addContainerGap(87, Short.MAX_VALUE))
+                .addContainerGap(95, Short.MAX_VALUE))
         );
 
         panelView.add(panelPulsaView, "card5");
 
-        panelKartuView.setBackground(new java.awt.Color(0, 0, 0));
+        paneFormReStockKuota.setBackground(new java.awt.Color(0, 0, 0));
 
-        btnReStock.setBackground(new java.awt.Color(0, 0, 0));
-        btnReStock.setForeground(new java.awt.Color(240, 240, 240));
-        btnReStock.setText("RE-STOCK");
-        btnReStock.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnRestockKuotaSave.setText("Save");
+        btnRestockKuotaSave.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnReStockMouseClicked(evt);
+                btnRestockKuotaSaveMouseClicked(evt);
             }
         });
-        btnReStock.addActionListener(new java.awt.event.ActionListener() {
+        btnRestockKuotaSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnReStockActionPerformed(evt);
+                btnRestockKuotaSaveActionPerformed(evt);
             }
         });
 
-        btnStock.setBackground(new java.awt.Color(0, 0, 0));
-        btnStock.setForeground(new java.awt.Color(240, 240, 240));
-        btnStock.setText("STOCK");
-        btnStock.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnStockMouseClicked(evt);
-            }
-        });
+        txtRestockBalance_current.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
 
-        javax.swing.GroupLayout panelKartuViewLayout = new javax.swing.GroupLayout(panelKartuView);
-        panelKartuView.setLayout(panelKartuViewLayout);
-        panelKartuViewLayout.setHorizontalGroup(
-            panelKartuViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelKartuViewLayout.createSequentialGroup()
-                .addGap(122, 122, 122)
-                .addComponent(btnReStock, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(99, 99, 99)
-                .addComponent(btnStock, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(131, Short.MAX_VALUE))
-        );
-        panelKartuViewLayout.setVerticalGroup(
-            panelKartuViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelKartuViewLayout.createSequentialGroup()
-                .addGap(187, 187, 187)
-                .addGroup(panelKartuViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnReStock, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnStock, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(216, Short.MAX_VALUE))
-        );
+        jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel13.setText("KARTU PROVIDER");
 
-        panelView.add(panelKartuView, "card3");
-
-        panelReStockView.setBackground(new java.awt.Color(0, 0, 0));
-
-        jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
-        jLabel11.setForeground(new java.awt.Color(240, 240, 240));
-        jLabel11.setText("PROVIDER");
-
-        cbJenisReStock.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
-        cbJenisReStock.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "--JENIS--", "PERDANA", "KUOTA" }));
-
-        jLabel16.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
-        jLabel16.setForeground(new java.awt.Color(240, 240, 240));
-        jLabel16.setText("JENIS");
-
-        cbProviderReStock.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
-        cbProviderReStock.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "--PROVIDER--", "TELKOMSEL", "TRI", "XL", "AXIS", "INDOSAT", "SMARTFREN" }));
-
-        jLabel17.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
-        jLabel17.setForeground(new java.awt.Color(240, 240, 240));
-        jLabel17.setText("TOTAL NOMOR YANG AKAN DIMASUKKAN : ");
-
-        txtJumlahNomorReStock.addActionListener(new java.awt.event.ActionListener() {
+        txtRestockProviderName.setEditable(false);
+        txtRestockProviderName.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
+        txtRestockProviderName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtJumlahNomorReStockActionPerformed(evt);
+                txtRestockProviderNameActionPerformed(evt);
             }
         });
 
-        btnNextReStock.setText("NEXT");
+        txtRestockType.setEditable(false);
+        txtRestockType.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
 
-        btnSubmitReStock.setText("STOCK");
-        btnSubmitReStock.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSubmitReStockActionPerformed(evt);
-            }
-        });
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel11.setText("Type");
 
-        javax.swing.GroupLayout panelReStockViewLayout = new javax.swing.GroupLayout(panelReStockView);
-        panelReStockView.setLayout(panelReStockViewLayout);
-        panelReStockViewLayout.setHorizontalGroup(
-            panelReStockViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelReStockViewLayout.createSequentialGroup()
-                .addGap(97, 97, 97)
-                .addGroup(panelReStockViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelReStockViewLayout.createSequentialGroup()
-                        .addGroup(panelReStockViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtJumlahNomorReStock, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel17)
-                            .addComponent(cbProviderReStock, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel16)
-                            .addComponent(jLabel11)
-                            .addComponent(cbJenisReStock, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(433, Short.MAX_VALUE))
-                    .addGroup(panelReStockViewLayout.createSequentialGroup()
-                        .addComponent(btnNextReStock, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnSubmitReStock, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(68, 68, 68))))
+        jLabel16.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel16.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel16.setText("Provider");
+
+        jLabel17.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel17.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel17.setText("Balance");
+
+        javax.swing.GroupLayout paneFormReStockKuotaLayout = new javax.swing.GroupLayout(paneFormReStockKuota);
+        paneFormReStockKuota.setLayout(paneFormReStockKuotaLayout);
+        paneFormReStockKuotaLayout.setHorizontalGroup(
+            paneFormReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(paneFormReStockKuotaLayout.createSequentialGroup()
+                .addGroup(paneFormReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(paneFormReStockKuotaLayout.createSequentialGroup()
+                        .addGap(48, 48, 48)
+                        .addComponent(jLabel13))
+                    .addGroup(paneFormReStockKuotaLayout.createSequentialGroup()
+                        .addGroup(paneFormReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(paneFormReStockKuotaLayout.createSequentialGroup()
+                                .addGap(73, 73, 73)
+                                .addComponent(jLabel16))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneFormReStockKuotaLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(paneFormReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel17, javax.swing.GroupLayout.Alignment.TRAILING))))
+                        .addGap(18, 18, 18)
+                        .addGroup(paneFormReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtRestockProviderName, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
+                            .addComponent(txtRestockBalance_current)
+                            .addComponent(txtRestockType)
+                            .addComponent(btnRestockKuotaSave, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(281, Short.MAX_VALUE))
         );
-        panelReStockViewLayout.setVerticalGroup(
-            panelReStockViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelReStockViewLayout.createSequentialGroup()
-                .addGap(83, 83, 83)
-                .addComponent(jLabel11)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbProviderReStock, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+        paneFormReStockKuotaLayout.setVerticalGroup(
+            paneFormReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneFormReStockKuotaLayout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addComponent(jLabel13)
+                .addGap(84, 84, 84)
+                .addGroup(paneFormReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtRestockProviderName, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel16))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(paneFormReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtRestockBalance_current, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel17))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(paneFormReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtRestockType, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11))
                 .addGap(18, 18, 18)
-                .addComponent(jLabel16)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbJenisReStock, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(57, 57, 57)
-                .addComponent(jLabel17)
-                .addGap(5, 5, 5)
-                .addComponent(txtJumlahNomorReStock, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33)
-                .addGroup(panelReStockViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnNextReStock)
-                    .addComponent(btnSubmitReStock))
-                .addContainerGap(87, Short.MAX_VALUE))
+                .addComponent(btnRestockKuotaSave, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(138, Short.MAX_VALUE))
         );
 
-        panelView.add(panelReStockView, "card7");
+        panelView.add(paneFormReStockKuota, "card11");
 
         panelReStockPerdanaView.setBackground(new java.awt.Color(0, 0, 0));
 
@@ -852,7 +834,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
                 .addGroup(panelReStockPerdanaViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSaveReStockPerdana)
                     .addComponent(btnBackReStockPerdana))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                 .addComponent(btnSubmitReStockPerdana)
                 .addContainerGap())
         );
@@ -861,9 +843,9 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
 
         panelReStockKuotaView.setBackground(new java.awt.Color(0, 0, 0));
 
-        jTable1.setBackground(new java.awt.Color(0, 0, 0));
-        jTable1.setForeground(new java.awt.Color(240, 240, 240));
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblRestockKuotaView.setBackground(new java.awt.Color(0, 0, 0));
+        tblRestockKuotaView.setForeground(new java.awt.Color(240, 240, 240));
+        tblRestockKuotaView.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -882,7 +864,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
                 return types [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblRestockKuotaView);
 
         btnBackReStockKuota.setText("BACK");
 
@@ -899,21 +881,22 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         panelReStockKuotaView.setLayout(panelReStockKuotaViewLayout);
         panelReStockKuotaViewLayout.setHorizontalGroup(
             panelReStockKuotaViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelReStockKuotaViewLayout.createSequentialGroup()
-                .addGap(247, 247, 247)
-                .addComponent(btnBackReStockKuota, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(36, 36, 36)
-                .addComponent(btnSaveReStockKuota, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelReStockKuotaViewLayout.createSequentialGroup()
                 .addContainerGap(65, Short.MAX_VALUE)
-                .addGroup(panelReStockKuotaViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnSubmitReStockKuota, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panelReStockKuotaViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(panelReStockKuotaViewLayout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 621, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollBar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(61, 61, 61))
+                        .addComponent(btnBackReStockKuota, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(34, 34, 34)
+                        .addComponent(btnSaveReStockKuota, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelReStockKuotaViewLayout.createSequentialGroup()
+                        .addGroup(panelReStockKuotaViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnSubmitReStockKuota, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panelReStockKuotaViewLayout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 621, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollBar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(61, 61, 61))))
         );
         panelReStockKuotaViewLayout.setVerticalGroup(
             panelReStockKuotaViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -923,74 +906,15 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
                     .addComponent(jScrollBar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 335, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addGroup(panelReStockKuotaViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnBackReStockKuota)
-                    .addComponent(btnSaveReStockKuota))
+                .addGroup(panelReStockKuotaViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnSaveReStockKuota)
+                    .addComponent(btnBackReStockKuota))
                 .addGap(14, 14, 14)
                 .addComponent(btnSubmitReStockKuota)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         panelView.add(panelReStockKuotaView, "card9");
-
-        paneFormlReStockKuota.setBackground(new java.awt.Color(0, 0, 0));
-
-        btnRestockKuotaSave.setText("SAVE");
-        btnRestockKuotaSave.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnRestockKuotaSaveMouseClicked(evt);
-            }
-        });
-
-        txtRestockKuotaBalance_current.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
-
-        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel13.setText("KARTU PROVIDER");
-
-        txtRestockKuotaProviderName.setEditable(false);
-        txtRestockKuotaProviderName.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
-        txtRestockKuotaProviderName.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtRestockKuotaProviderNameActionPerformed(evt);
-            }
-        });
-
-        txtRestockKuotaType.setEditable(false);
-        txtRestockKuotaType.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
-
-        javax.swing.GroupLayout paneFormlReStockKuotaLayout = new javax.swing.GroupLayout(paneFormlReStockKuota);
-        paneFormlReStockKuota.setLayout(paneFormlReStockKuotaLayout);
-        paneFormlReStockKuotaLayout.setHorizontalGroup(
-            paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneFormlReStockKuotaLayout.createSequentialGroup()
-                .addContainerGap(322, Short.MAX_VALUE)
-                .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(txtRestockKuotaType)
-                    .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(btnRestockKuotaSave, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel13)
-                        .addGroup(paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(txtRestockKuotaBalance_current, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
-                            .addComponent(txtRestockKuotaProviderName, javax.swing.GroupLayout.Alignment.LEADING))))
-                .addGap(231, 231, 231))
-        );
-        paneFormlReStockKuotaLayout.setVerticalGroup(
-            paneFormlReStockKuotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneFormlReStockKuotaLayout.createSequentialGroup()
-                .addContainerGap(172, Short.MAX_VALUE)
-                .addComponent(jLabel13)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtRestockKuotaProviderName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtRestockKuotaBalance_current, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
-                .addComponent(txtRestockKuotaType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnRestockKuotaSave)
-                .addGap(150, 150, 150))
-        );
-
-        panelView.add(paneFormlReStockKuota, "card11");
 
         panelStockView.setBackground(new java.awt.Color(0, 0, 0));
 
@@ -1085,9 +1009,9 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
 
         panelTagihanView.setBackground(new java.awt.Color(0, 0, 0));
 
-        tblPlnPdam.setBackground(new java.awt.Color(0, 0, 0));
-        tblPlnPdam.setForeground(new java.awt.Color(240, 240, 240));
-        tblPlnPdam.setModel(new javax.swing.table.DefaultTableModel(
+        tblCustomerBill.setBackground(new java.awt.Color(0, 0, 0));
+        tblCustomerBill.setForeground(new java.awt.Color(240, 240, 240));
+        tblCustomerBill.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -1098,7 +1022,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
                 "", "", "Title 3", "Title 4"
             }
         ));
-        jScrollPane4.setViewportView(tblPlnPdam);
+        jScrollPane4.setViewportView(tblCustomerBill);
 
         cbJenisTagihan.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
         cbJenisTagihan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "--JENIS--", "PLN", "PDAM" }));
@@ -1174,7 +1098,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
                 .addGroup(panelTagihanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnDeleteTagihan)
                     .addComponent(btnFormCustomer1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         panelView.add(panelTagihanView, "card4");
@@ -1185,148 +1109,181 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         lblHeaderFormTagihan.setForeground(new java.awt.Color(255, 255, 255));
         lblHeaderFormTagihan.setText("FORM PLN/PDAM");
 
-        txtFormIdTagihan.setEditable(false);
+        txtFormCustomerBillId_customer_bill.setEditable(false);
 
         lblIdPelangganTagihan.setForeground(new java.awt.Color(255, 255, 255));
         lblIdPelangganTagihan.setText("ID");
 
+        txtFormCustomerBillType.setEditable(false);
+
         lblNoPelangganTagihan.setForeground(new java.awt.Color(255, 255, 255));
-        lblNoPelangganTagihan.setText("NO. PLN/PDAM");
+        lblNoPelangganTagihan.setText("PLN/PDAM Number");
 
         lblNamaPelangganTagihan.setForeground(new java.awt.Color(255, 255, 255));
-        lblNamaPelangganTagihan.setText("NAMA PELANGGAN");
+        lblNamaPelangganTagihan.setText("Customer Name");
 
         lblJenis.setForeground(new java.awt.Color(255, 255, 255));
-        lblJenis.setText("JENIS");
+        lblJenis.setText("Type");
 
         lblBalancePembayaran.setForeground(new java.awt.Color(255, 255, 255));
-        lblBalancePembayaran.setText("JUMLAH PEMBAYARAN");
+        lblBalancePembayaran.setText("Balance");
 
-        btnCreatePlnPdam.setText("CREATE");
-        btnCreatePlnPdam.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnFormCustomerBillCreate.setText("Create");
+        btnFormCustomerBillCreate.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnCreatePlnPdamMouseClicked(evt);
+                btnFormCustomerBillCreateMouseClicked(evt);
             }
         });
-        btnCreatePlnPdam.addActionListener(new java.awt.event.ActionListener() {
+        btnFormCustomerBillCreate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCreatePlnPdamActionPerformed(evt);
+                btnFormCustomerBillCreateActionPerformed(evt);
             }
         });
 
-        btnUpdatePlnPdam.setText("UPDATE");
-        btnUpdatePlnPdam.addActionListener(new java.awt.event.ActionListener() {
+        btnFormCustomerBillUpdate.setText("Update");
+        btnFormCustomerBillUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUpdatePlnPdamActionPerformed(evt);
+                btnFormCustomerBillUpdateActionPerformed(evt);
             }
         });
 
-        btnKembaliTagihan.setBackground(new java.awt.Color(153, 0, 153));
-        btnKembaliTagihan.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnKembaliTagihan.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnFormCustomerBillKembali.setBackground(new java.awt.Color(153, 0, 153));
+        btnFormCustomerBillKembali.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnFormCustomerBillKembali.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnKembaliTagihanMouseClicked(evt);
+                btnFormCustomerBillKembaliMouseClicked(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnKembaliTagihanMouseEntered(evt);
+                btnFormCustomerBillKembaliMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnKembaliTagihanMouseExited(evt);
+                btnFormCustomerBillKembaliMouseExited(evt);
             }
         });
 
         jLabel49.setFont(new java.awt.Font("Segoe UI", 1, 11)); // NOI18N
         jLabel49.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel49.setText("KEMBALI");
+        jLabel49.setText("Kembali");
 
-        javax.swing.GroupLayout btnKembaliTagihanLayout = new javax.swing.GroupLayout(btnKembaliTagihan);
-        btnKembaliTagihan.setLayout(btnKembaliTagihanLayout);
-        btnKembaliTagihanLayout.setHorizontalGroup(
-            btnKembaliTagihanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout btnFormCustomerBillKembaliLayout = new javax.swing.GroupLayout(btnFormCustomerBillKembali);
+        btnFormCustomerBillKembali.setLayout(btnFormCustomerBillKembaliLayout);
+        btnFormCustomerBillKembaliLayout.setHorizontalGroup(
+            btnFormCustomerBillKembaliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 74, Short.MAX_VALUE)
-            .addGroup(btnKembaliTagihanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(btnKembaliTagihanLayout.createSequentialGroup()
+            .addGroup(btnFormCustomerBillKembaliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(btnFormCustomerBillKembaliLayout.createSequentialGroup()
                     .addGap(0, 13, Short.MAX_VALUE)
                     .addComponent(jLabel49)
                     .addGap(0, 13, Short.MAX_VALUE)))
         );
-        btnKembaliTagihanLayout.setVerticalGroup(
-            btnKembaliTagihanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-            .addGroup(btnKembaliTagihanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(btnKembaliTagihanLayout.createSequentialGroup()
+        btnFormCustomerBillKembaliLayout.setVerticalGroup(
+            btnFormCustomerBillKembaliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+            .addGroup(btnFormCustomerBillKembaliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(btnFormCustomerBillKembaliLayout.createSequentialGroup()
                     .addGap(0, 7, Short.MAX_VALUE)
                     .addComponent(jLabel49)
                     .addGap(0, 8, Short.MAX_VALUE)))
         );
+
+        cbJenisPembayaran.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--TYPE--", "PLN", "PDAM" }));
+        cbJenisPembayaran.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+                cbJenisPembayaranPopupMenuWillBecomeInvisible(evt);
+            }
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+        });
+
+        btnFormCustomerBillReset.setText("Reset");
+        btnFormCustomerBillReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFormCustomerBillResetActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelFormTagihanViewLayout = new javax.swing.GroupLayout(panelFormTagihanView);
         panelFormTagihanView.setLayout(panelFormTagihanViewLayout);
         panelFormTagihanViewLayout.setHorizontalGroup(
             panelFormTagihanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFormTagihanViewLayout.createSequentialGroup()
-                .addGap(126, 126, 126)
-                .addGroup(panelFormTagihanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtFormIdTagihan, javax.swing.GroupLayout.PREFERRED_SIZE, 368, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(panelFormTagihanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(panelFormTagihanViewLayout.createSequentialGroup()
-                            .addComponent(lblJenis)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtJenisPembayaran, javax.swing.GroupLayout.PREFERRED_SIZE, 368, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(panelFormTagihanViewLayout.createSequentialGroup()
-                            .addComponent(lblNamaPelangganTagihan)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtNamaPelanggan, javax.swing.GroupLayout.PREFERRED_SIZE, 368, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(panelFormTagihanViewLayout.createSequentialGroup()
-                            .addComponent(lblNoPelangganTagihan)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtNoPelanggan, javax.swing.GroupLayout.PREFERRED_SIZE, 368, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFormTagihanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblIdPelangganTagihan)
+                .addGroup(panelFormTagihanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelFormTagihanViewLayout.createSequentialGroup()
+                        .addGap(126, 126, 126)
+                        .addGroup(panelFormTagihanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(panelFormTagihanViewLayout.createSequentialGroup()
+                                .addComponent(lblIdPelangganTagihan)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtFormCustomerBillId_customer_bill, javax.swing.GroupLayout.PREFERRED_SIZE, 368, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelFormTagihanViewLayout.createSequentialGroup()
+                                .addComponent(lblNoPelangganTagihan)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                                .addComponent(txtFormCustomerBillCustomer_number, javax.swing.GroupLayout.PREFERRED_SIZE, 368, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(panelFormTagihanViewLayout.createSequentialGroup()
                                 .addComponent(lblBalancePembayaran)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtBalancePembayaran, javax.swing.GroupLayout.PREFERRED_SIZE, 368, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(lblHeaderFormTagihan))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFormTagihanViewLayout.createSequentialGroup()
-                            .addComponent(btnKembaliTagihan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnUpdatePlnPdam)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(btnCreatePlnPdam))))
-                .addContainerGap(149, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtFormCustomerBillBalance, javax.swing.GroupLayout.PREFERRED_SIZE, 368, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panelFormTagihanViewLayout.createSequentialGroup()
+                                .addComponent(btnFormCustomerBillReset)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnFormCustomerBillUpdate)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnFormCustomerBillCreate))
+                            .addGroup(panelFormTagihanViewLayout.createSequentialGroup()
+                                .addGroup(panelFormTagihanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblNamaPelangganTagihan)
+                                    .addComponent(lblJenis))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(panelFormTagihanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(panelFormTagihanViewLayout.createSequentialGroup()
+                                        .addComponent(cbJenisPembayaran, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtFormCustomerBillType, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(txtFormCustomerBillCustomer_name, javax.swing.GroupLayout.PREFERRED_SIZE, 368, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(btnFormCustomerBillKembali, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(panelFormTagihanViewLayout.createSequentialGroup()
+                        .addGap(39, 39, 39)
+                        .addComponent(lblHeaderFormTagihan)))
+                .addContainerGap(178, Short.MAX_VALUE))
         );
         panelFormTagihanViewLayout.setVerticalGroup(
             panelFormTagihanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFormTagihanViewLayout.createSequentialGroup()
-                .addGap(26, 26, 26)
+                .addGap(25, 25, 25)
                 .addComponent(lblHeaderFormTagihan)
-                .addGap(73, 73, 73)
-                .addGroup(panelFormTagihanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtFormIdTagihan, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
+                .addComponent(btnFormCustomerBillKembali, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(panelFormTagihanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtFormCustomerBillId_customer_bill, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblIdPelangganTagihan))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelFormTagihanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtNoPelanggan, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtFormCustomerBillCustomer_number, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblNoPelangganTagihan))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelFormTagihanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtNamaPelanggan, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtFormCustomerBillCustomer_name, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblNamaPelangganTagihan))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelFormTagihanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtJenisPembayaran, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblJenis))
+                .addGroup(panelFormTagihanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cbJenisPembayaran, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panelFormTagihanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtFormCustomerBillType, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblJenis)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelFormTagihanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtBalancePembayaran, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtFormCustomerBillBalance, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblBalancePembayaran))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelFormTagihanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnKembaliTagihan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnUpdatePlnPdam, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
-                    .addComponent(btnCreatePlnPdam, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(86, Short.MAX_VALUE))
+                    .addGroup(panelFormTagihanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnFormCustomerBillUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+                        .addComponent(btnFormCustomerBillReset, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE))
+                    .addComponent(btnFormCustomerBillCreate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(94, Short.MAX_VALUE))
         );
 
         panelView.add(panelFormTagihanView, "card17");
@@ -1571,7 +1528,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
                     .addComponent(jLabel40)
                     .addComponent(jLabel39)
                     .addComponent(txtPengeluaranPendapatan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28)
                 .addGroup(panelPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1676,7 +1633,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
                 .addGroup(panelManageViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnCustomerView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnEmployeeView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(204, Short.MAX_VALUE))
+                .addContainerGap(212, Short.MAX_VALUE))
         );
 
         panelView.add(panelManageView, "card12");
@@ -1762,7 +1719,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         panelManageEmployeeViewLayout.setVerticalGroup(
             panelManageEmployeeViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelManageEmployeeViewLayout.createSequentialGroup()
-                .addContainerGap(20, Short.MAX_VALUE)
+                .addContainerGap(28, Short.MAX_VALUE)
                 .addComponent(lblHeaderEmployee)
                 .addGap(18, 18, 18)
                 .addComponent(btnFormEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1935,7 +1892,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
                         .addComponent(btnFormEmployeeUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btnFormEmployeeReset, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(56, Short.MAX_VALUE))
+                .addContainerGap(64, Short.MAX_VALUE))
         );
 
         panelView.add(panelFormEmployeeView, "card13");
@@ -2023,7 +1980,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         panelManageCustomerViewLayout.setVerticalGroup(
             panelManageCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelManageCustomerViewLayout.createSequentialGroup()
-                .addContainerGap(20, Short.MAX_VALUE)
+                .addContainerGap(28, Short.MAX_VALUE)
                 .addComponent(lblHeaderCustomer)
                 .addGap(18, 18, 18)
                 .addComponent(btnFormCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2361,7 +2318,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
                 .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtCustomerStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblRole2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 108, Short.MAX_VALUE)
                 .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelFormCustomerViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnFormCustomerCreate, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2847,40 +2804,12 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         panelView.revalidate();
         btnKartuMenu.setBackground(sidemenu_pressed);
         sidemenu_active = 2;
-        panelView.add(panelKartuView);
+        panelView.add(panelStockView);
         panelView.repaint();
         panelView.revalidate();
         
     }//GEN-LAST:event_btnKartuMenuMouseClicked
 
-    public JTable getTblPlnPdam() {
-        return tblPlnPdam;
-    }
-
-    public JTextField getTxtFormIdTagihan() {
-        return txtFormIdTagihan;
-    }
-
-    public JTextField getTxtNamaPelanggan() {
-        return txtNamaPelanggan;
-    }
-
-    public JTextField getTxtNoPelanggan() {
-        return txtNoPelanggan;
-    }
-
-    public JTextField getTxtBalancePembayaran() {
-        return txtBalancePembayaran;
-    }
-
-    public JTextField getTxtJenisPembayaran() {
-        return txtJenisPembayaran;
-    }
-
-    
-
-    
-    
     private void btnKartuMenuMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnKartuMenuMouseEntered
         if (sidemenu_active != 2) {
             btnKartuMenu.setBackground(sidemenu_entered);
@@ -3054,14 +2983,6 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         btnLogoutMenu.setBackground(sidemenu_pressed);
     }//GEN-LAST:event_btnLogoutMenuMouseReleased
 
-    private void btnReStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReStockActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnReStockActionPerformed
-
-    private void txtJumlahNomorReStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtJumlahNomorReStockActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtJumlahNomorReStockActionPerformed
-
     private void btnSaveReStockPerdanaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveReStockPerdanaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnSaveReStockPerdanaActionPerformed
@@ -3076,32 +2997,10 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         panelView.revalidate();
         
         //add panel
-        panelView.add(panelReStockView);
+        panelView.add(panelReStockKuotaView);
         panelView.repaint();
         panelView.revalidate();
     }//GEN-LAST:event_btnSubmitReStockPerdanaActionPerformed
-
-    private void btnReStockMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnReStockMouseClicked
-        panelView.removeAll();
-        panelView.repaint();
-        panelView.revalidate();
-        
-        //add panel
-        panelView.add(panelReStockView);
-        panelView.repaint();
-        panelView.revalidate();
-    }//GEN-LAST:event_btnReStockMouseClicked
-
-    private void btnStockMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnStockMouseClicked
-        panelView.removeAll();
-        panelView.repaint();
-        panelView.revalidate();
-        
-        //add panel
-        panelView.add(panelStockView);
-        panelView.repaint();
-        panelView.revalidate();
-    }//GEN-LAST:event_btnStockMouseClicked
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
         panelView.removeAll();
@@ -3109,21 +3008,10 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         panelView.revalidate();
         
         //add panel
-        panelView.add(panelReStockView);
+        panelView.add(panelReStockKuotaView);
         panelView.repaint();
         panelView.revalidate();
     }//GEN-LAST:event_jButton9ActionPerformed
-
-    private void btnSubmitReStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitReStockActionPerformed
-        panelView.removeAll();
-        panelView.repaint();
-        panelView.revalidate();
-        
-        //add panel
-        panelView.add(panelStockView);
-        panelView.repaint();
-        panelView.revalidate();
-    }//GEN-LAST:event_btnSubmitReStockActionPerformed
 
     private void btnSubmitReStockKuotaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitReStockKuotaActionPerformed
         panelView.removeAll();
@@ -3289,7 +3177,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         panelView.revalidate();
         
         //add panel
-        panelView.add(paneFormlReStockKuota);
+        panelView.add(paneFormReStockKuota);
         panelView.repaint();
         panelView.revalidate();
     }//GEN-LAST:event_btnReStockKuotaPulsaActionPerformed
@@ -3450,29 +3338,45 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         customerCreditController.insertCustomerCredit(this);
     }//GEN-LAST:event_btnFormSubmitPulsaHomeActionPerformed
 
-    private void txtRestockKuotaProviderNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRestockKuotaProviderNameActionPerformed
+    private void txtRestockProviderNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRestockProviderNameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtRestockKuotaProviderNameActionPerformed
+    }//GEN-LAST:event_txtRestockProviderNameActionPerformed
 
-    public JTable getTblRestockKuotaPulsa() {
-        return tblRestockKuotaPulsa;
+    public JTable getTblRestockPulsa() {
+        return tblRestockPulsa;
     }
 
-    public JTextField getTxtRestockKuotaType() {
-        return txtRestockKuotaType;
-    }
-    
-    public JTextField getTxtRestockKuotaBalance_current() {
-        return txtRestockKuotaBalance_current;
+    public void setTblRestockPulsa(JTable tblRestockPulsa) {
+        this.tblRestockPulsa = tblRestockPulsa;
     }
 
-    public JTextField getTxtRestockKuotaProviderName() {
-        return txtRestockKuotaProviderName;
+    public JTextField getTxtRestockBalance_current() {
+        return txtRestockBalance_current;
+    }
+
+    public void setTxtRestockBalance_current(JTextField txtRestockBalance_current) {
+        this.txtRestockBalance_current = txtRestockBalance_current;
+    }
+
+    public JTextField getTxtRestockProviderName() {
+        return txtRestockProviderName;
+    }
+
+    public void setTxtRestockProviderName(JTextField txtRestockProviderName) {
+        this.txtRestockProviderName = txtRestockProviderName;
+    }
+
+    public JTextField getTxtRestockType() {
+        return txtRestockType;
+    }
+
+    public void setTxtRestockType(JTextField txtRestockType) {
+        this.txtRestockType = txtRestockType;
     }
     
     private void btnRestockKuotaSaveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRestockKuotaSaveMouseClicked
         // TODO add your handling code here:
-        creditRestockKuotaController.updateCreditRestockKuota(this);
+        creditRestockController.updateCreditRestock(this);
     }//GEN-LAST:event_btnRestockKuotaSaveMouseClicked
 
     private void btnFormCustomer1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnFormCustomer1MouseClicked
@@ -3529,7 +3433,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         // TODO add your handling code here:
     }//GEN-LAST:event_btnFormCustomerReset1ActionPerformed
 
-    private void btnKembaliTagihanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnKembaliTagihanMouseClicked
+    private void btnFormCustomerBillKembaliMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnFormCustomerBillKembaliMouseClicked
         // TODO add your handling code here:
         panelView.removeAll();
         panelView.repaint();
@@ -3539,37 +3443,83 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         panelView.add(panelTagihanView);
         panelView.repaint();
         panelView.revalidate();
-    }//GEN-LAST:event_btnKembaliTagihanMouseClicked
+    }//GEN-LAST:event_btnFormCustomerBillKembaliMouseClicked
 
-    private void btnKembaliTagihanMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnKembaliTagihanMouseEntered
+    private void btnFormCustomerBillKembaliMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnFormCustomerBillKembaliMouseEntered
         // TODO add your handling code here:
-        btnKembaliTagihan.setBackground(sidemenu_entered);
-    }//GEN-LAST:event_btnKembaliTagihanMouseEntered
+        btnFormCustomerBillKembali.setBackground(sidemenu_entered);
+    }//GEN-LAST:event_btnFormCustomerBillKembaliMouseEntered
 
-    private void btnKembaliTagihanMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnKembaliTagihanMouseExited
+    private void btnFormCustomerBillKembaliMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnFormCustomerBillKembaliMouseExited
         // TODO add your handling code here:
-        btnKembaliTagihan.setBackground(sidemenu_exited);
-    }//GEN-LAST:event_btnKembaliTagihanMouseExited
+        btnFormCustomerBillKembali.setBackground(sidemenu_exited);
+    }//GEN-LAST:event_btnFormCustomerBillKembaliMouseExited
 
-    private void btnCreatePlnPdamMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCreatePlnPdamMouseClicked
+    private void btnFormCustomerBillCreateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnFormCustomerBillCreateMouseClicked
         // TODO add your handling code here:
         
-    }//GEN-LAST:event_btnCreatePlnPdamMouseClicked
+    }//GEN-LAST:event_btnFormCustomerBillCreateMouseClicked
 
-    private void btnCreatePlnPdamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreatePlnPdamActionPerformed
-        // TODO add your handling code here:
-        creditRestockPlnPdamController.insertCreditRestockPlnPdam(this);
-    }//GEN-LAST:event_btnCreatePlnPdamActionPerformed
+    public JTable getTblCustomerBill() {
+        return tblCustomerBill;
+    }
 
-    private void btnUpdatePlnPdamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdatePlnPdamActionPerformed
+    public JTextField getTxtFormCustomerBillBalance() {
+        return txtFormCustomerBillBalance;
+    }
+
+    public JTextField getTxtFormCustomerBillCustomer_name() {
+        return txtFormCustomerBillCustomer_name;
+    }
+
+    public JTextField getTxtFormCustomerBillCustomer_number() {
+        return txtFormCustomerBillCustomer_number;
+    }
+
+    public JTextField getTxtFormCustomerBillId_customer_bill() {
+        return txtFormCustomerBillId_customer_bill;
+    }
+    
+    public JTextField getTxtFormCustomerBillType() {
+        return txtFormCustomerBillType;
+    }
+    
+    private void btnFormCustomerBillCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFormCustomerBillCreateActionPerformed
         // TODO add your handling code here:
-        creditRestockPlnPdamController.updateCreditRestockPlnPdam(this);
-    }//GEN-LAST:event_btnUpdatePlnPdamActionPerformed
+        customerBillController.insertCustomerBill(this);
+    }//GEN-LAST:event_btnFormCustomerBillCreateActionPerformed
+
+    private void btnFormCustomerBillUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFormCustomerBillUpdateActionPerformed
+        // TODO add your handling code here:
+        customerBillController.updateCustomerBill(this);
+    }//GEN-LAST:event_btnFormCustomerBillUpdateActionPerformed
 
     private void btnDeleteTagihanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteTagihanActionPerformed
         // TODO add your handling code here:
-        creditRestockPlnPdamController.updateCreditRestockPlnPdam(this);
+        customerBillController.deleteCustomerBill(this);
     }//GEN-LAST:event_btnDeleteTagihanActionPerformed
+
+    private void cbJenisPembayaranPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_cbJenisPembayaranPopupMenuWillBecomeInvisible
+        // TODO add your handling code here:
+        String cboxJenisPembayaran = (String)cbJenisPembayaran.getSelectedItem();
+        String cboxJenisPembayaranValue = cbJenisPembayaran.getSelectedItem().toString();
+        if (cboxJenisPembayaranValue.equals("PLN")) {
+            txtFormCustomerBillType.setText("PLN");
+        } else if (cboxJenisPembayaranValue.equals("PDAM")) {
+            txtFormCustomerBillType.setText("PDAM");
+        } else {
+            txtIsiPulsaHome.setText("");
+        }
+    }//GEN-LAST:event_cbJenisPembayaranPopupMenuWillBecomeInvisible
+
+    private void btnFormCustomerBillResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFormCustomerBillResetActionPerformed
+        // TODO add your handling code here:
+        customerBillController.resetCustomerBill(this);
+    }//GEN-LAST:event_btnFormCustomerBillResetActionPerformed
+
+    private void btnRestockKuotaSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestockKuotaSaveActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnRestockKuotaSaveActionPerformed
 
     /**
      * @param args the command line arguments
@@ -3617,7 +3567,6 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JPanel btnBacktoManageCustomer;
     private javax.swing.JPanel btnBacktoManageCustomer1;
     private javax.swing.JPanel btnBacktoManageEmployee;
-    private javax.swing.JButton btnCreatePlnPdam;
     private javax.swing.JPanel btnCustomerView;
     private javax.swing.JButton btnDeleteStock;
     private javax.swing.JButton btnDeleteTagihan;
@@ -3625,6 +3574,10 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JPanel btnEmployeeView;
     private javax.swing.JPanel btnFormCustomer;
     private javax.swing.JPanel btnFormCustomer1;
+    private javax.swing.JButton btnFormCustomerBillCreate;
+    private javax.swing.JPanel btnFormCustomerBillKembali;
+    private javax.swing.JButton btnFormCustomerBillReset;
+    private javax.swing.JButton btnFormCustomerBillUpdate;
     private javax.swing.JButton btnFormCustomerCreate;
     private javax.swing.JButton btnFormCustomerCreate1;
     private javax.swing.JButton btnFormCustomerDelete;
@@ -3640,33 +3593,26 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JButton btnFormSubmitPulsaHome;
     private javax.swing.JPanel btnHomeMenu;
     private javax.swing.JPanel btnKartuMenu;
-    private javax.swing.JPanel btnKembaliTagihan;
     private javax.swing.JPanel btnLogoutMenu;
     private javax.swing.JPanel btnManageMenu;
-    private javax.swing.JButton btnNextReStock;
     private javax.swing.JPanel btnPendapatanMenu;
     private javax.swing.JPanel btnPlnPdamMenu;
     private javax.swing.JPanel btnPulsaMenu;
-    private javax.swing.JButton btnReStock;
     private javax.swing.JButton btnReStockKuotaPulsa;
     private javax.swing.JButton btnRestockKuotaSave;
     private javax.swing.JButton btnSaveReStockKuota;
     private javax.swing.JButton btnSaveReStockPerdana;
-    private javax.swing.JButton btnStock;
-    private javax.swing.JButton btnSubmitReStock;
     private javax.swing.JButton btnSubmitReStockKuota;
     private javax.swing.JButton btnSubmitReStockPerdana;
-    private javax.swing.JButton btnUpdatePlnPdam;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox cbBesarPulsa;
     private javax.swing.JComboBox cbBesarPulsaHome;
     private javax.swing.JComboBox cbFilterJenisStock;
     private javax.swing.JComboBox cbFilterProviderStock;
-    private javax.swing.JComboBox cbJenisReStock;
+    private javax.swing.JComboBox<String> cbJenisPembayaran;
     private javax.swing.JComboBox cbJenisTagihan;
     private javax.swing.JComboBox cbProviderPulsa;
     private javax.swing.JComboBox cbProviderPulsaHome;
-    private javax.swing.JComboBox cbProviderReStock;
     private javax.swing.JPanel headView;
     private javax.swing.JLabel icoAbout;
     private javax.swing.JLabel icoHome;
@@ -3742,7 +3688,6 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField9;
     private javax.swing.JLabel lblAppName;
     private javax.swing.JLabel lblBalancePembayaran;
@@ -3770,13 +3715,12 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JLabel lblRole2;
     private javax.swing.JLabel lblRole3;
     private javax.swing.JLabel lblRole4;
-    private javax.swing.JPanel paneFormlReStockKuota;
+    private javax.swing.JPanel paneFormReStockKuota;
     private javax.swing.JPanel panelFormCustomerView;
     private javax.swing.JPanel panelFormCustomerView1;
     private javax.swing.JPanel panelFormEmployeeView;
     private javax.swing.JPanel panelFormTagihanView;
     private javax.swing.JPanel panelHomeView;
-    private javax.swing.JPanel panelKartuView;
     private javax.swing.JPanel panelManageCustomerView;
     private javax.swing.JPanel panelManageEmployeeView;
     private javax.swing.JPanel panelManageView;
@@ -3784,7 +3728,6 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JPanel panelPulsaView;
     private javax.swing.JPanel panelReStockKuotaView;
     private javax.swing.JPanel panelReStockPerdanaView;
-    private javax.swing.JPanel panelReStockView;
     private javax.swing.JPanel panelStockView;
     private javax.swing.JPanel panelTagihanView;
     private javax.swing.JPanel panelView;
@@ -3793,13 +3736,13 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JScrollPane spCustomer;
     private javax.swing.JScrollPane spEmployee;
     private javax.swing.JTable tblCustomer;
+    private javax.swing.JTable tblCustomerBill;
     private javax.swing.JTable tblCustomerCredit;
     private javax.swing.JTable tblEmployee;
-    private javax.swing.JTable tblPlnPdam;
     private javax.swing.JTable tblReStockPerdana;
-    private javax.swing.JTable tblRestockKuotaPulsa;
+    private javax.swing.JTable tblRestockKuotaView;
+    private javax.swing.JTable tblRestockPulsa;
     private javax.swing.JTable tblStock;
-    private javax.swing.JTextField txtBalancePembayaran;
     private javax.swing.JTextField txtCustomerPhoneNumber;
     private javax.swing.JTextField txtCustomerPhoneNumber1;
     private javax.swing.JTextField txtCustomerStatus;
@@ -3807,41 +3750,43 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JTextField txtCustomer_name;
     private javax.swing.JTextField txtCustomer_name1;
     private javax.swing.JTextField txtEmployee_name;
-    private javax.swing.JTextField txtFormIdTagihan;
+    private javax.swing.JTextField txtFormCustomerBillBalance;
+    private javax.swing.JTextField txtFormCustomerBillCustomer_name;
+    private javax.swing.JTextField txtFormCustomerBillCustomer_number;
+    private javax.swing.JTextField txtFormCustomerBillId_customer_bill;
+    private javax.swing.JTextField txtFormCustomerBillType;
     private javax.swing.JTextField txtFormNomorPulsaHome;
     private javax.swing.JTextField txtId_Employee;
     private javax.swing.JTextField txtId_customer;
     private javax.swing.JTextField txtId_customer1;
     private javax.swing.JTextField txtIsiPulsaHome;
-    private javax.swing.JTextField txtJenisPembayaran;
-    private javax.swing.JTextField txtJumlahNomorReStock;
     private javax.swing.JTextField txtKartuKuotaPendapatan;
     private javax.swing.JTextField txtKartuPerdanaPendapatan;
-    private javax.swing.JTextField txtNamaPelanggan;
-    private javax.swing.JTextField txtNoPelanggan;
     private javax.swing.JTextField txtPDAMPendapatan;
     private javax.swing.JTextField txtPLNPendapatan;
     private javax.swing.JTextField txtPassword;
     private javax.swing.JTextField txtPengeluaranPendapatan;
     private javax.swing.JTextField txtPulsaPendapatan;
-    private javax.swing.JTextField txtRestockKuotaBalance_current;
-    private javax.swing.JTextField txtRestockKuotaProviderName;
-    private javax.swing.JTextField txtRestockKuotaType;
+    private javax.swing.JTextField txtRestockBalance_current;
+    private javax.swing.JTextField txtRestockProviderName;
+    private javax.swing.JTextField txtRestockType;
     private javax.swing.JTextField txtRole;
     private javax.swing.JLabel txtTotalPendapatan;
     private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables
 
-    public void loadDatabase() throws SQLException, EmployeeException, CustomerException, CustomerCreditException, CreditRestockKuotaException {
+    public void loadDatabase() throws SQLException, EmployeeException, CustomerException, CustomerCreditException, CustomerBillException, CreditRestockException {
         EmployeeDao employeedao = CreamsDatabase.getEmployeeDao();
         CustomerDao customerdao = CreamsDatabase.getCustomerDao();
         CustomerCreditDao customercreditdao = CreamsDatabase.getCustomerCreditDao();
-        CreditRestockKuotaDao creditrestockkuotadao = CreamsDatabase.getCreditRestockKuotaDao();
+        CreditRestockDao creditrestockdao = CreamsDatabase.getCreditRestockDao();
+        CustomerBillDao customerbilldao = CreamsDatabase.getCustomerBillDao();
         
         employeeTableModel.setList(employeedao.selectAllEmployee());
         customerTableModel.setList(customerdao.selectAllCustomer());
         customerCreditTableModel.setList(customercreditdao.selectAllCustomerCredit());
-        creditRestockKuotaTableModel.setList(creditrestockkuotadao.selectAllCreditRestockKuota());
+        creditRestockTableModel.setList(creditrestockdao.selectAllCreditRestock());
+        customerBillTableModel.setList(customerbilldao.selectAllCustomerBill());
     }
     
     @Override
@@ -3920,20 +3865,20 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         }
         
         try {
-            CreditRestockKuota cre = creditRestockKuotaTableModel.get(tblRestockKuotaPulsa.getSelectedRow());
-            txtRestockKuotaProviderName.setText(cre.getProvider_name());
-            txtRestockKuotaBalance_current.setText(cre.getBalance_current() + "");
-            txtRestockKuotaType.setText(cre.getType());
+            CreditRestock cre = creditRestockTableModel.get(tblRestockPulsa.getSelectedRow());
+            txtRestockProviderName.setText(cre.getProvider_name());
+            txtRestockBalance_current.setText(cre.getBalance_current() + "");
+            txtRestockType.setText(cre.getType());
         } catch (IndexOutOfBoundsException exception) {
         }
         
         try {
-            CreditRestockPlnPdam cred = creditRestockPlnPdamTableModel.get(tblPlnPdam.getSelectedRow());
-            txtFormIdTagihan.setText(cred.getId_credit_restock_plnpdam() + "");
-            txtNoPelanggan.setText(cred.getNo_pelanggan()+ "");
-            txtNamaPelanggan.setText(cred.getNama_pelanggan());
-            txtJenisPembayaran.setText(cred.getType());
-            txtBalancePembayaran.setText(cred.getBalance()+"");
+            CustomerBill cusbill = customerBillTableModel.get(tblCustomerBill.getSelectedRow());
+            txtFormCustomerBillId_customer_bill.setText(cusbill.getId_customer_bill()+ "");
+            txtFormCustomerBillCustomer_number.setText(cusbill.getCustomer_number()+ "");
+            txtFormCustomerBillCustomer_name.setText(cusbill.getCustomer_name());
+            txtFormCustomerBillType.setText(cusbill.getType());
+            txtFormCustomerBillBalance.setText(cusbill.getBalance()+"");
             
         } catch (IndexOutOfBoundsException exception) {
         }
@@ -3950,40 +3895,40 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     }
 
     @Override
-    public void onChange(CreditRestockKuotaModel model) {
-        txtRestockKuotaProviderName.setText(model.getProvider_name());
+    public void onChange(CreditRestockModel model) {
+        txtRestockProviderName.setText(model.getProvider_name());
         txtFormNomorPulsaHome.setText(model.getBalance_current()+ "");
     }
 
     @Override
-    public void onUpdate(CreditRestockKuota creditRestockKuota) {
-        int index = tblRestockKuotaPulsa.getSelectedRow();
-        creditRestockKuotaTableModel.set(index, creditRestockKuota);
+    public void onUpdate(CreditRestock creditRestock) {
+        int index = tblRestockPulsa.getSelectedRow();
+        creditRestockTableModel.set(index, creditRestock);
     }
 
     @Override
-    public void onChange(CreditRestockPlnPdamModel model) {
-        txtFormIdTagihan.setText(model.getId_credit_restock_plnpdam() + "");
-        txtNoPelanggan.setText(model.getNo_pelanggan()+ "");
-        txtNamaPelanggan.setText(model.getNama_pelanggan());
-        txtJenisPembayaran.setText(model.getType());
-        txtBalancePembayaran.setText(model.getBalance()+"");
+    public void onChange(CustomerBillModel model) {
+        txtFormCustomerBillId_customer_bill.setText(model.getId_customer_bill()+ "");
+        txtFormCustomerBillCustomer_number.setText(model.getCustomer_number());
+        txtFormCustomerBillCustomer_name.setText(model.getCustomer_name());
+        txtFormCustomerBillType.setText(model.getType());
+        txtFormCustomerBillBalance.setText(model.getBalance()+"");
     }
 
     @Override
-    public void onInsert(CreditRestockPlnPdam creditRestockPlnPdam) {
-        creditRestockPlnPdamTableModel.add(creditRestockPlnPdam);
+    public void onInsert(CustomerBill customerBill) {
+        customerBillTableModel.add(customerBill);
     }
 
     @Override
-    public void onUpdate(CreditRestockPlnPdam creditRestockPlnPdam) {
-        int index = tblPlnPdam.getSelectedRow();
-        creditRestockPlnPdamTableModel.set(index, creditRestockPlnPdam);
+    public void onUpdate(CustomerBill customerBill) {
+        int index = tblCustomerBill.getSelectedRow();
+        customerBillTableModel.set(index, customerBill);
     }
 
     @Override
-    public void onDelete(CreditRestockPlnPdam creditRestockPlnPdam) {
-        int index = tblPlnPdam.getSelectedRow();
-        creditRestockPlnPdamTableModel.remove(index);
+    public void onDelete(CustomerBill customerBill) {
+        int index = tblCustomerBill.getSelectedRow();
+        customerBillTableModel.remove(index);
     }
 }

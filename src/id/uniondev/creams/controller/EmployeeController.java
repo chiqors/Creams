@@ -42,12 +42,20 @@ public class EmployeeController {
             try {
                 model.signinEmployee();
                 JOptionPane.showMessageDialog(signinframe, "Your account is successfully signed in!");
-                model.signinresetEmployee();
+                String log_user = model.getUsername();
+                String log_role = model.getRole();
+                
                 MainFrame main = new MainFrame();
-                main.getLblHeaderName().setText(signinframe.getTxtUsername().getText());
+                main.getLblHeaderName().setText(log_user);
                 main.loadDatabase();
+                if (log_user.equalsIgnoreCase("admin")) {
+                    main.getBtnManageMenu().setVisible(true);
+                } else {
+                    main.getBtnManageMenu().setVisible(false);
+                }
                 main.setVisible(true);
                 signinframe.setVisible(false);
+                model.signinresetEmployee();
             } catch (Throwable throwable) {
                 JOptionPane.showMessageDialog(signinframe, new Object[]{
                     "Error Signin appeared with message ", throwable.getMessage()

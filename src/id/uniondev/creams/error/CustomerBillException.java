@@ -9,13 +9,13 @@ package id.uniondev.creams.error;
  *
  * @author Aditya Nur Iskandar
  */
-public class CreditRestockPlnPdamException extends Exception {
+public class CustomerBillException extends Exception {
 
     /**
      * Creates a new instance of <code>CreditRestockPlnPdam</code> without
      * detail message.
      */
-    public CreditRestockPlnPdamException() {
+    public CustomerBillException() {
     }
 
     /**
@@ -24,7 +24,7 @@ public class CreditRestockPlnPdamException extends Exception {
      *
      * @param msg the detail message.
      */
-    public CreditRestockPlnPdamException(String msg) {
+    public CustomerBillException(String msg) {
         super(msg);
     }
 }

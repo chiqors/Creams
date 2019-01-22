@@ -6,18 +6,19 @@
 package id.uniondev.creams.database;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
-import id.uniondev.creams.entity.CreditRestockKuota;
-import id.uniondev.creams.impl.CreditRestockKuotaDaoImpl;
+import id.uniondev.creams.entity.CreditRestock;
+import id.uniondev.creams.impl.CreditRestockDaoImpl;
+import id.uniondev.creams.impl.CustomerBillDaoImpl;
 import id.uniondev.creams.impl.CustomerDaoImpl;
 import id.uniondev.creams.impl.EmployeeDaoImpl;
 import id.uniondev.creams.impl.CustomerCreditDaoImpl;
-import id.uniondev.creams.service.CreditRestockKuotaDao;
-import id.uniondev.creams.service.CreditRestockPlnPdamDao;
 import id.uniondev.creams.service.CustomerDao;
 import id.uniondev.creams.service.EmployeeDao;
 import id.uniondev.creams.service.CustomerCreditDao;
 import java.sql.Connection;
 import java.sql.SQLException;
+import id.uniondev.creams.service.CustomerBillDao;
+import id.uniondev.creams.service.CreditRestockDao;
 
 /**
  *
@@ -28,8 +29,8 @@ public class CreamsDatabase {
     private static EmployeeDao employeeDao;
     private static CustomerDao customerDao;
     private static CustomerCreditDao customerCreditDao;
-    private static CreditRestockKuotaDao creditRestockKuotaDao;
-    private static CreditRestockPlnPdamDao creditRestockPlnPdamDao;
+    private static CreditRestockDao creditRestockDao;
+    private static CustomerBillDao customerBillDao;
     
     public static Connection getConnection() throws SQLException {
         if (connection == null) {
@@ -63,15 +64,18 @@ public class CreamsDatabase {
         return customerCreditDao;
     }
     
-    public static CreditRestockKuotaDao getCreditRestockKuotaDao() throws SQLException {
-        if (creditRestockKuotaDao == null) {
-            creditRestockKuotaDao = new CreditRestockKuotaDaoImpl(getConnection());
+    public static CreditRestockDao getCreditRestockDao() throws SQLException {
+        if (creditRestockDao == null) {
+            creditRestockDao = new CreditRestockDaoImpl(getConnection());
         }
-        return creditRestockKuotaDao;
+        return creditRestockDao;
     }
 
-    public static CreditRestockPlnPdamDao getCreditRestockPlnPdamDao() {
-        return creditRestockPlnPdamDao;
+    public static CustomerBillDao getCustomerBillDao() throws SQLException {
+        if (customerBillDao == null) {
+            customerBillDao = new CustomerBillDaoImpl(getConnection());
+        }
+        return customerBillDao;
     }
     
 }
