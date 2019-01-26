@@ -19,4 +19,6 @@ public interface CreditRestockDao  {
     public CreditRestock getCreditRestock(Integer id) throws CreditRestockException;
     public CreditRestock getCreditRestock(String provider_name) throws CreditRestockException;
     public List<CreditRestock> selectAllCreditRestock() throws CreditRestockException;
+    public List<CreditRestock> selectAllPerdana() throws CreditRestockException;
+    public List<CreditRestock> selectAllKuota() throws CreditRestockException;
 }

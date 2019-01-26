@@ -5,7 +5,7 @@
  */
 package id.uniondev.creams.model;
 
-import id.uniondev.creams.entity.CreditRestock;
+import id.uniondev.creams.entity.Provider;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
@@ -14,10 +14,10 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author ACER
  */
-public class CreditRestockTableModel extends AbstractTableModel {
-    private List<CreditRestock> list = new ArrayList<CreditRestock>();
+public class ProviderTableModel extends AbstractTableModel {
+    private List<Provider> list = new ArrayList<Provider>();
 
-    public void setList(List<CreditRestock> list) {
+    public void setList(List<Provider> list) {
         this.list = list;
     }
     
@@ -28,22 +28,22 @@ public class CreditRestockTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 3;
+        return 2;
     }
 
-    public boolean add(CreditRestock c) {
+    public boolean add(Provider e) {
         try {
-            return list.add(c);
+            return list.add(e);
         } finally {
             fireTableRowsInserted(getRowCount()-1, getColumnCount()-1);
         }
     }
-    
-    public CreditRestock get(int index) {
+
+    public Provider get(int index) {
         return list.get(index);
     }
 
-    public CreditRestock set(int index, CreditRestock element) {
+    public Provider set(int index, Provider element) {
         try {
             return list.set(index, element);
         } finally {
@@ -51,7 +51,7 @@ public class CreditRestockTableModel extends AbstractTableModel {
         }
     }
 
-    public CreditRestock remove(int index) {
+    public Provider remove(int index) {
         try {
             return list.remove(index);
         } finally {
@@ -62,9 +62,8 @@ public class CreditRestockTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int column) {
         switch(column) {
-            case 0 : return "Provider Name";
-            case 1 : return "Stock";
-            case 2 : return "Type";
+            case 0 : return "Id";
+            case 1 : return "Provider";
             default : return null;
         }
     }
@@ -72,9 +71,8 @@ public class CreditRestockTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch(columnIndex) {
-            case 0 : return list.get(rowIndex).getProvider_name();
-            case 1 : return list.get(rowIndex).getBalance_current();
-            case 2 : return list.get(rowIndex).getType();
+            case 0 : return list.get(rowIndex).getId_provider();
+            case 1 : return list.get(rowIndex).getProvider_name();
             default : return null;
         }
     }

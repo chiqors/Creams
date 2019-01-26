@@ -33,15 +33,16 @@ public class CustomerBillDaoImpl implements CustomerBillDao {
     private final String getByCustomer_name = "SELECT * FROM customer_bill WHERE "
             + "customer_name = ?";
     private final String selectAll = "SELECT * FROM customer_bill";
-
+    private final String selectSumPLN = "SELECT SUM(balance) AS PLN FROM customer_bill WHERE type = 'PLN'";
+    private final String selectSumPDAM = "SELECT SUM(balance) AS PLN FROM customer_bill WHERE type = 'PDAM'";
+    
     public CustomerBillDaoImpl(Connection connection) {
         this.connection = connection;
     }
 
     @Override
     public void insertCustomerBill(CustomerBill customerBill) throws CustomerBillException {
-
-         PreparedStatement statement = null;
+        PreparedStatement statement = null;
         try {
             connection.setAutoCommit(false);
             statement = connection.prepareStatement(insertCustomerBill, Statement.RETURN_GENERATED_KEYS);
@@ -114,7 +115,7 @@ public class CustomerBillDaoImpl implements CustomerBillDao {
 
     @Override
     public void deleteCustomerBill(Integer id_customer_bill) throws CustomerBillException {
-         PreparedStatement statement = null;
+        PreparedStatement statement = null;
         try {
             connection.setAutoCommit(false);
             statement = connection.prepareStatement(deleteCustomerBill);
@@ -184,7 +185,7 @@ public class CustomerBillDaoImpl implements CustomerBillDao {
 
     @Override
     public CustomerBill getCustomerBill(String customer_name) throws CustomerBillException {
-    PreparedStatement statement = null;
+        PreparedStatement statement = null;
         try {
             connection.setAutoCommit(false);
             statement = connection.prepareStatement(getByCustomer_name);
@@ -262,5 +263,4 @@ public class CustomerBillDaoImpl implements CustomerBillDao {
             }
         }
     }
-    
 }

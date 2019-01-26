@@ -10,21 +10,31 @@ import id.uniondev.creams.controller.EmployeeController;
 import id.uniondev.creams.controller.CustomerCreditController;
 import id.uniondev.creams.controller.CreditRestockController;
 import id.uniondev.creams.controller.CustomerBillController;
+import id.uniondev.creams.controller.IncomeController;
+import id.uniondev.creams.controller.ProviderController;
 import id.uniondev.creams.database.CreamsDatabase;
 import id.uniondev.creams.entity.CreditRestock;
 import id.uniondev.creams.entity.CustomerBill;
 import id.uniondev.creams.entity.Customer;
 import id.uniondev.creams.entity.Employee;
 import id.uniondev.creams.entity.CustomerCredit;
+import id.uniondev.creams.entity.Income;
+import id.uniondev.creams.entity.Provider;
 import id.uniondev.creams.error.CreditRestockException;
 import id.uniondev.creams.error.CustomerBillException;
 import id.uniondev.creams.error.CustomerCreditException;
 import id.uniondev.creams.error.CustomerException;
 import id.uniondev.creams.error.EmployeeException;
+import id.uniondev.creams.error.IncomeException;
+import id.uniondev.creams.error.ProviderException;
 import id.uniondev.creams.event.CustomerCreditListener;
 import id.uniondev.creams.event.CustomerBillListener;
 import id.uniondev.creams.event.CustomerListener;
 import id.uniondev.creams.event.EmployeeListener;
+import id.uniondev.creams.event.CreditRestockListener;
+import id.uniondev.creams.event.IncomeListener;
+import id.uniondev.creams.event.ProviderListener;
+import id.uniondev.creams.model.CreditRestockKuotaTableModel;
 import id.uniondev.creams.model.CustomerModel;
 import id.uniondev.creams.model.CustomerTableModel;
 import id.uniondev.creams.model.EmployeeModel;
@@ -33,10 +43,20 @@ import id.uniondev.creams.model.CustomerCreditModel;
 import id.uniondev.creams.model.CustomerCreditTableModel;
 import id.uniondev.creams.model.CustomerBillModel;
 import id.uniondev.creams.model.CustomerBillTableModel;
+import id.uniondev.creams.model.IncomeModel;
+import id.uniondev.creams.model.IncomeTableModel;
+import id.uniondev.creams.model.CreditRestockModel;
+import id.uniondev.creams.model.CreditRestockPerdanaTableModel;
+import id.uniondev.creams.model.CreditRestockTableModel;
+import id.uniondev.creams.model.ProviderModel;
+import id.uniondev.creams.model.ProviderTableModel;
 import id.uniondev.creams.service.CustomerDao;
 import id.uniondev.creams.service.EmployeeDao;
 import id.uniondev.creams.service.CustomerBillDao;
 import id.uniondev.creams.service.CustomerCreditDao;
+import id.uniondev.creams.service.CreditRestockDao;
+import id.uniondev.creams.service.IncomeDao;
+import id.uniondev.creams.service.ProviderDao;
 import java.awt.Color;
 import java.sql.SQLException;
 import javax.swing.JComboBox;
@@ -46,24 +66,14 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import id.uniondev.creams.event.CustomerCreditListener;
-import id.uniondev.creams.model.CreditRestockModel;
-import id.uniondev.creams.model.CreditRestockTableModel;
-import id.uniondev.creams.model.CustomerBillModel;
-import id.uniondev.creams.model.CustomerBillTableModel;
-import id.uniondev.creams.service.CustomerCreditDao;
 import javax.swing.JPanel;
-import id.uniondev.creams.event.CustomerBillListener;
-import id.uniondev.creams.service.CustomerBillDao;
-import id.uniondev.creams.event.CreditRestockListener;
-import id.uniondev.creams.service.CreditRestockDao;
-import id.uniondev.creams.service.CreditRestockDao;
+
 
 /**
  *
  * @author UnionDev
  */
-public class MainFrame extends javax.swing.JFrame implements EmployeeListener, CustomerListener, CustomerCreditListener, CreditRestockListener, CustomerBillListener,  ListSelectionListener {
+public class MainFrame extends javax.swing.JFrame implements EmployeeListener, CustomerListener, CustomerCreditListener, CreditRestockListener, CustomerBillListener, IncomeListener, ProviderListener, ListSelectionListener {
 
     /**
      * Creates new form MainFrame
@@ -78,19 +88,27 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private CustomerTableModel customerTableModel;
     private CustomerCreditTableModel customerCreditTableModel;
     private CreditRestockTableModel creditRestockTableModel;
+    private CreditRestockKuotaTableModel creditRestockKuotaTableModel;
+    private CreditRestockPerdanaTableModel creditRestockPerdanaTableModel;
     private CustomerBillTableModel customerBillTableModel;
+    private IncomeTableModel incomeTableModel;
+    private ProviderTableModel providerTableModel;
     
     private EmployeeModel employeeModel;
     private CustomerModel customerModel;
     private CustomerCreditModel customerCreditModel;
     private CreditRestockModel creditRestockModel;
     private CustomerBillModel customerBillModel;
+    private IncomeModel incomeModel;
+    private ProviderModel providerModel;
     
     private EmployeeController employeeController;
     private CustomerController customerController;
     private CustomerCreditController customerCreditController;
     private CreditRestockController creditRestockController;
     private CustomerBillController customerBillController;
+    private IncomeController incomeController;
+    private ProviderController providerController;
     
     public MainFrame() {
         employeeTableModel = new EmployeeTableModel();
@@ -112,6 +130,8 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         customerCreditController.setModel(customerCreditModel);
         
         creditRestockTableModel = new CreditRestockTableModel();
+        creditRestockKuotaTableModel = new CreditRestockKuotaTableModel();
+        creditRestockPerdanaTableModel = new CreditRestockPerdanaTableModel();
         creditRestockModel = new CreditRestockModel();
         creditRestockModel.setListener(this);
         creditRestockController = new CreditRestockController();
@@ -123,7 +143,20 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         customerBillController = new CustomerBillController();
         customerBillController.setModel(customerBillModel);
         
+        incomeTableModel = new IncomeTableModel();
+        incomeModel = new IncomeModel();
+        incomeModel.setListener(this);
+        incomeController = new IncomeController();
+        incomeController.setModel(incomeModel);
+        
+        providerTableModel = new ProviderTableModel();
+        providerModel = new ProviderModel();
+        providerModel.setListener(this);
+        providerController = new ProviderController();
+        providerController.setModel(providerModel);
+        
         initComponents();
+        setSidemenu_active(0);
         
         tblEmployee.getSelectionModel().addListSelectionListener(this);
         tblEmployee.setModel(employeeTableModel);
@@ -138,15 +171,61 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         tblRestockPulsa.setModel(creditRestockTableModel);
         
         tblRestockKuotaView.getSelectionModel().addListSelectionListener(this);
-        tblRestockKuotaView.setModel(creditRestockTableModel);
+        tblRestockKuotaView.setModel(creditRestockKuotaTableModel);
         
         tblStock.getSelectionModel().addListSelectionListener(this);
-        tblStock.setModel(creditRestockTableModel);
+        tblStock.setModel(creditRestockPerdanaTableModel);
         
         tblCustomerBill.getSelectionModel().addListSelectionListener(this);
         tblCustomerBill.setModel(customerBillTableModel);
+        
+        tblPendapatan.getSelectionModel().addListSelectionListener(this);
+        tblPendapatan.setModel(incomeTableModel);
+        
+        tblProvider.getSelectionModel().addListSelectionListener(this);
+        tblProvider.setModel(providerTableModel);
     }
 
+    public int getSidemenu_active() {
+        return sidemenu_active;
+    }
+
+    public void setSidemenu_active(int sidemenu_active) {
+        btnHomeMenu.setBackground(sidemenu_exited);
+        btnPulsaMenu.setBackground(sidemenu_exited);
+        btnPlnPdamMenu.setBackground(sidemenu_exited);
+        btnKartuMenu.setBackground(sidemenu_exited);
+        btnPendapatanMenu.setBackground(sidemenu_exited);
+        btnManageMenu.setBackground(sidemenu_exited);
+        switch(sidemenu_active) {
+            case 1 : 
+                btnHomeMenu.setBackground(sidemenu_active_color);
+                break;
+            case 2 : 
+                btnPulsaMenu.setBackground(sidemenu_active_color);
+                break;
+            case 3 : 
+                btnPlnPdamMenu.setBackground(sidemenu_active_color);
+                break;
+            case 4 : 
+                btnKartuMenu.setBackground(sidemenu_active_color);
+                break;
+            case 5 : 
+                btnPendapatanMenu.setBackground(sidemenu_active_color);
+                break;
+            case 6 : 
+                btnManageMenu.setBackground(sidemenu_active_color);
+                break;
+            default :
+                break;
+        }
+        this.sidemenu_active = sidemenu_active;
+    }
+    
+    public JPanel getBtnPendapatanMenu() {
+        return btnPendapatanMenu;
+    }
+    
     public JPanel getBtnManageMenu() {
         return btnManageMenu;
     }
@@ -238,8 +317,6 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         jButton9 = new javax.swing.JButton();
         cbFilterProviderStock = new javax.swing.JComboBox();
         cbFilterJenisStock = new javax.swing.JComboBox();
-        btnEditStock = new javax.swing.JButton();
-        btnDeleteStock = new javax.swing.JButton();
         panelTagihanView = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         tblCustomerBill = new javax.swing.JTable();
@@ -266,7 +343,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         jLabel49 = new javax.swing.JLabel();
         cbJenisPembayaran = new javax.swing.JComboBox<>();
         btnFormCustomerBillReset = new javax.swing.JButton();
-        panelPendapatanView = new javax.swing.JPanel();
+        panelFormPendapatanView = new javax.swing.JPanel();
         jLabel23 = new javax.swing.JLabel();
         jLabel24 = new javax.swing.JLabel();
         jLabel25 = new javax.swing.JLabel();
@@ -279,29 +356,41 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         jLabel30 = new javax.swing.JLabel();
         jLabel31 = new javax.swing.JLabel();
         jLabel32 = new javax.swing.JLabel();
-        txtPulsaPendapatan = new javax.swing.JTextField();
-        txtKartuKuotaPendapatan = new javax.swing.JTextField();
         jLabel33 = new javax.swing.JLabel();
         jLabel34 = new javax.swing.JLabel();
-        txtKartuPerdanaPendapatan = new javax.swing.JTextField();
         jLabel35 = new javax.swing.JLabel();
         jLabel36 = new javax.swing.JLabel();
-        txtPLNPendapatan = new javax.swing.JTextField();
-        txtPDAMPendapatan = new javax.swing.JTextField();
         jLabel38 = new javax.swing.JLabel();
         jLabel40 = new javax.swing.JLabel();
-        txtPengeluaranPendapatan = new javax.swing.JTextField();
+        txtPendapatanCreditPerdana = new javax.swing.JTextField();
         jSeparator3 = new javax.swing.JSeparator();
-        jTextField9 = new javax.swing.JTextField();
-        txtTotalPendapatan = new javax.swing.JLabel();
         jLabel41 = new javax.swing.JLabel();
         jLabel42 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
+        btnPendapatanSave = new javax.swing.JPanel();
+        jLabel43 = new javax.swing.JLabel();
+        txtPendapatanOutcome = new javax.swing.JTextField();
+        txtPendapatanPDAM = new javax.swing.JTextField();
+        txtPendapatanPLN = new javax.swing.JTextField();
+        txtPendapatanCreditKuota = new javax.swing.JTextField();
+        txtPendapatanCredit = new javax.swing.JTextField();
+        txtPendapatanTotal = new javax.swing.JTextField();
+        jLabel44 = new javax.swing.JLabel();
+        jLabel45 = new javax.swing.JLabel();
+        txtPendapatanId_income = new javax.swing.JTextField();
+        panelPendapatanView = new javax.swing.JPanel();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        tblPendapatan = new javax.swing.JTable();
+        lblHeaderCustomer1 = new javax.swing.JLabel();
+        btnFormPendapatan = new javax.swing.JPanel();
+        jLabel57 = new javax.swing.JLabel();
         panelManageView = new javax.swing.JPanel();
         btnEmployeeView = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         btnCustomerView = new javax.swing.JPanel();
         jLabel47 = new javax.swing.JLabel();
+        btnProviderView = new javax.swing.JPanel();
+        jLabel46 = new javax.swing.JLabel();
         panelManageEmployeeView = new javax.swing.JPanel();
         lblHeaderEmployee = new javax.swing.JLabel();
         btnFormEmployeeDelete = new javax.swing.JButton();
@@ -366,6 +455,25 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         jSeparator5 = new javax.swing.JSeparator();
         txtCustomerStatus1 = new javax.swing.JTextField();
         lblRole4 = new javax.swing.JLabel();
+        panelManageProviderView = new javax.swing.JPanel();
+        lblHeaderCustomer2 = new javax.swing.JLabel();
+        btnFormProviderDelete = new javax.swing.JButton();
+        spCustomer1 = new javax.swing.JScrollPane();
+        tblProvider = new javax.swing.JTable();
+        btnFormProvider = new javax.swing.JPanel();
+        jLabel58 = new javax.swing.JLabel();
+        panelFormProviderView = new javax.swing.JPanel();
+        lblHeaderFormEmployee3 = new javax.swing.JLabel();
+        lblFormIdEmployee3 = new javax.swing.JLabel();
+        txtFormProviderId_provider = new javax.swing.JTextField();
+        lblEmployee_name3 = new javax.swing.JLabel();
+        txtFormProviderProvider_name = new javax.swing.JTextField();
+        btnBacktoManageProvider = new javax.swing.JPanel();
+        jLabel59 = new javax.swing.JLabel();
+        btnFormProviderCreate = new javax.swing.JButton();
+        btnFormProviderUpdate = new javax.swing.JButton();
+        btnFormProviderReset = new javax.swing.JButton();
+        jSeparator6 = new javax.swing.JSeparator();
         sidePane = new javax.swing.JPanel();
         lblAppName = new javax.swing.JLabel();
         btnHomeMenu = new javax.swing.JPanel();
@@ -954,10 +1062,6 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         cbFilterJenisStock.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
         cbFilterJenisStock.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "--JENIS--", "PERDANA", "KUOTA" }));
 
-        btnEditStock.setText("EDIT");
-
-        btnDeleteStock.setText("DELETE");
-
         javax.swing.GroupLayout panelStockViewLayout = new javax.swing.GroupLayout(panelStockView);
         panelStockView.setLayout(panelStockViewLayout);
         panelStockViewLayout.setHorizontalGroup(
@@ -965,17 +1069,11 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
             .addGroup(panelStockViewLayout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addGroup(panelStockViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelStockViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(panelStockViewLayout.createSequentialGroup()
-                            .addComponent(btnEditStock, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(btnDeleteStock, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(panelStockViewLayout.createSequentialGroup()
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 689, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jScrollBar3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panelStockViewLayout.createSequentialGroup()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 689, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollBar3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panelStockViewLayout.createSequentialGroup()
                         .addComponent(cbFilterProviderStock, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -993,16 +1091,9 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
                 .addGroup(panelStockViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 363, Short.MAX_VALUE)
                     .addComponent(jScrollBar3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGroup(panelStockViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelStockViewLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton9))
-                    .addGroup(panelStockViewLayout.createSequentialGroup()
-                        .addGap(4, 4, 4)
-                        .addGroup(panelStockViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnEditStock)
-                            .addComponent(btnDeleteStock))))
-                .addGap(15, 15, 15))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton9)
+                .addGap(22, 22, 22))
         );
 
         panelView.add(panelStockView, "card10");
@@ -1288,7 +1379,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
 
         panelView.add(panelFormTagihanView, "card17");
 
-        panelPendapatanView.setBackground(new java.awt.Color(0, 0, 0));
+        panelFormPendapatanView.setBackground(new java.awt.Color(0, 0, 0));
 
         jLabel23.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel23.setForeground(new java.awt.Color(240, 240, 240));
@@ -1338,23 +1429,6 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         jLabel32.setForeground(new java.awt.Color(240, 240, 240));
         jLabel32.setText(":");
 
-        txtPulsaPendapatan.setBackground(new java.awt.Color(0, 0, 0));
-        txtPulsaPendapatan.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
-        txtPulsaPendapatan.setForeground(new java.awt.Color(240, 240, 240));
-        txtPulsaPendapatan.setText("-----");
-        txtPulsaPendapatan.setBorder(null);
-        txtPulsaPendapatan.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtPulsaPendapatanActionPerformed(evt);
-            }
-        });
-
-        txtKartuKuotaPendapatan.setBackground(new java.awt.Color(0, 0, 0));
-        txtKartuKuotaPendapatan.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
-        txtKartuKuotaPendapatan.setForeground(new java.awt.Color(240, 240, 240));
-        txtKartuKuotaPendapatan.setText("-----");
-        txtKartuKuotaPendapatan.setBorder(null);
-
         jLabel33.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel33.setForeground(new java.awt.Color(240, 240, 240));
         jLabel33.setText("Rp");
@@ -1362,12 +1436,6 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         jLabel34.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel34.setForeground(new java.awt.Color(240, 240, 240));
         jLabel34.setText("Rp");
-
-        txtKartuPerdanaPendapatan.setBackground(new java.awt.Color(0, 0, 0));
-        txtKartuPerdanaPendapatan.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
-        txtKartuPerdanaPendapatan.setForeground(new java.awt.Color(240, 240, 240));
-        txtKartuPerdanaPendapatan.setText("-----");
-        txtKartuPerdanaPendapatan.setBorder(null);
 
         jLabel35.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel35.setForeground(new java.awt.Color(240, 240, 240));
@@ -1377,18 +1445,6 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         jLabel36.setForeground(new java.awt.Color(240, 240, 240));
         jLabel36.setText("Rp");
 
-        txtPLNPendapatan.setBackground(new java.awt.Color(0, 0, 0));
-        txtPLNPendapatan.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
-        txtPLNPendapatan.setForeground(new java.awt.Color(240, 240, 240));
-        txtPLNPendapatan.setText("-----");
-        txtPLNPendapatan.setBorder(null);
-
-        txtPDAMPendapatan.setBackground(new java.awt.Color(0, 0, 0));
-        txtPDAMPendapatan.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
-        txtPDAMPendapatan.setForeground(new java.awt.Color(240, 240, 240));
-        txtPDAMPendapatan.setText("-----");
-        txtPDAMPendapatan.setBorder(null);
-
         jLabel38.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel38.setForeground(new java.awt.Color(240, 240, 240));
         jLabel38.setText("Rp");
@@ -1397,16 +1453,8 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         jLabel40.setForeground(new java.awt.Color(240, 240, 240));
         jLabel40.setText("Rp");
 
-        txtPengeluaranPendapatan.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
-
-        jTextField9.setBackground(new java.awt.Color(0, 0, 0));
-        jTextField9.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
-        jTextField9.setForeground(new java.awt.Color(240, 240, 240));
-        jTextField9.setBorder(null);
-
-        txtTotalPendapatan.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        txtTotalPendapatan.setForeground(new java.awt.Color(240, 240, 240));
-        txtTotalPendapatan.setText("Rp");
+        txtPendapatanCreditPerdana.setEditable(false);
+        txtPendapatanCreditPerdana.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
 
         jLabel41.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel41.setForeground(new java.awt.Color(240, 240, 240));
@@ -1420,128 +1468,291 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         jLabel14.setForeground(new java.awt.Color(240, 240, 240));
         jLabel14.setText("*Ketik total pengeluaran");
 
+        btnPendapatanSave.setBackground(new java.awt.Color(92, 0, 122));
+        btnPendapatanSave.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnPendapatanSave.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnPendapatanSaveMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnPendapatanSaveMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnPendapatanSaveMouseExited(evt);
+            }
+        });
+
+        jLabel43.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel43.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel43.setText("Save");
+
+        javax.swing.GroupLayout btnPendapatanSaveLayout = new javax.swing.GroupLayout(btnPendapatanSave);
+        btnPendapatanSave.setLayout(btnPendapatanSaveLayout);
+        btnPendapatanSaveLayout.setHorizontalGroup(
+            btnPendapatanSaveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(btnPendapatanSaveLayout.createSequentialGroup()
+                .addGap(35, 35, 35)
+                .addComponent(jLabel43)
+                .addContainerGap(39, Short.MAX_VALUE))
+        );
+        btnPendapatanSaveLayout.setVerticalGroup(
+            btnPendapatanSaveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(btnPendapatanSaveLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel43)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        txtPendapatanOutcome.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
+
+        txtPendapatanPDAM.setEditable(false);
+        txtPendapatanPDAM.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
+
+        txtPendapatanPLN.setEditable(false);
+        txtPendapatanPLN.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
+
+        txtPendapatanCreditKuota.setEditable(false);
+        txtPendapatanCreditKuota.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
+
+        txtPendapatanCredit.setEditable(false);
+        txtPendapatanCredit.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
+
+        txtPendapatanTotal.setEditable(false);
+
+        jLabel44.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel44.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel44.setText("PENDAPATAN");
+
+        jLabel45.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel45.setForeground(new java.awt.Color(240, 240, 240));
+        jLabel45.setText("Rp");
+
+        txtPendapatanId_income.setEditable(false);
+
+        javax.swing.GroupLayout panelFormPendapatanViewLayout = new javax.swing.GroupLayout(panelFormPendapatanView);
+        panelFormPendapatanView.setLayout(panelFormPendapatanViewLayout);
+        panelFormPendapatanViewLayout.setHorizontalGroup(
+            panelFormPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelFormPendapatanViewLayout.createSequentialGroup()
+                .addGroup(panelFormPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFormPendapatanViewLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(panelFormPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(panelFormPendapatanViewLayout.createSequentialGroup()
+                                .addComponent(jLabel41)
+                                .addGap(427, 427, 427))
+                            .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(panelFormPendapatanViewLayout.createSequentialGroup()
+                        .addGap(45, 45, 45)
+                        .addGroup(panelFormPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFormPendapatanViewLayout.createSequentialGroup()
+                                .addGroup(panelFormPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(panelFormPendapatanViewLayout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(jLabel45, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(txtPendapatanTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(panelFormPendapatanViewLayout.createSequentialGroup()
+                                        .addComponent(jLabel14)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btnPendapatanSave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(24, 24, 24))
+                            .addGroup(panelFormPendapatanViewLayout.createSequentialGroup()
+                                .addGroup(panelFormPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(panelFormPendapatanViewLayout.createSequentialGroup()
+                                        .addGroup(panelFormPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel27, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel37, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(195, 195, 195)
+                                        .addGroup(panelFormPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addGroup(panelFormPendapatanViewLayout.createSequentialGroup()
+                                                .addGroup(panelFormPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(jLabel32, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(jLabel31, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(jLabel30, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(jLabel28, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGap(44, 44, 44)
+                                                .addGroup(panelFormPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                    .addGroup(panelFormPendapatanViewLayout.createSequentialGroup()
+                                                        .addComponent(jLabel34, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addGap(18, 18, 18)
+                                                        .addComponent(txtPendapatanCreditKuota, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                    .addGroup(panelFormPendapatanViewLayout.createSequentialGroup()
+                                                        .addComponent(jLabel38, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addGap(18, 18, 18)
+                                                        .addComponent(txtPendapatanPDAM))
+                                                    .addGroup(panelFormPendapatanViewLayout.createSequentialGroup()
+                                                        .addComponent(jLabel36, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addGap(18, 18, 18)
+                                                        .addComponent(txtPendapatanPLN, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                    .addGroup(panelFormPendapatanViewLayout.createSequentialGroup()
+                                                        .addComponent(jLabel35, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addGap(18, 18, 18)
+                                                        .addComponent(txtPendapatanCreditPerdana, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                    .addGroup(panelFormPendapatanViewLayout.createSequentialGroup()
+                                                        .addComponent(jLabel33, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addGap(18, 18, 18)
+                                                        .addGroup(panelFormPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                            .addComponent(txtPendapatanCredit, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                            .addComponent(txtPendapatanId_income, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                            .addGroup(panelFormPendapatanViewLayout.createSequentialGroup()
+                                                .addComponent(jLabel39, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(44, 44, 44)
+                                                .addComponent(jLabel40, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(txtPendapatanOutcome))
+                                            .addComponent(jLabel42, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(jLabel44))
+                                .addGap(0, 105, Short.MAX_VALUE)))))
+                .addGap(24, 24, 24))
+        );
+        panelFormPendapatanViewLayout.setVerticalGroup(
+            panelFormPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelFormPendapatanViewLayout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addGroup(panelFormPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel44)
+                    .addComponent(txtPendapatanId_income, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(panelFormPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel23)
+                    .addComponent(jLabel32)
+                    .addComponent(jLabel33)
+                    .addComponent(txtPendapatanCredit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(panelFormPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelFormPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel31)
+                        .addComponent(jLabel34)
+                        .addComponent(txtPendapatanCreditKuota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(panelFormPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelFormPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel30)
+                        .addComponent(jLabel35)
+                        .addComponent(txtPendapatanCreditPerdana, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel25, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGap(14, 14, 14)
+                .addGroup(panelFormPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel26)
+                    .addComponent(jLabel28)
+                    .addComponent(jLabel36)
+                    .addComponent(txtPendapatanPLN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(14, 14, 14)
+                .addGroup(panelFormPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel27)
+                    .addComponent(jLabel38)
+                    .addComponent(jLabel29)
+                    .addComponent(txtPendapatanPDAM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(panelFormPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(panelFormPendapatanViewLayout.createSequentialGroup()
+                        .addComponent(txtPendapatanOutcome, javax.swing.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
+                        .addGap(2, 2, 2))
+                    .addGroup(panelFormPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel37)
+                        .addComponent(jLabel40)
+                        .addComponent(jLabel39)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                .addGroup(panelFormPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFormPendapatanViewLayout.createSequentialGroup()
+                        .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29)
+                        .addGroup(panelFormPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel41)
+                            .addComponent(jLabel42)
+                            .addComponent(txtPendapatanTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel45))
+                        .addGap(42, 42, 42)
+                        .addComponent(jLabel14))
+                    .addComponent(btnPendapatanSave, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(25, 25, 25))
+        );
+
+        panelView.add(panelFormPendapatanView, "card6");
+
+        panelPendapatanView.setBackground(new java.awt.Color(0, 0, 0));
+
+        tblPendapatan.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane7.setViewportView(tblPendapatan);
+
+        lblHeaderCustomer1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblHeaderCustomer1.setForeground(new java.awt.Color(240, 240, 240));
+        lblHeaderCustomer1.setText("DATA PENDAPATAN");
+
+        btnFormPendapatan.setBackground(new java.awt.Color(153, 0, 153));
+        btnFormPendapatan.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnFormPendapatan.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnFormPendapatanMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnFormPendapatanMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnFormPendapatanMouseExited(evt);
+            }
+        });
+
+        jLabel57.setFont(new java.awt.Font("Segoe UI", 1, 11)); // NOI18N
+        jLabel57.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel57.setText("Form");
+
+        javax.swing.GroupLayout btnFormPendapatanLayout = new javax.swing.GroupLayout(btnFormPendapatan);
+        btnFormPendapatan.setLayout(btnFormPendapatanLayout);
+        btnFormPendapatanLayout.setHorizontalGroup(
+            btnFormPendapatanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(btnFormPendapatanLayout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addComponent(jLabel57)
+                .addContainerGap(39, Short.MAX_VALUE))
+        );
+        btnFormPendapatanLayout.setVerticalGroup(
+            btnFormPendapatanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel57, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout panelPendapatanViewLayout = new javax.swing.GroupLayout(panelPendapatanView);
         panelPendapatanView.setLayout(panelPendapatanViewLayout);
         panelPendapatanViewLayout.setHorizontalGroup(
             panelPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelPendapatanViewLayout.createSequentialGroup()
+                .addGap(36, 36, 36)
                 .addGroup(panelPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPendapatanViewLayout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(panelPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(panelPendapatanViewLayout.createSequentialGroup()
-                                .addComponent(jLabel41, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel42, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtTotalPendapatan, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(panelPendapatanViewLayout.createSequentialGroup()
-                        .addGap(40, 40, 40)
-                        .addGroup(panelPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelPendapatanViewLayout.createSequentialGroup()
-                                .addGroup(panelPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel27, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(206, 206, 206)
-                                .addGroup(panelPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel32, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel31, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel30, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel28, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(44, 44, 44)
-                                .addGroup(panelPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(panelPendapatanViewLayout.createSequentialGroup()
-                                        .addGroup(panelPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel34, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel35, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel36, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel38, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(panelPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(txtKartuKuotaPendapatan, javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(txtPDAMPendapatan)
-                                            .addComponent(txtPLNPendapatan, javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(txtKartuPerdanaPendapatan, javax.swing.GroupLayout.Alignment.LEADING)))
-                                    .addGroup(panelPendapatanViewLayout.createSequentialGroup()
-                                        .addComponent(jLabel33, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtPulsaPendapatan, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE))))
-                            .addGroup(panelPendapatanViewLayout.createSequentialGroup()
-                                .addGroup(panelPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel14)
-                                    .addGroup(panelPendapatanViewLayout.createSequentialGroup()
-                                        .addComponent(jLabel37, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(206, 206, 206)
-                                        .addComponent(jLabel39, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(44, 44, 44)
-                                        .addComponent(jLabel40, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtPengeluaranPendapatan, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(0, 117, Short.MAX_VALUE)))))
-                .addGap(24, 24, 24))
+                    .addComponent(btnFormPendapatan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblHeaderCustomer1)
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 696, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
         panelPendapatanViewLayout.setVerticalGroup(
             panelPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelPendapatanViewLayout.createSequentialGroup()
-                .addGap(65, 65, 65)
-                .addGroup(panelPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel23)
-                    .addComponent(jLabel32)
-                    .addComponent(jLabel33)
-                    .addComponent(txtPulsaPendapatan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPendapatanViewLayout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addComponent(lblHeaderCustomer1)
                 .addGap(18, 18, 18)
-                .addGroup(panelPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel31)
-                        .addComponent(jLabel34)
-                        .addComponent(txtKartuKuotaPendapatan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 311, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
-                .addGroup(panelPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel30)
-                        .addComponent(jLabel35)
-                        .addComponent(txtKartuPerdanaPendapatan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel25, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addGap(16, 16, 16)
-                .addGroup(panelPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel26)
-                    .addComponent(jLabel28)
-                    .addComponent(jLabel36)
-                    .addComponent(txtPLNPendapatan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(16, 16, 16)
-                .addGroup(panelPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel27)
-                    .addComponent(jLabel38)
-                    .addComponent(jLabel29)
-                    .addComponent(txtPDAMPendapatan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(panelPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel37)
-                    .addComponent(jLabel40)
-                    .addComponent(jLabel39)
-                    .addComponent(txtPengeluaranPendapatan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
-                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28)
-                .addGroup(panelPendapatanViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel41)
-                    .addComponent(jLabel42)
-                    .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtTotalPendapatan))
-                .addGap(44, 44, 44)
-                .addComponent(jLabel14)
-                .addGap(25, 25, 25))
+                .addComponent(btnFormPendapatan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(28, 28, 28))
         );
 
-        panelView.add(panelPendapatanView, "card6");
+        panelView.add(panelPendapatanView, "card16");
 
         panelManageView.setBackground(new java.awt.Color(0, 0, 0));
 
@@ -1615,25 +1826,67 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
                 .addContainerGap())
         );
 
+        btnProviderView.setBackground(new java.awt.Color(153, 0, 153));
+        btnProviderView.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnProviderView.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnProviderViewMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnProviderViewMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnProviderViewMouseExited(evt);
+            }
+        });
+
+        jLabel46.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel46.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel46.setText("Provider");
+
+        javax.swing.GroupLayout btnProviderViewLayout = new javax.swing.GroupLayout(btnProviderView);
+        btnProviderView.setLayout(btnProviderViewLayout);
+        btnProviderViewLayout.setHorizontalGroup(
+            btnProviderViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, btnProviderViewLayout.createSequentialGroup()
+                .addContainerGap(57, Short.MAX_VALUE)
+                .addComponent(jLabel46)
+                .addGap(54, 54, 54))
+        );
+        btnProviderViewLayout.setVerticalGroup(
+            btnProviderViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(btnProviderViewLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel46, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout panelManageViewLayout = new javax.swing.GroupLayout(panelManageView);
         panelManageView.setLayout(panelManageViewLayout);
         panelManageViewLayout.setHorizontalGroup(
             panelManageViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelManageViewLayout.createSequentialGroup()
-                .addGap(176, 176, 176)
-                .addComponent(btnEmployeeView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
-                .addComponent(btnCustomerView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(221, 221, 221))
+                .addGroup(panelManageViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelManageViewLayout.createSequentialGroup()
+                        .addGap(126, 126, 126)
+                        .addComponent(btnEmployeeView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(125, 125, 125)
+                        .addComponent(btnCustomerView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelManageViewLayout.createSequentialGroup()
+                        .addGap(280, 280, 280)
+                        .addComponent(btnProviderView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 181, Short.MAX_VALUE))
         );
         panelManageViewLayout.setVerticalGroup(
             panelManageViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelManageViewLayout.createSequentialGroup()
-                .addGap(199, 199, 199)
-                .addGroup(panelManageViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnCustomerView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEmployeeView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(212, Short.MAX_VALUE))
+                .addGap(151, 151, 151)
+                .addGroup(panelManageViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnEmployeeView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCustomerView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(64, 64, 64)
+                .addComponent(btnProviderView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(141, Short.MAX_VALUE))
         );
 
         panelView.add(panelManageView, "card12");
@@ -2335,6 +2588,249 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
 
         panelView.add(panelFormCustomerView, "card13");
 
+        panelManageProviderView.setBackground(new java.awt.Color(0, 0, 0));
+
+        lblHeaderCustomer2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblHeaderCustomer2.setForeground(new java.awt.Color(240, 240, 240));
+        lblHeaderCustomer2.setText("DATA PROVIDER");
+
+        btnFormProviderDelete.setText("Delete");
+        btnFormProviderDelete.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnFormProviderDelete.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnFormProviderDeleteMouseClicked(evt);
+            }
+        });
+        btnFormProviderDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFormProviderDeleteActionPerformed(evt);
+            }
+        });
+
+        tblProvider.setBackground(new java.awt.Color(0, 0, 0));
+        tblProvider.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
+        tblProvider.setForeground(new java.awt.Color(240, 240, 240));
+        tblProvider.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        spCustomer1.setViewportView(tblProvider);
+
+        btnFormProvider.setBackground(new java.awt.Color(153, 0, 153));
+        btnFormProvider.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnFormProvider.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnFormProviderMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnFormProviderMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnFormProviderMouseExited(evt);
+            }
+        });
+
+        jLabel58.setFont(new java.awt.Font("Segoe UI", 1, 11)); // NOI18N
+        jLabel58.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel58.setText("Form");
+
+        javax.swing.GroupLayout btnFormProviderLayout = new javax.swing.GroupLayout(btnFormProvider);
+        btnFormProvider.setLayout(btnFormProviderLayout);
+        btnFormProviderLayout.setHorizontalGroup(
+            btnFormProviderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(btnFormProviderLayout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addComponent(jLabel58)
+                .addContainerGap(39, Short.MAX_VALUE))
+        );
+        btnFormProviderLayout.setVerticalGroup(
+            btnFormProviderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel58, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout panelManageProviderViewLayout = new javax.swing.GroupLayout(panelManageProviderView);
+        panelManageProviderView.setLayout(panelManageProviderViewLayout);
+        panelManageProviderViewLayout.setHorizontalGroup(
+            panelManageProviderViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelManageProviderViewLayout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addGroup(panelManageProviderViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnFormProvider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(spCustomer1, javax.swing.GroupLayout.PREFERRED_SIZE, 684, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblHeaderCustomer2)
+                    .addComponent(btnFormProviderDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(52, Short.MAX_VALUE))
+        );
+        panelManageProviderViewLayout.setVerticalGroup(
+            panelManageProviderViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelManageProviderViewLayout.createSequentialGroup()
+                .addContainerGap(20, Short.MAX_VALUE)
+                .addComponent(lblHeaderCustomer2)
+                .addGap(18, 18, 18)
+                .addComponent(btnFormProvider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(spCustomer1, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnFormProviderDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(65, 65, 65))
+        );
+
+        panelView.add(panelManageProviderView, "card11");
+
+        panelFormProviderView.setBackground(new java.awt.Color(0, 0, 0));
+
+        lblHeaderFormEmployee3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblHeaderFormEmployee3.setForeground(new java.awt.Color(240, 240, 240));
+        lblHeaderFormEmployee3.setText("FORM PROVIDER");
+
+        lblFormIdEmployee3.setForeground(new java.awt.Color(255, 255, 255));
+        lblFormIdEmployee3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblFormIdEmployee3.setText("ID");
+
+        txtFormProviderId_provider.setEditable(false);
+
+        lblEmployee_name3.setForeground(new java.awt.Color(255, 255, 255));
+        lblEmployee_name3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblEmployee_name3.setText("Provider Name");
+
+        btnBacktoManageProvider.setBackground(new java.awt.Color(153, 0, 153));
+        btnBacktoManageProvider.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnBacktoManageProvider.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnBacktoManageProviderMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnBacktoManageProviderMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnBacktoManageProviderMouseExited(evt);
+            }
+        });
+
+        jLabel59.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
+        jLabel59.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel59.setText("Back");
+
+        javax.swing.GroupLayout btnBacktoManageProviderLayout = new javax.swing.GroupLayout(btnBacktoManageProvider);
+        btnBacktoManageProvider.setLayout(btnBacktoManageProviderLayout);
+        btnBacktoManageProviderLayout.setHorizontalGroup(
+            btnBacktoManageProviderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, btnBacktoManageProviderLayout.createSequentialGroup()
+                .addContainerGap(30, Short.MAX_VALUE)
+                .addComponent(jLabel59)
+                .addGap(29, 29, 29))
+        );
+        btnBacktoManageProviderLayout.setVerticalGroup(
+            btnBacktoManageProviderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(btnBacktoManageProviderLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel59)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        btnFormProviderCreate.setText("Create");
+        btnFormProviderCreate.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnFormProviderCreateMouseClicked(evt);
+            }
+        });
+        btnFormProviderCreate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFormProviderCreateActionPerformed(evt);
+            }
+        });
+
+        btnFormProviderUpdate.setText("Update");
+        btnFormProviderUpdate.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnFormProviderUpdateMouseClicked(evt);
+            }
+        });
+        btnFormProviderUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFormProviderUpdateActionPerformed(evt);
+            }
+        });
+
+        btnFormProviderReset.setText("Reset");
+        btnFormProviderReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFormProviderResetActionPerformed(evt);
+            }
+        });
+
+        jSeparator6.setOrientation(javax.swing.SwingConstants.VERTICAL);
+
+        javax.swing.GroupLayout panelFormProviderViewLayout = new javax.swing.GroupLayout(panelFormProviderView);
+        panelFormProviderView.setLayout(panelFormProviderViewLayout);
+        panelFormProviderViewLayout.setHorizontalGroup(
+            panelFormProviderViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelFormProviderViewLayout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addGroup(panelFormProviderViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelFormProviderViewLayout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(lblHeaderFormEmployee3)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panelFormProviderViewLayout.createSequentialGroup()
+                        .addGroup(panelFormProviderViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelFormProviderViewLayout.createSequentialGroup()
+                                .addComponent(btnBacktoManageProvider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 621, Short.MAX_VALUE))
+                            .addGroup(panelFormProviderViewLayout.createSequentialGroup()
+                                .addGroup(panelFormProviderViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblEmployee_name3)
+                                    .addGroup(panelFormProviderViewLayout.createSequentialGroup()
+                                        .addGap(10, 10, 10)
+                                        .addComponent(lblFormIdEmployee3, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(18, 18, 18)
+                                .addGroup(panelFormProviderViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtFormProviderId_provider)
+                                    .addGroup(panelFormProviderViewLayout.createSequentialGroup()
+                                        .addComponent(btnFormProviderReset, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(262, 262, 262)
+                                        .addComponent(btnFormProviderCreate, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnFormProviderUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE))
+                                    .addComponent(txtFormProviderProvider_name, javax.swing.GroupLayout.Alignment.TRAILING))))
+                        .addGap(32, 32, 32))))
+        );
+        panelFormProviderViewLayout.setVerticalGroup(
+            panelFormProviderViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelFormProviderViewLayout.createSequentialGroup()
+                .addGap(27, 27, 27)
+                .addComponent(lblHeaderFormEmployee3)
+                .addGap(18, 18, 18)
+                .addComponent(btnBacktoManageProvider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(75, 75, 75)
+                .addGroup(panelFormProviderViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtFormProviderId_provider, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblFormIdEmployee3))
+                .addGap(18, 18, 18)
+                .addGroup(panelFormProviderViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtFormProviderProvider_name, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblEmployee_name3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 124, Short.MAX_VALUE)
+                .addGroup(panelFormProviderViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelFormProviderViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnFormProviderCreate, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnFormProviderUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnFormProviderReset, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(19, 19, 19))
+        );
+
+        panelView.add(panelFormProviderView, "card13");
+
         backGround.add(panelView, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 120, 770, 450));
 
         sidePane.setBackground(new java.awt.Color(92, 0, 122));
@@ -2768,32 +3264,32 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         panelView.repaint();
         panelView.revalidate();
         btnHomeMenu.setBackground(sidemenu_active_color);
-        sidemenu_active = 1;
+        setSidemenu_active(1);
         panelView.add(panelHomeView);
         panelView.repaint();
         panelView.revalidate();
     }//GEN-LAST:event_btnHomeMenuMouseClicked
 
     private void btnHomeMenuMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHomeMenuMouseEntered
-        if (sidemenu_active != 1) {
+        if (getSidemenu_active() != 1) {
             btnHomeMenu.setBackground(sidemenu_entered);
         }
     }//GEN-LAST:event_btnHomeMenuMouseEntered
 
     private void btnHomeMenuMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHomeMenuMouseExited
-        if (sidemenu_active != 1) {
+        if (getSidemenu_active() != 1) {
             btnHomeMenu.setBackground(sidemenu_exited);
         }
     }//GEN-LAST:event_btnHomeMenuMouseExited
 
     private void btnHomeMenuMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHomeMenuMousePressed
-       if (sidemenu_active != 1) {
+       if (getSidemenu_active() != 1) {
             btnHomeMenu.setBackground(sidemenu_pressed);
         }
     }//GEN-LAST:event_btnHomeMenuMousePressed
 
     private void btnHomeMenuMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHomeMenuMouseReleased
-        if (sidemenu_active != 1) {
+        if (getSidemenu_active() != 1) {
             btnHomeMenu.setBackground(sidemenu_entered);
         }
     }//GEN-LAST:event_btnHomeMenuMouseReleased
@@ -2803,7 +3299,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         panelView.repaint();
         panelView.revalidate();
         btnKartuMenu.setBackground(sidemenu_pressed);
-        sidemenu_active = 2;
+        setSidemenu_active(4);
         panelView.add(panelStockView);
         panelView.repaint();
         panelView.revalidate();
@@ -2811,25 +3307,25 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     }//GEN-LAST:event_btnKartuMenuMouseClicked
 
     private void btnKartuMenuMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnKartuMenuMouseEntered
-        if (sidemenu_active != 2) {
+        if (getSidemenu_active() != 4) {
             btnKartuMenu.setBackground(sidemenu_entered);
         }
     }//GEN-LAST:event_btnKartuMenuMouseEntered
 
     private void btnKartuMenuMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnKartuMenuMouseExited
-        if (sidemenu_active != 2) {
+        if (getSidemenu_active() != 4) {
             btnKartuMenu.setBackground(sidemenu_exited);
         }
     }//GEN-LAST:event_btnKartuMenuMouseExited
 
     private void btnKartuMenuMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnKartuMenuMousePressed
-        if (sidemenu_active != 2) {
+        if (getSidemenu_active() != 4) {
             btnKartuMenu.setBackground(sidemenu_pressed);
         }
     }//GEN-LAST:event_btnKartuMenuMousePressed
 
     private void btnKartuMenuMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnKartuMenuMouseReleased
-        if (sidemenu_active != 2) {
+        if (getSidemenu_active() != 4) {
             btnKartuMenu.setBackground(sidemenu_entered);
         }
     }//GEN-LAST:event_btnKartuMenuMouseReleased
@@ -2839,32 +3335,32 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         panelView.repaint();
         panelView.revalidate();
         btnPlnPdamMenu.setBackground(sidemenu_pressed);
-        sidemenu_active = 3;
+        setSidemenu_active(3);
         panelView.add(panelTagihanView);
         panelView.repaint();
         panelView.revalidate();
     }//GEN-LAST:event_btnPlnPdamMenuMouseClicked
 
     private void btnPlnPdamMenuMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPlnPdamMenuMouseEntered
-        if (sidemenu_active != 3) {
+        if (getSidemenu_active() != 3) {
             btnPlnPdamMenu.setBackground(sidemenu_entered);
         } 
     }//GEN-LAST:event_btnPlnPdamMenuMouseEntered
 
     private void btnPlnPdamMenuMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPlnPdamMenuMouseExited
-        if (sidemenu_active != 3) {
+        if (getSidemenu_active() != 3) {
             btnPlnPdamMenu.setBackground(sidemenu_exited);
         }
     }//GEN-LAST:event_btnPlnPdamMenuMouseExited
 
     private void btnPlnPdamMenuMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPlnPdamMenuMousePressed
-        if (sidemenu_active != 3) {
+        if (getSidemenu_active() != 3) {
             btnPlnPdamMenu.setBackground(sidemenu_pressed);
         }
     }//GEN-LAST:event_btnPlnPdamMenuMousePressed
 
     private void btnPlnPdamMenuMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPlnPdamMenuMouseReleased
-        if (sidemenu_active != 3) {
+        if (getSidemenu_active() != 3) {
             btnPlnPdamMenu.setBackground(sidemenu_entered);
         }
     }//GEN-LAST:event_btnPlnPdamMenuMouseReleased
@@ -2874,32 +3370,32 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         panelView.repaint();
         panelView.revalidate();
         btnPulsaMenu.setBackground(sidemenu_pressed);
-        sidemenu_active = 4;
+        setSidemenu_active(2);
         panelView.add(panelPulsaView);
         panelView.repaint();
         panelView.revalidate();
     }//GEN-LAST:event_btnPulsaMenuMouseClicked
 
     private void btnPulsaMenuMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPulsaMenuMouseEntered
-        if (sidemenu_active != 4) {
+        if (getSidemenu_active() != 2) {
             btnPulsaMenu.setBackground(sidemenu_entered);
         }
     }//GEN-LAST:event_btnPulsaMenuMouseEntered
 
     private void btnPulsaMenuMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPulsaMenuMouseExited
-        if (sidemenu_active != 4) {
+        if (getSidemenu_active() != 2) {
             btnPulsaMenu.setBackground(sidemenu_exited);
         }
     }//GEN-LAST:event_btnPulsaMenuMouseExited
 
     private void btnPulsaMenuMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPulsaMenuMousePressed
-        if (sidemenu_active != 4) {
+        if (getSidemenu_active() != 2) {
             btnPulsaMenu.setBackground(sidemenu_pressed);
         }
     }//GEN-LAST:event_btnPulsaMenuMousePressed
 
     private void btnPulsaMenuMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPulsaMenuMouseReleased
-        if (sidemenu_active != 4) {
+        if (getSidemenu_active() != 2) {
             btnPulsaMenu.setBackground(sidemenu_entered);
         }
     }//GEN-LAST:event_btnPulsaMenuMouseReleased
@@ -2909,32 +3405,32 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         panelView.repaint();
         panelView.revalidate();
         btnPendapatanMenu.setBackground(sidemenu_pressed);
-        sidemenu_active = 5;
+        setSidemenu_active(5);
         panelView.add(panelPendapatanView);
         panelView.repaint();
         panelView.revalidate();
     }//GEN-LAST:event_btnPendapatanMenuMouseClicked
 
     private void btnPendapatanMenuMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPendapatanMenuMouseEntered
-        if (sidemenu_active != 4) {
+        if (getSidemenu_active() != 5) {
             btnPendapatanMenu.setBackground(sidemenu_entered);
         }
     }//GEN-LAST:event_btnPendapatanMenuMouseEntered
 
     private void btnPendapatanMenuMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPendapatanMenuMouseExited
-        if (sidemenu_active != 4) {
+        if (getSidemenu_active() != 5) {
             btnPendapatanMenu.setBackground(sidemenu_exited);
         }
     }//GEN-LAST:event_btnPendapatanMenuMouseExited
 
     private void btnPendapatanMenuMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPendapatanMenuMouseReleased
-        if (sidemenu_active != 4) {
+        if (getSidemenu_active() != 5) {
             btnPendapatanMenu.setBackground(sidemenu_entered);
         }
     }//GEN-LAST:event_btnPendapatanMenuMouseReleased
 
     private void btnPendapatanMenuMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPendapatanMenuMousePressed
-        if (sidemenu_active != 4) {
+        if (getSidemenu_active() != 5) {
             btnPendapatanMenu.setBackground(sidemenu_pressed);
         }
     }//GEN-LAST:event_btnPendapatanMenuMousePressed
@@ -2942,7 +3438,6 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private void btnAboutMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAboutMenuMouseClicked
         AboutFrame about = new AboutFrame();
         about.setVisible(true);
-        
     }//GEN-LAST:event_btnAboutMenuMouseClicked
 
     private void btnAboutMenuMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAboutMenuMouseEntered
@@ -3032,7 +3527,7 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         panelView.removeAll();
         panelView.repaint();
         panelView.revalidate();
-        
+        setSidemenu_active(6);
         //add panel
         panelView.add(panelManageView);
         panelView.repaint();
@@ -3181,10 +3676,6 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         panelView.repaint();
         panelView.revalidate();
     }//GEN-LAST:event_btnReStockKuotaPulsaActionPerformed
-
-    private void txtPulsaPendapatanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPulsaPendapatanActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtPulsaPendapatanActionPerformed
 
     public JTable getTblCustomer() {
         return tblCustomer;
@@ -3521,6 +4012,189 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
         // TODO add your handling code here:
     }//GEN-LAST:event_btnRestockKuotaSaveActionPerformed
 
+    private void btnPendapatanSaveMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPendapatanSaveMouseEntered
+        // TODO add your handling code here:
+        btnPendapatanSave.setBackground(sidemenu_entered);
+    }//GEN-LAST:event_btnPendapatanSaveMouseEntered
+
+    private void btnPendapatanSaveMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPendapatanSaveMouseExited
+        // TODO add your handling code here:
+        btnPendapatanSave.setBackground(sidemenu_exited);
+    }//GEN-LAST:event_btnPendapatanSaveMouseExited
+
+    public JTable getTblPendapatan() {
+        return tblPendapatan;
+    }
+    
+    public JTextField getTxtPendapatanId_income() {
+        return txtPendapatanId_income;
+    }
+    
+    public JTextField getTxtPendapatanCreditKuota() {
+        return txtPendapatanCreditKuota;
+    }
+
+    public JTextField getTxtPendapatanCreditPerdana() {
+        return txtPendapatanCreditPerdana;
+    }
+
+    public JTextField getTxtPendapatanOutcome() {
+        return txtPendapatanOutcome;
+    }
+
+    public JTextField getTxtPendapatanPDAM() {
+        return txtPendapatanPDAM;
+    }
+
+    public JTextField getTxtPendapatanPLN() {
+        return txtPendapatanPLN;
+    }
+
+    public JTextField getTxtPendapatanCredit() {
+        return txtPendapatanCredit;
+    }
+    
+    public JTextField getTxtPendapatanTotal() {
+        return txtPendapatanTotal;
+    }
+    
+    private void btnPendapatanSaveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPendapatanSaveMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnPendapatanSaveMouseClicked
+
+    private void btnFormPendapatanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnFormPendapatanMouseClicked
+        // TODO add your handling code here:
+        panelView.removeAll();
+        panelView.repaint();
+        panelView.revalidate();
+        
+        //add panel
+        panelView.add(panelFormPendapatanView);
+        panelView.repaint();
+        panelView.revalidate();
+    }//GEN-LAST:event_btnFormPendapatanMouseClicked
+
+    private void btnFormPendapatanMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnFormPendapatanMouseEntered
+        // TODO add your handling code here:
+        btnFormPendapatan.setBackground(sidemenu_entered);
+    }//GEN-LAST:event_btnFormPendapatanMouseEntered
+
+    private void btnFormPendapatanMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnFormPendapatanMouseExited
+        // TODO add your handling code here:
+        btnFormPendapatan.setBackground(sidemenu_exited);
+    }//GEN-LAST:event_btnFormPendapatanMouseExited
+
+    private void btnFormProviderDeleteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnFormProviderDeleteMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnFormProviderDeleteMouseClicked
+
+    private void btnFormProviderDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFormProviderDeleteActionPerformed
+        // TODO add your handling code here:
+        providerController.deleteProvider(this);
+    }//GEN-LAST:event_btnFormProviderDeleteActionPerformed
+
+    private void btnFormProviderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnFormProviderMouseClicked
+        // TODO add your handling code here:
+        panelView.removeAll();
+        panelView.repaint();
+        panelView.revalidate();
+        
+        //add panel
+        panelView.add(panelFormProviderView);
+        panelView.repaint();
+        panelView.revalidate();
+    }//GEN-LAST:event_btnFormProviderMouseClicked
+
+    private void btnFormProviderMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnFormProviderMouseEntered
+        // TODO add your handling code here:
+        btnFormProvider.setBackground(sidemenu_entered);
+    }//GEN-LAST:event_btnFormProviderMouseEntered
+
+    private void btnFormProviderMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnFormProviderMouseExited
+        // TODO add your handling code here:
+        btnFormProvider.setBackground(sidemenu_exited);
+    }//GEN-LAST:event_btnFormProviderMouseExited
+
+    private void btnBacktoManageProviderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBacktoManageProviderMouseClicked
+        // TODO add your handling code here:
+        panelView.removeAll();
+        panelView.repaint();
+        panelView.revalidate();
+        
+        //add panel
+        panelView.add(panelManageProviderView);
+        panelView.repaint();
+        panelView.revalidate();
+    }//GEN-LAST:event_btnBacktoManageProviderMouseClicked
+
+    private void btnBacktoManageProviderMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBacktoManageProviderMouseEntered
+        // TODO add your handling code here:
+        btnBacktoManageProvider.setBackground(sidemenu_entered);
+    }//GEN-LAST:event_btnBacktoManageProviderMouseEntered
+
+    private void btnBacktoManageProviderMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBacktoManageProviderMouseExited
+        // TODO add your handling code here:
+        btnBacktoManageProvider.setBackground(sidemenu_exited);
+    }//GEN-LAST:event_btnBacktoManageProviderMouseExited
+
+    private void btnFormProviderCreateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnFormProviderCreateMouseClicked
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_btnFormProviderCreateMouseClicked
+
+    public JTable getTblProvider() {
+        return tblProvider;
+    }
+
+    public JTextField getTxtFormProviderId_provider() {
+        return txtFormProviderId_provider;
+    }
+    
+    public JTextField getTxtFormProviderProvider_name() {
+        return txtFormProviderProvider_name;
+    }
+    
+    private void btnFormProviderCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFormProviderCreateActionPerformed
+        // TODO add your handling code here:
+        providerController.insertProvider(this);
+    }//GEN-LAST:event_btnFormProviderCreateActionPerformed
+
+    private void btnFormProviderUpdateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnFormProviderUpdateMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnFormProviderUpdateMouseClicked
+
+    private void btnFormProviderUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFormProviderUpdateActionPerformed
+        // TODO add your handling code here:
+        providerController.updateProvider(this);
+    }//GEN-LAST:event_btnFormProviderUpdateActionPerformed
+
+    private void btnFormProviderResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFormProviderResetActionPerformed
+        // TODO add your handling code here:
+        providerController.resetProvider(this);
+    }//GEN-LAST:event_btnFormProviderResetActionPerformed
+
+    private void btnProviderViewMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnProviderViewMouseClicked
+        // TODO add your handling code here:
+        panelView.removeAll();
+        panelView.repaint();
+        panelView.revalidate();
+        
+        //add panel
+        panelView.add(panelManageProviderView);
+        panelView.repaint();
+        panelView.revalidate();
+    }//GEN-LAST:event_btnProviderViewMouseClicked
+
+    private void btnProviderViewMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnProviderViewMouseEntered
+        // TODO add your handling code here:
+        btnProviderView.setBackground(sidemenu_entered);
+    }//GEN-LAST:event_btnProviderViewMouseEntered
+
+    private void btnProviderViewMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnProviderViewMouseExited
+        // TODO add your handling code here:
+        btnProviderView.setBackground(sidemenu_exited);
+    }//GEN-LAST:event_btnProviderViewMouseExited
+
     /**
      * @param args the command line arguments
      */
@@ -3567,10 +4241,9 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JPanel btnBacktoManageCustomer;
     private javax.swing.JPanel btnBacktoManageCustomer1;
     private javax.swing.JPanel btnBacktoManageEmployee;
+    private javax.swing.JPanel btnBacktoManageProvider;
     private javax.swing.JPanel btnCustomerView;
-    private javax.swing.JButton btnDeleteStock;
     private javax.swing.JButton btnDeleteTagihan;
-    private javax.swing.JButton btnEditStock;
     private javax.swing.JPanel btnEmployeeView;
     private javax.swing.JPanel btnFormCustomer;
     private javax.swing.JPanel btnFormCustomer1;
@@ -3590,13 +4263,21 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JButton btnFormEmployeeDelete;
     private javax.swing.JButton btnFormEmployeeReset;
     private javax.swing.JButton btnFormEmployeeUpdate;
+    private javax.swing.JPanel btnFormPendapatan;
+    private javax.swing.JPanel btnFormProvider;
+    private javax.swing.JButton btnFormProviderCreate;
+    private javax.swing.JButton btnFormProviderDelete;
+    private javax.swing.JButton btnFormProviderReset;
+    private javax.swing.JButton btnFormProviderUpdate;
     private javax.swing.JButton btnFormSubmitPulsaHome;
     private javax.swing.JPanel btnHomeMenu;
     private javax.swing.JPanel btnKartuMenu;
     private javax.swing.JPanel btnLogoutMenu;
     private javax.swing.JPanel btnManageMenu;
     private javax.swing.JPanel btnPendapatanMenu;
+    private javax.swing.JPanel btnPendapatanSave;
     private javax.swing.JPanel btnPlnPdamMenu;
+    private javax.swing.JPanel btnProviderView;
     private javax.swing.JPanel btnPulsaMenu;
     private javax.swing.JButton btnReStockKuotaPulsa;
     private javax.swing.JButton btnRestockKuotaSave;
@@ -3660,6 +4341,10 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JLabel jLabel40;
     private javax.swing.JLabel jLabel41;
     private javax.swing.JLabel jLabel42;
+    private javax.swing.JLabel jLabel43;
+    private javax.swing.JLabel jLabel44;
+    private javax.swing.JLabel jLabel45;
+    private javax.swing.JLabel jLabel46;
     private javax.swing.JLabel jLabel47;
     private javax.swing.JLabel jLabel49;
     private javax.swing.JLabel jLabel5;
@@ -3667,6 +4352,9 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JLabel jLabel54;
     private javax.swing.JLabel jLabel55;
     private javax.swing.JLabel jLabel56;
+    private javax.swing.JLabel jLabel57;
+    private javax.swing.JLabel jLabel58;
+    private javax.swing.JLabel jLabel59;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -3683,27 +4371,33 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
-    private javax.swing.JTextField jTextField9;
+    private javax.swing.JSeparator jSeparator6;
     private javax.swing.JLabel lblAppName;
     private javax.swing.JLabel lblBalancePembayaran;
     private javax.swing.JLabel lblEmployee_name;
     private javax.swing.JLabel lblEmployee_name1;
     private javax.swing.JLabel lblEmployee_name2;
+    private javax.swing.JLabel lblEmployee_name3;
     private javax.swing.JLabel lblFormIdEmployee;
     private javax.swing.JLabel lblFormIdEmployee1;
     private javax.swing.JLabel lblFormIdEmployee2;
+    private javax.swing.JLabel lblFormIdEmployee3;
     private javax.swing.JLabel lblFormPassword;
     private javax.swing.JLabel lblFormUsername;
     private javax.swing.JLabel lblHeaderCustomer;
+    private javax.swing.JLabel lblHeaderCustomer1;
+    private javax.swing.JLabel lblHeaderCustomer2;
     private javax.swing.JLabel lblHeaderEmployee;
     private javax.swing.JLabel lblHeaderFormEmployee;
     private javax.swing.JLabel lblHeaderFormEmployee1;
     private javax.swing.JLabel lblHeaderFormEmployee2;
+    private javax.swing.JLabel lblHeaderFormEmployee3;
     private javax.swing.JLabel lblHeaderFormTagihan;
     private javax.swing.JLabel lblHeaderName;
     private javax.swing.JLabel lblIdPelangganTagihan;
@@ -3719,10 +4413,13 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JPanel panelFormCustomerView;
     private javax.swing.JPanel panelFormCustomerView1;
     private javax.swing.JPanel panelFormEmployeeView;
+    private javax.swing.JPanel panelFormPendapatanView;
+    private javax.swing.JPanel panelFormProviderView;
     private javax.swing.JPanel panelFormTagihanView;
     private javax.swing.JPanel panelHomeView;
     private javax.swing.JPanel panelManageCustomerView;
     private javax.swing.JPanel panelManageEmployeeView;
+    private javax.swing.JPanel panelManageProviderView;
     private javax.swing.JPanel panelManageView;
     private javax.swing.JPanel panelPendapatanView;
     private javax.swing.JPanel panelPulsaView;
@@ -3734,11 +4431,14 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JSeparator seperatorMenu;
     private javax.swing.JPanel sidePane;
     private javax.swing.JScrollPane spCustomer;
+    private javax.swing.JScrollPane spCustomer1;
     private javax.swing.JScrollPane spEmployee;
     private javax.swing.JTable tblCustomer;
     private javax.swing.JTable tblCustomerBill;
     private javax.swing.JTable tblCustomerCredit;
     private javax.swing.JTable tblEmployee;
+    private javax.swing.JTable tblPendapatan;
+    private javax.swing.JTable tblProvider;
     private javax.swing.JTable tblReStockPerdana;
     private javax.swing.JTable tblRestockKuotaView;
     private javax.swing.JTable tblRestockPulsa;
@@ -3756,37 +4456,46 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     private javax.swing.JTextField txtFormCustomerBillId_customer_bill;
     private javax.swing.JTextField txtFormCustomerBillType;
     private javax.swing.JTextField txtFormNomorPulsaHome;
+    private javax.swing.JTextField txtFormProviderId_provider;
+    private javax.swing.JTextField txtFormProviderProvider_name;
     private javax.swing.JTextField txtId_Employee;
     private javax.swing.JTextField txtId_customer;
     private javax.swing.JTextField txtId_customer1;
     private javax.swing.JTextField txtIsiPulsaHome;
-    private javax.swing.JTextField txtKartuKuotaPendapatan;
-    private javax.swing.JTextField txtKartuPerdanaPendapatan;
-    private javax.swing.JTextField txtPDAMPendapatan;
-    private javax.swing.JTextField txtPLNPendapatan;
     private javax.swing.JTextField txtPassword;
-    private javax.swing.JTextField txtPengeluaranPendapatan;
-    private javax.swing.JTextField txtPulsaPendapatan;
+    private javax.swing.JTextField txtPendapatanCredit;
+    private javax.swing.JTextField txtPendapatanCreditKuota;
+    private javax.swing.JTextField txtPendapatanCreditPerdana;
+    private javax.swing.JTextField txtPendapatanId_income;
+    private javax.swing.JTextField txtPendapatanOutcome;
+    private javax.swing.JTextField txtPendapatanPDAM;
+    private javax.swing.JTextField txtPendapatanPLN;
+    private javax.swing.JTextField txtPendapatanTotal;
     private javax.swing.JTextField txtRestockBalance_current;
     private javax.swing.JTextField txtRestockProviderName;
     private javax.swing.JTextField txtRestockType;
     private javax.swing.JTextField txtRole;
-    private javax.swing.JLabel txtTotalPendapatan;
     private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables
 
-    public void loadDatabase() throws SQLException, EmployeeException, CustomerException, CustomerCreditException, CustomerBillException, CreditRestockException {
+    public void loadDatabase() throws SQLException, EmployeeException, CustomerException, CustomerCreditException, CustomerBillException, CreditRestockException, IncomeException, ProviderException {
         EmployeeDao employeedao = CreamsDatabase.getEmployeeDao();
         CustomerDao customerdao = CreamsDatabase.getCustomerDao();
         CustomerCreditDao customercreditdao = CreamsDatabase.getCustomerCreditDao();
         CreditRestockDao creditrestockdao = CreamsDatabase.getCreditRestockDao();
         CustomerBillDao customerbilldao = CreamsDatabase.getCustomerBillDao();
+        IncomeDao incomedao = CreamsDatabase.getIncomeDao();
+        ProviderDao providerdao = CreamsDatabase.getProviderDao();
         
         employeeTableModel.setList(employeedao.selectAllEmployee());
         customerTableModel.setList(customerdao.selectAllCustomer());
         customerCreditTableModel.setList(customercreditdao.selectAllCustomerCredit());
         creditRestockTableModel.setList(creditrestockdao.selectAllCreditRestock());
+        creditRestockKuotaTableModel.setList(creditrestockdao.selectAllKuota());
+        creditRestockPerdanaTableModel.setList(creditrestockdao.selectAllPerdana());
         customerBillTableModel.setList(customerbilldao.selectAllCustomerBill());
+        incomeTableModel.setList(incomedao.selectAllIncome());
+        providerTableModel.setList(providerdao.selectAllIProvider());
     }
     
     @Override
@@ -3882,6 +4591,28 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
             
         } catch (IndexOutOfBoundsException exception) {
         }
+        
+        try {
+            Income inc = incomeTableModel.get(tblPendapatan.getSelectedRow());
+            txtPendapatanId_income.setText(inc.getId_income()+ "");
+            txtPendapatanCredit.setText(inc.getCredit()+ "");
+            txtPendapatanCreditPerdana.setText(inc.getCredit_perdana()+ "");
+            txtPendapatanCreditKuota.setText(inc.getCredit_kuota()+ "");
+            txtPendapatanPLN.setText(inc.getPln()+"");
+            txtPendapatanPDAM.setText(inc.getPdam()+"");
+            txtPendapatanOutcome.setText(inc.getOutcome()+"");
+            txtPendapatanTotal.setText(inc.getTotal()+"");
+            
+        } catch (IndexOutOfBoundsException exception) {
+        }
+        
+        try {
+            Provider pro = providerTableModel.get(tblProvider.getSelectedRow());
+            txtFormProviderId_provider.setText(pro.getId_provider()+ "");
+            txtFormProviderProvider_name.setText(pro.getProvider_name()+ "");
+            
+        } catch (IndexOutOfBoundsException exception) {
+        }
     }
 
     @Override
@@ -3930,5 +4661,57 @@ public class MainFrame extends javax.swing.JFrame implements EmployeeListener, C
     public void onDelete(CustomerBill customerBill) {
         int index = tblCustomerBill.getSelectedRow();
         customerBillTableModel.remove(index);
+    }
+
+    @Override
+    public void onChange(IncomeModel model) {
+        txtPendapatanId_income.setText(model.getId_income()+ "");
+        txtPendapatanCredit.setText(model.getCredit()+ "");
+        txtPendapatanCreditPerdana.setText(model.getCredit_perdana()+ "");
+        txtPendapatanCreditKuota.setText(model.getCredit_kuota()+ "");
+        txtPendapatanPLN.setText(model.getPln()+"");
+        txtPendapatanPDAM.setText(model.getPdam()+"");
+        txtPendapatanOutcome.setText(model.getOutcome()+"");
+        txtPendapatanTotal.setText(model.getTotal()+"");
+    }
+
+    @Override
+    public void onInsert(Income income) {
+        incomeTableModel.add(income);
+    }
+
+    @Override
+    public void onUpdate(Income income) {
+        int index = tblPendapatan.getSelectedRow();
+        incomeTableModel.set(index, income);
+    }
+
+    @Override
+    public void onDelete(Income income) {
+        int index = tblPendapatan.getSelectedRow();
+        incomeTableModel.remove(index);
+    }
+
+    @Override
+    public void onChange(ProviderModel model) {
+        txtFormProviderId_provider.setText(model.getId_provider()+ "");
+        txtFormProviderProvider_name.setText(model.getProvider_name());
+    }
+
+    @Override
+    public void onInsert(Provider provider) {
+        providerTableModel.add(provider);
+    }
+
+    @Override
+    public void onUpdate(Provider provider) {
+        int index = tblProvider.getSelectedRow();
+        providerTableModel.set(index, provider);
+    }
+
+    @Override
+    public void onDelete(Provider provider) {
+        int index = tblProvider.getSelectedRow();
+        providerTableModel.remove(index);
     }
 }

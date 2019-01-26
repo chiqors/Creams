@@ -12,6 +12,8 @@ import id.uniondev.creams.impl.CustomerBillDaoImpl;
 import id.uniondev.creams.impl.CustomerDaoImpl;
 import id.uniondev.creams.impl.EmployeeDaoImpl;
 import id.uniondev.creams.impl.CustomerCreditDaoImpl;
+import id.uniondev.creams.impl.IncomeDaoImpl;
+import id.uniondev.creams.impl.ProviderDaoImpl;
 import id.uniondev.creams.service.CustomerDao;
 import id.uniondev.creams.service.EmployeeDao;
 import id.uniondev.creams.service.CustomerCreditDao;
@@ -19,6 +21,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import id.uniondev.creams.service.CustomerBillDao;
 import id.uniondev.creams.service.CreditRestockDao;
+import id.uniondev.creams.service.IncomeDao;
+import id.uniondev.creams.service.ProviderDao;
 
 /**
  *
@@ -31,6 +35,8 @@ public class CreamsDatabase {
     private static CustomerCreditDao customerCreditDao;
     private static CreditRestockDao creditRestockDao;
     private static CustomerBillDao customerBillDao;
+    private static IncomeDao incomeDao;
+    private static ProviderDao providerDao;
     
     public static Connection getConnection() throws SQLException {
         if (connection == null) {
@@ -78,5 +84,18 @@ public class CreamsDatabase {
         return customerBillDao;
     }
     
+    public static IncomeDao getIncomeDao() throws SQLException {
+        if (incomeDao == null) {
+            incomeDao = new IncomeDaoImpl(getConnection());
+        }
+        return incomeDao;
+    }
+    
+    public static ProviderDao getProviderDao() throws SQLException {
+        if (providerDao == null) {
+            providerDao = new ProviderDaoImpl(getConnection());
+        }
+        return providerDao;
+    }
 }
 

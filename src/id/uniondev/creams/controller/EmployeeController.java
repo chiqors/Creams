@@ -49,8 +49,10 @@ public class EmployeeController {
                 main.getLblHeaderName().setText(log_user);
                 main.loadDatabase();
                 if (log_user.equalsIgnoreCase("admin")) {
+                    main.getBtnPendapatanMenu().setVisible(true);
                     main.getBtnManageMenu().setVisible(true);
                 } else {
+                    main.getBtnPendapatanMenu().setVisible(false);
                     main.getBtnManageMenu().setVisible(false);
                 }
                 main.setVisible(true);

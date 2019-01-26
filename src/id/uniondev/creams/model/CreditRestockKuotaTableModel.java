@@ -14,7 +14,7 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author ACER
  */
-public class CreditRestockTableModel extends AbstractTableModel {
+public class CreditRestockKuotaTableModel extends AbstractTableModel {
     private List<CreditRestock> list = new ArrayList<CreditRestock>();
 
     public void setList(List<CreditRestock> list) {
@@ -64,7 +64,6 @@ public class CreditRestockTableModel extends AbstractTableModel {
         switch(column) {
             case 0 : return "Provider Name";
             case 1 : return "Stock";
-            case 2 : return "Type";
             default : return null;
         }
     }

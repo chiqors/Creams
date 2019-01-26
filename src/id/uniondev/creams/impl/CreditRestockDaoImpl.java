@@ -25,14 +25,14 @@ public class CreditRestockDaoImpl implements CreditRestockDao {
     
     private final String updateCreditRestock = "UPDATE credit_restock SET balance_current = ? WHERE provider_name = ? type = ?";
     private final String getById = "SELECT * FROM credit_restock WHERE id_credit_restock = ?";
-    private final String getByProvider_name = "SELECT * FROM credit_restock WHERE provder_name = ?";
+    private final String getByProvider_name = "SELECT * FROM credit_restock WHERE provider_name = ?";
     private final String selectAll = "SELECT * FROM credit_restock";
+    private final String selectPerdana = "SELECT * FROM credit_restock WHERE type = 'Perdana'";
+    private final String selectKuota = "SELECT * FROM credit_restock WHERE type = 'Kuota'";
 
     public CreditRestockDaoImpl(Connection connection) {
         this.connection = connection;
     }
-    
-    
 
     @Override
     public CreditRestock getCreditRestock(Integer id) throws CreditRestockException {
@@ -174,6 +174,84 @@ public class CreditRestockDaoImpl implements CreditRestockDao {
             try {
                 connection.setAutoCommit(true);
             } catch (SQLException ex) {
+            }
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch(SQLException e) {
+                }
+            }
+        }
+    }
+
+    @Override
+    public List<CreditRestock> selectAllPerdana() throws CreditRestockException {
+        Statement statement = null;
+        List<CreditRestock> list = new ArrayList<CreditRestock>();
+        try {
+            connection.setAutoCommit(false);
+            statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(selectPerdana);
+            CreditRestock creditRestock = null;
+            while (result.next()) {
+                creditRestock = new CreditRestock();
+                creditRestock.setId_credit_restock(result.getInt("ID_CREDIT_RESTOCK"));
+                creditRestock.setProvider_name(result.getString("PROVIDER_NAME"));
+                creditRestock.setType(result.getString("TYPE"));
+                creditRestock.setBalance_current(result.getInt("BALANCE_CURRENT"));
+                list.add(creditRestock);
+            }
+            connection.commit();
+            return list;
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (Exception ex) {
+            }
+            throw new CreditRestockException(e.getMessage());
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (Exception ex) {
+            }
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch(SQLException e) {
+                }
+            }
+        }
+    }
+
+    @Override
+    public List<CreditRestock> selectAllKuota() throws CreditRestockException {
+        Statement statement = null;
+        List<CreditRestock> list = new ArrayList<CreditRestock>();
+        try {
+            connection.setAutoCommit(false);
+            statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(selectKuota);
+            CreditRestock creditRestock = null;
+            while (result.next()) {
+                creditRestock = new CreditRestock();
+                creditRestock.setId_credit_restock(result.getInt("ID_CREDIT_RESTOCK"));
+                creditRestock.setProvider_name(result.getString("PROVIDER_NAME"));
+                creditRestock.setType(result.getString("TYPE"));
+                creditRestock.setBalance_current(result.getInt("BALANCE_CURRENT"));
+                list.add(creditRestock);
+            }
+            connection.commit();
+            return list;
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (Exception ex) {
+            }
+            throw new CreditRestockException(e.getMessage());
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (Exception ex) {
             }
             if (statement != null) {
                 try {
