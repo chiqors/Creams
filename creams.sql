@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jan 21, 2019 at 12:35 PM
+-- Generation Time: Jan 26, 2019 at 02:38 PM
 -- Server version: 10.3.10-MariaDB-log
 -- PHP Version: 7.2.11
 
@@ -31,50 +31,21 @@ SET time_zone = "+00:00";
 CREATE TABLE `credit_restock` (
   `id_credit_restock` int(11) NOT NULL,
   `provider_name` varchar(20) NOT NULL,
-  `type` int(11) NOT NULL,
-  `price` int(11) NOT NULL,
-  `kuota` int(11) NOT NULL,
-  `expired_date` date NOT NULL,
-  `balance_number` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `credit_restock_kuota`
---
-
-CREATE TABLE `credit_restock_kuota` (
-  `id_credit_restock_kuota` int(11) NOT NULL,
-  `provider_name` varchar(20) NOT NULL,
   `type` varchar(20) NOT NULL,
   `balance_current` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `credit_restock_kuota`
+-- Dumping data for table `credit_restock`
 --
 
-INSERT INTO `credit_restock_kuota` (`id_credit_restock_kuota`, `provider_name`, `type`, `balance_current`) VALUES
-(1, 'AXIS', 'Kuota', 150),
+INSERT INTO `credit_restock` (`id_credit_restock`, `provider_name`, `type`, `balance_current`) VALUES
+(1, 'AXIS', 'Kuota', 500),
 (2, 'Indosat', 'Kuota', 150),
-(3, 'Smartfren', 'Kuota', 250),
+(3, 'Smartfren', 'Kuota', 350),
 (4, 'Telkomsel', 'Kuota', 150),
 (5, 'TRI', 'Kuota', 150),
-(6, 'XL', 'Kuota', 150);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `credit_restock_plnpdam`
---
-
-CREATE TABLE `credit_restock_plnpdam` (
-  `id_credit_restock_plnpdam` int(11) NOT NULL,
-  `no_pelanggan` int(11) NOT NULL,
-  `type` int(11) NOT NULL,
-  `balance` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+(6, 'XL', 'Kuota', 450);
 
 -- --------------------------------------------------------
 
@@ -87,6 +58,20 @@ CREATE TABLE `customer` (
   `customer_name` text NOT NULL,
   `phone_number` varchar(15) NOT NULL,
   `status` varchar(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `customer_bill`
+--
+
+CREATE TABLE `customer_bill` (
+  `id_customer_bill` int(11) NOT NULL,
+  `customer_number` int(11) NOT NULL,
+  `customer_name` varchar(50) NOT NULL,
+  `type` varchar(11) NOT NULL,
+  `balance` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -138,6 +123,17 @@ CREATE TABLE `income` (
   `outcome` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `provider`
+--
+
+CREATE TABLE `provider` (
+  `id_provider` int(11) NOT NULL,
+  `provider_name` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 --
 -- Indexes for dumped tables
 --
@@ -149,23 +145,17 @@ ALTER TABLE `credit_restock`
   ADD PRIMARY KEY (`id_credit_restock`);
 
 --
--- Indexes for table `credit_restock_kuota`
---
-ALTER TABLE `credit_restock_kuota`
-  ADD PRIMARY KEY (`id_credit_restock_kuota`);
-
---
--- Indexes for table `credit_restock_plnpdam`
---
-ALTER TABLE `credit_restock_plnpdam`
-  ADD PRIMARY KEY (`id_credit_restock_plnpdam`),
-  ADD UNIQUE KEY `no_pelanggan` (`no_pelanggan`);
-
---
 -- Indexes for table `customer`
 --
 ALTER TABLE `customer`
   ADD PRIMARY KEY (`id_customer`);
+
+--
+-- Indexes for table `customer_bill`
+--
+ALTER TABLE `customer_bill`
+  ADD PRIMARY KEY (`id_customer_bill`),
+  ADD UNIQUE KEY `no_pelanggan` (`customer_number`);
 
 --
 -- Indexes for table `customer_credit`
@@ -186,6 +176,12 @@ ALTER TABLE `income`
   ADD PRIMARY KEY (`id_income`);
 
 --
+-- Indexes for table `provider`
+--
+ALTER TABLE `provider`
+  ADD PRIMARY KEY (`id_provider`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -193,19 +189,7 @@ ALTER TABLE `income`
 -- AUTO_INCREMENT for table `credit_restock`
 --
 ALTER TABLE `credit_restock`
-  MODIFY `id_credit_restock` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `credit_restock_kuota`
---
-ALTER TABLE `credit_restock_kuota`
-  MODIFY `id_credit_restock_kuota` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
---
--- AUTO_INCREMENT for table `credit_restock_plnpdam`
---
-ALTER TABLE `credit_restock_plnpdam`
-  MODIFY `id_credit_restock_plnpdam` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_credit_restock` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `customer`
@@ -214,10 +198,16 @@ ALTER TABLE `customer`
   MODIFY `id_customer` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `customer_bill`
+--
+ALTER TABLE `customer_bill`
+  MODIFY `id_customer_bill` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `customer_credit`
 --
 ALTER TABLE `customer_credit`
-  MODIFY `id_customer_credit` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_customer_credit` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `employee`
@@ -230,6 +220,12 @@ ALTER TABLE `employee`
 --
 ALTER TABLE `income`
   MODIFY `id_income` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `provider`
+--
+ALTER TABLE `provider`
+  MODIFY `id_provider` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
